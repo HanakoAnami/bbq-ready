@@ -1,36 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>はなこのポートフォリオ</title>
-    <style>
-        /* 簡単なボタンのデザイン（後でいくらでも凝れます！） */
-        .btn-orange {
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #ff6600; /* オレンジ色 */
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-family: sans-serif;
-        }
-        .btn-orange:hover {
-            background-color: #e65c00; /* 押した時に少し暗くなる */
-        }
-        body {
-            text-align: center;
-            padding-top: 100px;
-            background-color: #fafafa;
-        }
-    </style>
+    <title>ポートフォリオ</title>
 </head>
 <body>
 
-    <h1>Welcome to My Portfolio</h1>
-    <p>Djangoで作成中のBBQ管理アプリです。</p>
+<h1>BBQ Ready</h1>
+<p>BBQ管理アプリ</p>
 
-    <a href="{% url 'index' %}" class="btn-orange">アプリへ</a>
+<a href="{% url 'login' %}">アプリへ</a>
 
 </body>
 </html>
