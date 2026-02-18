@@ -1,4 +1,7 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
-def index(request):
-    return HttpResponse("はなこさんのBBQアプリ、準備開始！")
+def portfolio(request):# ポートフォリオトップページ
+    return render(request, 'bbq_app/portfolio.html')
+
+def index(request):# ログイン後の画面用
+    return render(request, 'bbq_app/index.html')
