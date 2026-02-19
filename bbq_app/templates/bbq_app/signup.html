@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>BBQ Ready</title>
+</head>
+<body>
+  <h1>アカウント作成</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">登録</button>
+  </form>
+
+  <p><a href="{% url 'login' %}">ログインはこちら</a></p>
+</body>
+</html>
