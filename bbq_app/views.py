@@ -3,13 +3,15 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .forms import SignupForm, EventForm
+from .models import Event
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
 
 @login_required
-def home(request):# ログイン後の画面用
-    return render(request, 'bbq_app/home.html')
+def home(request):
+    events = Event.objects.filter(user=request.user).order_by("date")[3:]
+    return render(request, 'bbq_app/home.html', {"events": events})
 
 class UserLoginView(LoginView):
     template_name = 'bbq_app/login.html'

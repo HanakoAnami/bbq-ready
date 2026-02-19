@@ -19,6 +19,21 @@
     <button type="submit">ログアウト</button>
     </form>
     <p><a href="{% url 'event_create' %}">+新規イベント作成</a></p>
+    <h2>開催予定のイベント</h2>
+
+{% if events %}
+    {% for event in events %}
+        <div style="border:1px solid #ccc; padding:10px; margin:10px">
+            <p>イベント名:{{ event.name }}</p>
+            <p>開催日:{{ event.date }}</p>
+            <p>開催時間:{{ event.time }}</p>
+            <p>開催場所:{{ event.location }}</p>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>開催予定のイベントはありません、イベントの計画を立てましょう！</p>
+{% endif %}
+
 </div>
 </body>
 </html>
