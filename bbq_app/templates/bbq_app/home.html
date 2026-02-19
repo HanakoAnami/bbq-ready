@@ -13,6 +13,11 @@
     <div class="box">
         <p>ここは、BBQの持ち物や予算を管理するページになります！</p>
         <p><strong>現在のステータス：開発中（順調！）</strong></p>
-    </div>
+    <br>
+    <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">ログアウト</button>
+    </form>
+</div>
 </body>
 </html>
