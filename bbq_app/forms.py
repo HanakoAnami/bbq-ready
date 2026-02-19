@@ -21,7 +21,6 @@ class SignupForm(UserCreationForm):
         user = super().save(commit=False)
         email = self.cleaned_data["email"].lower()
         nickname = self.cleaned_data["nickname"]
-        
         user.username = email
         user.email = email
         user.first_name = nickname

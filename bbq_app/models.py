@@ -1,3 +1,14 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+class Event(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
+    name = models.CharField("イベント名", max_length=30)
+    date = models.DateField("開催日")
+    time = models.TimeField("開催時間")
+    location = models.CharField("開催場所", max_length=50)
+    created_at = models.DateTimeField("作成日時", auto_now_add=True)
+    updated_at = models.DateTimeField("更新日時", auto_now=True)
+    
+    def __str__(self):
+        return self.name
