@@ -8,4 +8,6 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('home/', views.home, name='home'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('events/new/', views.event_create, name='event_create'),
 ]
+
