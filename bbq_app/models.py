@@ -13,7 +13,8 @@ class Event(models.Model):
     
     def __str__(self):
         return self.name
-    
+
+#持ち物テンプレ    
 class BbqItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, blank=True)
@@ -21,7 +22,8 @@ class BbqItem(models.Model):
     
     def __str__(self):
         return self.name
-    
+ 
+ #イベント用にコピーされた持ち物（チェック状態を保つように）   
 class EventItem(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     bbq_item = models.ForeignKey(BbqItem, on_delete=models.CASCADE)

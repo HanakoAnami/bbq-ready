@@ -3,10 +3,22 @@
 
 <h1>{{ event.name }}の持ち物一覧</h1>
 
+<form method="POST">
+    {% csrf_token %}
+
 <ul>
     {% for item in items %}
-        <li>{{ item.bbq_item.name }}</li>
-     {% empty %}
-        <li>持ち物がありません</li>
+        <li>
+            <label>
+                <input type="checkbox"
+                       name="selected_items"
+                       value="{{ item.id }}"
+                       {% if item.is_selected %}checked{% endif %}>
+                {{ item.bbq_item.name }}
+            </label>
+        </li>
     {% endfor %}
 </ul>
+
+<button type="submit">保存</butoon>
+</form>
