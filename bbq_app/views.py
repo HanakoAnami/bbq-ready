@@ -55,7 +55,7 @@ def event_create(request):
 def item_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     items = EventItem.objects.filter(event=event).select_related("bbq_item")
-    total_count = items.count()
+    total_count = items.count()#持ち物進捗
     selected_count = items.filter(is_selected=True).count()
     
     if request.method == "POST":
@@ -69,11 +69,17 @@ def item_edit(request, event_id):
         
         return redirect("item_edit", event_id=event.id)
     
+    if total_count > 0:
+        progress_percent = int((selected_count / total_count) * 100)
+    else:
+        progress_percent = 0
+    
     return render(request, "bbq_app/item_edit.html", {
         "event":event, 
         "items":items,
         "total_count":total_count,
         "selected_count":selected_count,
+        "progress_percent":progress_percent,
     })
 
 
