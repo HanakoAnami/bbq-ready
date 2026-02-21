@@ -30,21 +30,6 @@ def signup(request):
 
 @login_required
 def event_create(request):
-    if request.method == "POST":
-        form = EventForm(request.POST)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.user = request.user
-            event.save()
-            return redirect("home")
-        
-    else:
-        form = EventForm()
-        
-    return render(request,"bbq_app/event_form.html", {"form": form})
-
-@login_required
-def event_create(request):
     if request.method =="POST":
         form = EventForm(request.POST)
         if form.is_valid():
@@ -59,7 +44,7 @@ def event_create(request):
                 for t in templates
             ])
             
-            return redirect("bbq_app:item_edit", event_id=event.id)
+            return redirect("item_edit", event_id=event.id)
     else:
         form = EventForm()
         
@@ -71,7 +56,7 @@ def item_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     items = EventItem.objects.filter(event=event).select_related("bbq_item")
     
-    return render(request, "bbq_app/items/edit_1.html", {"event":event, "items":items})
+    return render(request, "bbq_app/item_edit.html", {"event":event, "items":items})
 
 
             

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+
+<h1>{{ event.name }}の持ち物一覧</h1>
+
+<ul>
+    {% for item in items %}
+        <li>{{ item.bbq_item.name }}</li>
+     {% empty %}
+        <li>持ち物がありません</li>
+    {% endfor %}
+</ul>

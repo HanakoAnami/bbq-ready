@@ -16,7 +16,8 @@ class Event(models.Model):
     
 class BbqItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    bbq_item = models.CharField(max_length=50, blank=True)
+    name = models.CharField(max_length=50, blank=True)
+    category = models.CharField(max_length=50, blank=True)
     
     def __str__(self):
         return self.name
@@ -29,5 +30,5 @@ class EventItem(models.Model):
     status = models.IntegerField(default=1)#ステータス内容まだ決めてない
     
     def __str__(self):
-        return f"{self.event} - {self.bbq_item}"
+        return f"{self.event} - {self.bbq_item.name}"
     

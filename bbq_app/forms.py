@@ -39,3 +39,6 @@ class EventForm(forms.ModelForm):
             "time": forms.TimeInput(attrs={"type": "time"}),
         }
 
+     
+
+
