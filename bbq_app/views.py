@@ -8,11 +8,13 @@ from .models import Event, BbqItem, EventItem
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
 
+#ホームにイベントを３つまで表示
 @login_required
 def home(request):
     events = Event.objects.filter(user=request.user).order_by("date")[3:]
     return render(request, 'bbq_app/home.html', {"events": events})
 
+#ログイン
 class UserLoginView(LoginView):
     template_name = 'bbq_app/login.html'
     
@@ -28,6 +30,7 @@ def signup(request):
 
     return render(request, 'bbq_app/signup.html', {'form': form})
 
+#新規イベント作成
 @login_required
 def event_create(request):
     if request.method =="POST":
@@ -50,8 +53,8 @@ def event_create(request):
         
     return render(request, "bbq_app/event_form.html", {"form":form})
 
-@login_required
 #持ち物編集リスト①
+@login_required
 def item_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     items = EventItem.objects.filter(event=event).select_related("bbq_item")
@@ -82,6 +85,29 @@ def item_edit(request, event_id):
         "progress_percent":progress_percent,
     })
 
-
+#イベント複製
+@login_required
+def event_duplicate(request, event_id):
+    original_event = get_object_or_404(Event, id=event_id, user=request.user)
+    
+    new_event = Event.objects.create(
+        user=request.user,
+        name=f"{original_event.name} (複製)",
+        date=original_event.date, 
+        time=original_event.time,
+    )
+    #元のEventItemを取得
+    original_items = EventItem.objects.filter(event=original_event)
+    #コピー
+    EventItem.objects.bulk_create([
+        EventItem(
+            event=new_event,
+            bbq_item=item.bbq_item,
+            is_selected=item.is_selected,
+            status=item.status,
+        )
+        for item in original_items
+    ])
+    return redirect("item_edit", event_id=new_event.id)
             
             
