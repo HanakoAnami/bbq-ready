@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
 class Event(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
@@ -12,3 +13,21 @@ class Event(models.Model):
     
     def __str__(self):
         return self.name
+    
+class BbqItem(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    bbq_item = models.CharField(max_length=50, blank=True)
+    
+    def __str__(self):
+        return self.name
+    
+class EventItem(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    bbq_item = models.ForeignKey(BbqItem, on_delete=models.CASCADE)
+    
+    is_selected = models.BooleanField(default=False)
+    status = models.IntegerField(default=1)
+    
+    def __str__(self):
+        return f"{self.event} - {self.bbq_item}"
+    

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
@@ -42,5 +42,7 @@ def event_create(request):
         form = EventForm()
         
     return render(request,"bbq_app/event_form.html", {"form": form})
+
+
             
             

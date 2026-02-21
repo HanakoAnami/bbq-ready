@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>イベント詳細</title>
+</head>
+<body>
+  <h1>イベント詳細</h1>
+
+  <p>イベント名：{{ event.name }}</p>
+  <p>開催日：{{ event.date }}</p>
+  <p>開催時間：{{ event.time }}</p>
+  <p>開催場所：{{ event.location }}</p>
+
+  <p><a href="{% url 'home' %}">HOMEに戻る</a></p>
+</body>
+</html>
