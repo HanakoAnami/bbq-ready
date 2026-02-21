@@ -2,6 +2,9 @@
 <html>
 
 <h1>{{ event.name }}の持ち物一覧</h1>
+<p>
+    準備進捗：{{ selected_count }} / {{ total_count }}
+</p>
 
 <form method="POST">
     {% csrf_token %}
