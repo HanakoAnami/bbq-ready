@@ -9,5 +9,8 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('events/new/', views.event_create, name='event_create'),
+    path('events/create/', views.event_create, name='event_create'),
+    path('events/<int:event_id>/items/', views.item_edit, name='item_edit'),
+    
 ]
 
