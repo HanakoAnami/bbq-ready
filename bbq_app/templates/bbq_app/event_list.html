@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <meta charset="UTF-8">
+<h1>全イベント一覧</h1>
+
+<ul>
+    {% for event in events %}
+        <li>
+            {{ event.name }}
+            <a href="{% url 'item_edit' event.id %}">全イベント詳細</a>
+            <a href="{% url 'event_duplicate' event.id %}">イベントを複製する</a>
+        </li>
+    {% empty %}
+        <li>イベントがありません</li>
+    {% endfor %}
+    </ul>
+

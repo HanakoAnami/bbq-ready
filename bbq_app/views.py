@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .forms import SignupForm, EventForm
 from .models import Event, BbqItem, EventItem
+from django.utils import timezone
+from django.db.models import Q
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
@@ -11,8 +13,17 @@ def portfolio(request):
 #ホームにイベントを３つまで表示
 @login_required
 def home(request):
-    events = Event.objects.filter(user=request.user).order_by("date")[3:]
-    return render(request, 'bbq_app/home.html', {"events": events})
+    now = timezone.localtime()
+    
+    upcoming_events = (
+        Event.objects
+        .filter(user=request.user)
+        .filter(
+            Q(date__gt=now.date()) | Q(date=now.date(), time__gte=now.time())
+        )
+        .order_by("date", "time")[:3]
+    )
+    return render(request, 'bbq_app/home.html', {"upcoming_events": upcoming_events})
 
 #ログイン
 class UserLoginView(LoginView):
@@ -109,5 +120,11 @@ def event_duplicate(request, event_id):
         for item in original_items
     ])
     return redirect("item_edit", event_id=new_event.id)
+
+#全イベント詳細
+@login_required
+def event_list(request):
+    events = Event.objects.filter(user=request.user).order_by("-id")
+    return render(request, "bbq_app/event_list.html", {"events":events})
             
             
