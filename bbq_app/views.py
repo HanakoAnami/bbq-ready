@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .forms import SignupForm, EventForm
-from .models import Event
+from .models import Event, BbqItem, EventItem
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
@@ -42,6 +42,28 @@ def event_create(request):
         form = EventForm()
         
     return render(request,"bbq_app/event_form.html", {"form": form})
+
+@login_required
+def event_create(request):
+    if request.method =="POST":
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.user = request.user
+            event.save()
+            
+            #テンプレートをイベントにコピー
+            templates = BbqItem.objects.filter(user=request.user)
+            EventItem.objects.bulk_create([
+                EventItem(event=event, bbq_item=t, status=1, is_selected=False)
+                for t in templates
+            ])
+            
+            return redirect("bbq_app:item_edit", event_id=event.id)
+    else:
+        form = EventForm()
+        
+    return render(request, "bbq_app/events/event_create.html", {"form":form})
 
 
             

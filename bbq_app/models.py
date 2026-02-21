@@ -25,8 +25,8 @@ class EventItem(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     bbq_item = models.ForeignKey(BbqItem, on_delete=models.CASCADE)
     
-    is_selected = models.BooleanField(default=False)
-    status = models.IntegerField(default=1)
+    is_selected = models.BooleanField(default=False)#必要かチェック
+    status = models.IntegerField(default=1)#ステータス内容まだ決めてない
     
     def __str__(self):
         return f"{self.event} - {self.bbq_item}"
