@@ -129,5 +129,19 @@ def event_duplicate(request, event_id):
 def event_list(request):
     events = Event.objects.filter(user=request.user).order_by("-held_at")
     return render(request, "bbq_app/event_list.html", {"events":events})
+
+#イベント削除
+@login_required
+def event_delete(request, event_id):
+    event = get_object_or_404(Event, id=event.id, user=request.user)
+    
+    if request.method =="POST":
+        event.delete()
+        return redirect("home")
+    
+    return render(request, "bbq_app/event_confirm_delete.html", {
+        "event":event
+    })
+    
             
             

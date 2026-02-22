@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>はなこBBQ管理</title>
-    <style>
-        body { background-color: #fff5e6; text-align: center; font-family: sans-serif; }
-        h1 { color: #ff6600; margin-top: 50px; }
-        .box { border: 2px solid #ff6600; padding: 20px; display: inline-block; background: white; border-radius: 10px; }
-    </style>
-</head>
-<body>
+{% extends "bbq_app/base.html" %}
+
+{% block title %}HOME{% endblock %}
+
+{% block content %}
     <h1>🍖 はなこのBBQ準備アプリ 🍖</h1>
     <div class="box">
         <p>ここは、BBQの持ち物や予算を管理するページになります！</p>
@@ -32,7 +26,4 @@
     </ul>
     <a href={% url 'event_list' %}>
     全イベント詳細
-    </a>
-
-</body>
-</html>
+{% endblock %}
