@@ -148,7 +148,7 @@ def event_list(request):
 #イベント削除
 @login_required
 def event_delete(request, event_id):
-    event = get_object_or_404(Event, id=event.id, user=request.user)
+    event = get_object_or_404(Event, id=event_id, user=request.user)
     
     if request.method =="POST":
         event.delete()
