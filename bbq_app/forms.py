@@ -31,12 +31,19 @@ class SignupForm(UserCreationForm):
         return user
     
 class EventForm(forms.ModelForm):
-    date=forms.DateField(label="開催日",widget=forms.DateInput(attrs={"type": "date"}))
-    time=forms.TimeField(label="開催時間",widget=forms.TimeInput(attrs={"type": "time"}))
-    
     class Meta:
         model = Event
-        fields = ("name", "location")
+        fields = ("name", "held_at", "location")
+        widgets =  {
+            "held_at": forms.DateTimeInput(
+                attrs={"type": "datetime-local"},
+                format="%Y-%m-%dT%H:%M"
+            )
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["held_at"].input_formats = ["%Y-%m-%dT%H:%M"]
 
      
 
