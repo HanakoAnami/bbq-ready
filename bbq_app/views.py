@@ -52,6 +52,7 @@ def event_create(request):
         if form.is_valid():
             event = form.save(commit=False)
             event.user = request.user
+            event.held_at = combine_to_held_at(event.date, event.time)
             event.save()
             
             #テンプレートをイベントにコピー
@@ -109,6 +110,7 @@ def event_duplicate(request, event_id):
         name=f"{original_event.name} (複製)",
         date=original_event.date, 
         time=original_event.time,
+        held_at=original_event.held_at,
     )
     #元のEventItemを取得
     original_items = EventItem.objects.filter(event=original_event)
@@ -127,7 +129,7 @@ def event_duplicate(request, event_id):
 #全イベント詳細
 @login_required
 def event_list(request):
-    events = Event.objects.filter(user=request.user).order_by("-id")
+    events = Event.objects.filter(user=request.user).order_by("-held_at")
     return render(request, "bbq_app/event_list.html", {"events":events})
             
             
