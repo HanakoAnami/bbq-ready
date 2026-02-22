@@ -6,6 +6,12 @@ from .forms import SignupForm, EventForm
 from .models import Event, BbqItem, EventItem
 from django.utils import timezone
 from django.db.models import Q
+from datetime import datetime
+from django.views.generic import CreateView, UpdateView
+
+def combine_to_held_at(date, time):
+    dt = datetime.combine(date, time)
+    return timezone.make_aware(dt, timezone.get_default_timezone())
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
@@ -17,11 +23,8 @@ def home(request):
     
     upcoming_events = (
         Event.objects
-        .filter(user=request.user)
-        .filter(
-            Q(date__gt=now.date()) | Q(date=now.date(), time__gte=now.time())
-        )
-        .order_by("date", "time")[:3]
+        .filter(user=request.user, held_at__gte=now)
+        .order_by("held_at")[:3]
     )
     return render(request, 'bbq_app/home.html', {"upcoming_events": upcoming_events})
 
