@@ -1,6 +1,10 @@
-<!DOCTYPE html>
-<html>
+{% extends "bbq_app/base.html" %}
 
+{% block header %}
+    {% include "bbq_app/partials/event_header.html" %}
+{% endblock %}
+
+{% block content %}
 <h1>{{ event.name }}の持ち物一覧</h1>
 <p>
     準備進捗：{{ selected_count }} / {{ total_count }}
@@ -30,3 +34,4 @@
 
 <button type="submit">保存</butoon>
 </form>
+{% endblock %}

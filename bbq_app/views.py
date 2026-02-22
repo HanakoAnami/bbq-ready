@@ -67,6 +67,21 @@ def event_create(request):
         
     return render(request, "bbq_app/event_form.html", {"form":form})
 
+#イベント詳細
+@login_required
+def event_edit(request, event_id):
+    event = get_object_or_404(Event, id=event_id, user=request.user)
+    
+    if request.method == "POST":
+        form = EventForm(request.POST, instance=event_id)
+        if form.is_valid():
+            form.save()
+            return redirect("item_edit", event_id=event.id)
+    else:
+        form = EventForm(instance=event)
+    return render(request, "bbq_app/event_form.html", {"form": form, "event":event})
+    
+
 #持ち物編集リスト①
 @login_required
 def item_edit(request, event_id):
