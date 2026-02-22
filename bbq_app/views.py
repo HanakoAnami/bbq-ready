@@ -20,7 +20,6 @@ def portfolio(request):
 @login_required
 def home(request):
     now = timezone.localtime()
-    
     upcoming_events = (
         Event.objects
         .filter(user=request.user, held_at__gte=now)
@@ -52,7 +51,7 @@ def event_create(request):
         if form.is_valid():
             event = form.save(commit=False)
             event.user = request.user
-            event.held_at = combine_to_held_at(event.date, event.time)
+            event.held_at = combine_to_held_at(form.cleaned_data["date"], form.cleaned_data["time"])
             event.save()
             
             #テンプレートをイベントにコピー
@@ -108,9 +107,8 @@ def event_duplicate(request, event_id):
     new_event = Event.objects.create(
         user=request.user,
         name=f"{original_event.name} (複製)",
-        date=original_event.date, 
-        time=original_event.time,
         held_at=original_event.held_at,
+        location=original_event.location,
     )
     #元のEventItemを取得
     original_items = EventItem.objects.filter(event=original_event)

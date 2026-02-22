@@ -31,9 +31,12 @@ class SignupForm(UserCreationForm):
         return user
     
 class EventForm(forms.ModelForm):
+    date=forms.DateField(label="開催日",widget=forms.DateInput(attrs={"type": "date"}))
+    time=forms.TimeField(label="開催時間",widget=forms.TimeInput(attrs={"type": "time"}))
+    
     class Meta:
         model = Event
-        fields = ("name", "date", "time", "location")
+        fields = ("name", "location")
 
      
 

@@ -5,10 +5,6 @@ from django.conf import settings
 class Event(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
     name = models.CharField("イベント名", max_length=30)
-    
-    date = models.DateField("開催日")
-    time = models.TimeField("開催時間")
-    
     held_at = models.DateTimeField("開催日時", null=True, blank=True)
     location = models.CharField("開催場所", max_length=50)
     created_at = models.DateTimeField("作成日時", auto_now_add=True)
