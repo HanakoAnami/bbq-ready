@@ -1,0 +1,16 @@
+{% extends "bbq_app/base.html" %}
+
+{% block content %}
+<h2>イベント削除確認</h2>
+
+<p>{{ event.name }}を削除しますか？</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">削除</button>
+</form>
+
+<p>
+    <a href="javascript:history.back">キャンセル</a>
+</p>
+{% endblock %}

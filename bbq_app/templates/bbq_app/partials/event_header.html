@@ -1,0 +1,22 @@
+<div style="border-bottom:1px solid #ccc; padding:10px;">
+
+  <div style="float:right;">
+    <a href="{% url 'event_edit' event.id %}">✏️ 編集</a> |
+    <a href="{% url 'event_delete' event.id %}">🗑 削除</a>
+  </div>
+
+  <h2>{{ event.name }}</h2>
+
+  <p>
+    開催日時：
+    {{ event.held_at|date:"Y年m月d日 H:i" }}
+  </p>
+
+  <p>
+    開催場所：
+    {{ event.location }}
+  </p>
+
+  <div style="clear:both;"></div>
+
+</div>
