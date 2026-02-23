@@ -154,7 +154,7 @@ def event_delete(request, event_id):
     })
     
 @login_required
-def event_participant(request, event_id):
+def event_participants(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     participants = Participant.objects.filter(event=event)
     return render(request, "bbq_app/participant_list.html",{
