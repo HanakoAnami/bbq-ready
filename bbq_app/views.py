@@ -68,7 +68,7 @@ def event_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     
     if request.method == "POST":
-        form = EventForm(request.POST, instance=event_id)
+        form = EventForm(request.POST, instance=event)
         if form.is_valid():
             form.save()
             return redirect("item_edit", event_id=event.id)
