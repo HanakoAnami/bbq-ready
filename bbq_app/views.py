@@ -9,10 +9,6 @@ from django.db.models import Q
 from datetime import datetime
 from django.views.generic import CreateView, UpdateView
 
-def combine_to_held_at(date, time):
-    dt = datetime.combine(date, time)
-    return timezone.make_aware(dt, timezone.get_default_timezone())
-
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
 
@@ -51,7 +47,6 @@ def event_create(request):
         if form.is_valid():
             event = form.save(commit=False)
             event.user = request.user
-            event.held_at = combine_to_held_at(form.cleaned_data["date"], form.cleaned_data["time"])
             event.save()
             
             #テンプレートをイベントにコピー

@@ -17,13 +17,16 @@
     <ul>
         {% for event in upcoming_events %}
         <li>
-            {{ event.name }} {{ event.date }} {{ event.time }} {{ event.location }}
+            {{ event.name }} {{ event.held_at|date:"Y年m月d日 H:i "}} {{ event.location }}
             <a href="{% url 'item_edit' event.id %}">詳細</a>
         </li>
         {% empty %}
         <li>直近のイベント予定はありません</li>
         {% endfor%}
     </ul>
-    <a href={% url 'event_list' %}>
-    全イベント詳細
+    <a href="{% url 'event_list' %}">全イベント詳細</a>
+{% endblock %}
+
+{% block footer %}
+{% include "bbq_app/partials/footer_nav.html" %}
 {% endblock %}

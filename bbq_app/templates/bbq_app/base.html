@@ -2,15 +2,15 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scare=1">
+    <meta name="viewport" content="width=device-width, initial-scare=1.0">
     <title>{% block title %}BBQ Ready{% endblock %}</title>
 </head>
 <body>
 
     {% block header %}{% endblock %}
 
-    {% block content %}{% endblock %}
-
+    <main>{% block content %}{% endblock %}</main>
+    
     {% block footer %}{% endblock %}
 
 </body>
