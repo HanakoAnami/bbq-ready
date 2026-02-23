@@ -32,4 +32,6 @@ class EventItem(models.Model):
     
     def __str__(self):
         return f"{self.event} - {self.bbq_item.name}"
-    
+
+
+# TODO:Participant行にURL発行ボタンを追加する

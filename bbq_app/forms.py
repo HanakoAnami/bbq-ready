@@ -44,6 +44,16 @@ class EventForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["held_at"].input_formats = ["%Y-%m-%dT%H:%M"]
+        
+#確定した参加者のみを保存するテーブル
+#招待リンクはinvitationで管理する
+class Participant(models.Model):
+    
+    
+#参加者ごとの招待リンク管理テーブル
+#有効リンクは1人１つまで
+#再発行時は旧リンクをrevokedにする
+class Invitation(models.Model):
 
      
 

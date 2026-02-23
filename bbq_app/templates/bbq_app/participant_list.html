@@ -1,0 +1,18 @@
+{% extends "bbq_app/base.html" %}
+
+{% block title %}イベント共有{% endblock %}
+
+{% block content %}
+<h2>参加者一覧</h2>
+
+<ul>
+    {% for participant in paeticipants %}
+        <li>
+            {{ participant.name }}
+            <a href="#"URL表示</a>
+        </li>
+    {% empty %}
+    <li>このイベントの参加者はいません。</li>    
+    {% endfor %}
+</ul>
+{% endblock %}
