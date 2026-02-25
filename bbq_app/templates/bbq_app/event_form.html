@@ -11,9 +11,9 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{% if event %}イベント編集{% else %}新規イベント作成{% endif %}</h>
+    <h1>{% if event %}イベント編集{% else %}新規イベント作成{% endif %}</h1>
 
-    {% if form.error %}
+    {% if form.errors %}
         <div style="color: red;">
             {{ form.errors }}
         </div>
@@ -24,6 +24,12 @@
     {{ form.as_p }}
     <button type="submit">{% if event %}更新{% else %}保存{% endif %}</button>
     </form>
+
+    {% if event %}
+        <p>
+            <a href="{% url 'event_delete' event.id %}">削除</a>
+        </p>
+    {% endif %}
 
     <p><a href="{% url 'home' %}">戻る</a></p>
 {% endblock %}

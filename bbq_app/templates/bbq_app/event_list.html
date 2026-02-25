@@ -1,7 +1,9 @@
-<!DOCTYPE html>
-<html lang="ja">
-    <meta charset="UTF-8">
-<h1>全イベント一覧</h1>
+{% extenda "bbq_app/base.html" %}
+
+{% block title %}全イベント一覧{% endblock %}
+
+{% block conten %}
+    <h1>全イベント一覧</h1>
 
 <ul>
     {% for event in events %}
@@ -14,4 +16,5 @@
         <li>イベントがありません</li>
     {% endfor %}
     </ul>
+{% endblock %}
 

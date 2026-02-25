@@ -134,10 +134,10 @@ def event_duplicate(request, event_id):
     ])
     return redirect("item_edit", event_id=new_event.id)
 
-#全イベント詳細
+#全イベント一覧
 @login_required
 def event_list(request):
-    events = Event.objects.filter(user=request.user).order_by("-held_at")
+    events = Event.objects.filter(user=request.user).order_by("held_at")
     return render(request, "bbq_app/event_list.html", {"events":events})
 
 #イベント削除
@@ -156,7 +156,8 @@ def event_delete(request, event_id):
 @login_required
 def event_participants(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
-    participants = Participant.objects.filter(event=event)
+    participant = get_object_or_404(Participant, id=participant.id, event=event)
+    
     return render(request, "bbq_app/participant_list.html",{
         "event": event,
         "participants":participants,
