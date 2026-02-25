@@ -1,16 +1,48 @@
 {% extends "bbq_app/base.html" %}
 
-{% block title %}全イベント一覧{% endblock %}
+{% block title %}全イベント詳細確認{% endblock %}
 
-{% block conten %}
-    <h1>全イベント一覧</h1>
+{% block content %}
+<h1>全イベント詳細確認</h1>
+
+<div>
+    {% if status == "upcoming" %}
+        <strong>開催予定</strong>
+    {% else %}
+        <a href="{% url 'event_list' %}?status=upcoming">開催予定</a>
+    {% endif %}
+
+    {% if status == "past" %}
+         <strong>開催済</strong>
+    {% else %}
+        <a href="{% url 'event_list' %}?status=past">開催済</a>
+    {% endif %}
+</div>
+
+<hr>
 
 <ul>
-    {% for event in events %}
-        <li>
-            {{ event.name }}
-            <a href="{% url 'item_edit' event.id %}">全イベント詳細</a>
-            <a href="{% url 'event_duplicate' event.id %}">イベントを複製する</a>
+{% for event in events %}
+    <li>
+        <strong>
+            <a href="{% url 'item_edit' event.id %}">
+                {{event.name}}
+            </a>
+        </strong><br>
+        開催日時:
+        {% if event.held_at %}
+            {{ event.held_at|date:"Y年m月d日 H:i" }}
+        {% else %}
+            未定
+        {% endif %}
+        <br>
+
+        開催場所:{{ event.location|default:"未定" }}
+        <br><br>
+
+        <a href="{% url 'event_duplicate' event.id %}">イベントを複製する</a>
+
+        <hr>
         </li>
     {% empty %}
         <li>イベントがありません</li>
