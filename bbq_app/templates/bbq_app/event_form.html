@@ -4,12 +4,6 @@
     {% if event %}イベント編集{% else %}新規イベント作成{% endif %}
 {% endblock %}
 
-{% block header %}
-    {% if event %}
-        {% include "bbq_app/partials/event_header.html" %}
-    {% endif %}
-{% endblock %}
-
 {% block content %}
     <h1>{% if event %}イベント編集{% else %}新規イベント作成{% endif %}</h1>
 

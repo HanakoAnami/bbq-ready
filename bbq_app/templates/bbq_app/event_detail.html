@@ -1,17 +1,26 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>イベント詳細</title>
-</head>
-<body>
-  <h1>イベント詳細</h1>
+{% extends "bbq_app/base.html" %}
 
-  <p>イベント名：{{ event.name }}</p>
-  <p>開催日：{{ event.date }}</p>
-  <p>開催時間：{{ event.time }}</p>
-  <p>開催場所：{{ event.location }}</p>
+{% block title %}イベント詳細{% endblock %}
 
-  <p><a href="{% url 'home' %}">HOMEに戻る</a></p>
-</body>
-</html>
+{% block header %}
+  {% include "bbq_app/partials/event_header.html" %}
+{% endblock %}
+
+{% block content %}
+<h1>イベント詳細</h1>
+
+<p>イベント名：{{ event.name }}</p>
+
+<p>開催日時：
+  {% if event.held_at|date:"Y年m月d日 H:i" %}
+  {% else %}
+    未定
+  {% endif %}
+</p>
+
+<p>
+    <a href="{% url 'event_list' event.id %}">持ち物編集</a> |
+    <a href="{% url 'event_delete' event.id %}">削除</a>
+</p>
+
+{% endblock %}

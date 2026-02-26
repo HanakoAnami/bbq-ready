@@ -1,3 +1,5 @@
+{% load static %}
+
 {% if event %}
 <div class="event-header">
 
@@ -17,13 +19,28 @@
   </div>
 
   <div class="event-header__nav">
-    <a href="{% url 'item_edit' event.id %}">持ち物リスト編集</a>
-    
-    <!--未実装
-    <a href="#">担当者一覧</a>
-    <a href="#">イベント共有</a>
-    <a href="#">忘れ物登録</a>
-    -->
+    <a href="{% url 'item_edit' event.id %}"
+      class="{% if request.resolver_match.url_name == 'item_edit' %}"active{% endif %}">
+      <img src="{% static 'bbq_app/images/item_edit.png' %}" width="28" alt="持ち物">
+      <span>持ち物編集</span>
+    </a>
 
-  </div>
+    <a href="{% url 'event_participants' event.id %}"
+      class="{% if request.resolver_match.url_name == 'event_participants' %}"active{% endif %}">
+      <img src="{% static 'bbq_app/images/event_participants.png' %}" width="28" alt="担当者">
+      <span>担当者一覧</span>
+
+     <a href="#"
+      class="{% if request.resolver_match.url_name == 'event_share' %}"active{% endif %}">
+      <img src="{% static 'bbq_app/images/event_share.png' %}" width="28" alt="共有">
+      <span>イベント共有</span>
+
+       <a href="#"
+      class="{% if request.resolver_match.url_name == 'forgot_item' %}"active{% endif %}">
+      <img src="{% static 'bbq_app/images/forgot_item.png' %}" width="28" alt="忘物">
+      <span>忘れ物登録</span>
+
+    </a>
+
+</div>
 {% endif %}
