@@ -17,5 +17,7 @@ urlpatterns = [
     path("events/<int:event_id>/delete/", views.event_delete, name="event_delete"),
     path("events/<int:event_id>/participants/", views.event_participants, name="event_participants"),
     path("mypage/", views.mypage, name="mypage"),
+    path("mypage/name/", views.mypage_name, name="mypage_name"),
+    path("mypage/email/", views.mypage_email, name="mypage_email"),
 ]
 
