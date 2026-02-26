@@ -1,5 +1,18 @@
+{% load static %}
+
 <div class="footer-nav">
-    <a href="{% url 'home' %}">HOME</a>
-    <a href="{% url 'event_list' %}">全イベント詳細</a>
-    <a href="#">マイページ</a>
+    <a href="{% url 'home' %}">
+        <img src="{% static 'bbq_app/images/home.png' %}" width="24">
+        <span>HOME</span>
+    </a>
+
+    <a href="{% url 'homeevent_list' %}">
+        <img src="{% static 'bbq_app/images/events.png' %}" width="24">
+        <span>全イベント詳細</span>
+    </a>
+
+    <a href="{% url 'mypage' %}">
+        <img src="{% static 'bbq_app/images/mypage.png' %}" width="24">
+        <span>マイページ</span>
+    </a>
 </div>
