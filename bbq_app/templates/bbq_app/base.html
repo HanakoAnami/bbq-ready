@@ -1,22 +1,15 @@
+{% load static %}
 <!DOCTYPE>
 <html lang="ja">
-
-{% load static %}
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}BBQ Ready{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'bbq_app/css/style.css' %}"
 </head>
 <body>
-
     {% block header %}{% endblock %}
-
     <main>{% block content %}{% endblock %}</main>
-    
-    {% block footer %}
-        {% include "bbq_app/partials/footer_nav.html" %}
-    {% endblock %}
-
+    {% block footer%}{% endblock %}
 </body>
 </html>
