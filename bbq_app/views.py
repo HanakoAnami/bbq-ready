@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from .forms import SignupForm, EventForm, UserNameForm
+from .forms import SignupForm, EventForm, UserNameForm, UserEmailForm
 from .models import Event, BbqItem, EventItem
 from django.utils import timezone
 from django.db.models import Q
@@ -195,6 +195,24 @@ def mypage_name(request):
 
 @login_required
 def mypage_email(request):
+    user = request.user
+    
+    if request.method =="POST":
+        form = UserEmailForm(request.POST, user=user)
+        if form.is_valid:
+            new_email = form.cleaned_data["email"].lower()
+            
+            #username=email運用、両方更新する
+            user.username = new_email
+            user.email = new_email
+            user.save()
+            
+            return redirect("mypage")
+        
+        else:
+            form = UserEmailForm(initial={"email": user.email}, user=user)
+        
+        return render(request, "bbq_app/mypage_emai.html", {"form": form, "user_obj":user })
     return render(request, "bbq_app/mypage_email.html")
 
 @login_required
