@@ -4,12 +4,12 @@
 {% block content %}
 <h1>ユーザ名変更<lh1>
 
+<p>現在のユーザー名：{{ user_obj.first_name|default:"未設定" }}</p>
+
 <form method="post">
     {% csrf_token %}
-    <label>ユーザー名変更</label><br>
-    <input type="text" name="nickname" value="{{ request.user.first_name }}"><be><br>
-
+    {{ form.as_p }}
     <button type="submit">変更</button>
-    <a href={% url 'mypage' %}>戻る</a>
-    </form>
+</form>
+<p><a href={% url 'mypage' %}>戻る</a></p>
 {% endblock %}    
