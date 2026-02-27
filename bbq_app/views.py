@@ -204,8 +204,4 @@ def mypage_email(request):
     else:
         form = EmailUpdateForm()
         
-    return render(request, "bbq_app/mypage_email.html", {"form": form, "current_email": request.user.email})
-
-@login_required
-def mypage_password(request):
-    return render(request, "bbq_app/mypage_password.html")
+    return render(request, "bbq_app/mypage_email.html", {"form": form, "current_email": request.user.emailgit})
