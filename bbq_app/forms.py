@@ -45,6 +45,9 @@ class EventForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["held_at"].input_formats = ["%Y-%m-%dT%H:%M"]
         
+class UserNameForm(forms.Form):
+    name = forms.CharField(label="新しいユーザー名", max_length=30, required=True)
+        
 
      
 

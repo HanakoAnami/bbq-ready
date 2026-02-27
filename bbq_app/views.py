@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from .forms import SignupForm, EventForm
+from .forms import SignupForm, EventForm, UserNameForm
 from .models import Event, BbqItem, EventItem
 from django.utils import timezone
 from django.db.models import Q
@@ -170,15 +170,33 @@ def event_participants(request, event_id):
         "event": event,
         "participants":participants,
     })          
-            
+ 
+#マイページ           
 @login_required
 def mypage(request):
-    return render(request, "bbw_app/mypage.html")
+    return render(request, "bbq_app/mypage.html")
 
+#ユーザー名変更
 @login_required
 def mypage_name(request):
+    user = request.user
+    
     if request.method == "POST":
-        request.user.first_name = request.POST.get("nickname", "").strip()
-        request.user.save()
+        form = UserNameForm(request.POST)
+        if form.is_valid():
+            user.first_name = form.cleaned_data["name"]
+            user.save()
+            request.user.save()
         return redirect("mypage")
-    return render(request, "bbw_app/mypage_name.html")    
+    else:
+        form = UserNameForm(initial={"name": user.first_name})
+        
+    return render(request, "bbq_app/mypage_name.html", {"form": form, "user_obj": user })    
+
+@login_required
+def mypage_email(request):
+    return render(request, "bbq_app/mypage_email.html")
+
+@login_required
+def mypage_password(request):
+    return render(request, "bbq_app/mypage_password.html")
