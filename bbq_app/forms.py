@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Event
+from django.contrib.auth import get_user_model
 
 class SignupForm(UserCreationForm):
     nickname = forms.CharField(label="名前/ニックネーム", max_length=30, required=True)
@@ -56,14 +57,22 @@ class UserEmailForm(forms.Form):
         self.user = user
     
     def clean_email(self):
-        emai = self.changed_data["email"].lower()
+        email = self.cleaned_data["email"].lower()
         
         #同じメールアドレスを使っている人がいないかチェック(=username)
         qs = User.objects.filter(username=email).exclude(id=self.user.id)
         if qs.exists():
             raise forms.ValidationError("このメールアドレスはすでに登録されています。")
         return email
+    
+User = get_user_model()
 
+class EmailUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("email",)
+        labels = {"email": "新しいメールアドレス"}
+        widgets = {"email": forms.EmailInput(attrs={"placeholder": "example@email.com"})}
      
 
 
