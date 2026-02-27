@@ -3,6 +3,18 @@
 
 {% block content %}
 <h1>メールアドレス変更<lh1>
-<p>未実装</p>
-<p><a href="{% url 'mypage' %}"戻る</p>
+
+<p>現在のメールアドレス:{{ user_obj.email }}</p>
+
+{% if form.errors %}
+    <div style="color:red;">{{ form.errors }}</div>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ from.as_p }}
+    <button type="submit">変更</button>
+</form>
+
+<p><a href="{% url 'mypage' %}"戻る</a></p>
 {% endblock %}   
