@@ -171,3 +171,14 @@ def event_participants(request, event_id):
         "participants":participants,
     })          
             
+@login_required
+def mypage(request):
+    return render(request, "bbw_app/mypage.html")
+
+@login_required
+def mypage_name(request):
+    if request.method == "POST":
+        request.user.first_name = request.POST.get("nickname", "").strip()
+        request.user.save()
+        return redirect("mypage")
+    return render(request, "bbw_app/mypage_name.html")    

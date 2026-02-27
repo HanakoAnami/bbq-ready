@@ -1,0 +1,15 @@
+{% extends "bbq_app/base.html" %}
+{% block title %}ユーザー名変更{% endblock %}
+
+{% block content %}
+<h1>ユーザ名変更<lh1>
+
+<form method="post">
+    {% csrf_token %}
+    <label>ユーザー名変更</label><br>
+    <input type="text" name="nickname" value="{{ request.user.first_name }}"><be><br>
+
+    <button type="submit">変更</button>
+    <a href={% url 'mypage' %}>戻る</a>
+    </form>
+{% endblock %}    
