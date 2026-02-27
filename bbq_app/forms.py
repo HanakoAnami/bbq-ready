@@ -47,7 +47,22 @@ class EventForm(forms.ModelForm):
         
 class UserNameForm(forms.Form):
     name = forms.CharField(label="新しいユーザー名", max_length=30, required=True)
+    
+class UserEmailForm(forms.Form):
+    email = forms.EmailField(label="新しいメールアドレス", required=True)
+    
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+    
+    def clean_email(self):
+        emai = self.changed_data["email"].lower()
         
+        #同じメールアドレスを使っている人がいないかチェック(=username)
+        qs = User.objects.filter(username=email).exclude(id=self.user.id)
+        if qs.exists():
+            raise forms.ValidationError("このメールアドレスはすでに登録されています。")
+        return email
 
      
 
