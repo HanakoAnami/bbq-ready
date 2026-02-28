@@ -4,12 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}BBQ Ready{% endblock %}</title>
-
     <link rel="stylesheet" href="{% static 'bbq_app/css/style.css' %}">
 </head>
 <body>
     {% block header %}{% endblock %}
-
     {% if messages %}
         <div class="flash-messages">
             {% for message in messages %}
@@ -17,9 +15,10 @@
             {% endfor %}
         </div>
     {% endif %}
-
     <main>{% block content %}{% endblock %}</main>
-    
-    {% block footer%}{% endblock %}
+
+    {% block footer%}
+        {% include "bbq_app/partials/footer_nav.html" %}
+    {% endblock %}
 </body>
 </html>
