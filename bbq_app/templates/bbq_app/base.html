@@ -5,11 +5,21 @@
     <meta charset="UTF-8">
     <title>{% block title %}BBQ Ready{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'bbq_app/css/style.css' %}"
+    <link rel="stylesheet" href="{% static 'bbq_app/css/style.css' %}">
 </head>
 <body>
     {% block header %}{% endblock %}
+
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                <div class="flash {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <main>{% block content %}{% endblock %}</main>
+    
     {% block footer%}{% endblock %}
 </body>
 </html>
