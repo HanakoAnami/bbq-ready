@@ -19,19 +19,21 @@ class Participant(models.Model):
 
 #持ち物テンプレ    
 class BbqItem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="event_items")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, blank=True)
     category = models.CharField(max_length=50, blank=True)
- 
- #イベント用にコピーされた持ち物（チェック状態を保つように）   
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
 class EventItem(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="event_items")
     bbq_item = models.ForeignKey(BbqItem, on_delete=models.CASCADE)
-    
-    is_selected = models.BooleanField(default=False)#必要かチェック
-    status = models.IntegerField(default=1)#ステータス内容まだ決めてない
-    
-    def __str__(self):
-        return f"{self.event} - {self.bbq_item.name}"
+    participant = models.ForeignKey(Participant, null=True, blank=True, on_delete=models.CASCADE, related_name="invitations")
+    is_selected = models.BooleanField(default=False)
+    status = models.IntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+ 
+ 
 
 
