@@ -23,18 +23,24 @@ class Participant(models.Model):
         on_delete=models.SET_NULL,
         related_name="participant"
     )
-    name = models.CharField(max_length=30)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)    
-
+    name = models.CharField("表示名", max_length=30)
+    created_at = models.DateTimeField("作成日時", auto_now_add=True)
+    updated_at = models.DateTimeField("更新日時", auto_now=True)    
+    
+    def __str__(self):
+        return f"{self.event.name} - {self.name}"
+    
 
 #持ち物テンプレ    
 class BbqItem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50, blank=True)
-    category = models.CharField(max_length=50, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="bbq_items")
+    name = models.CharField("持ち物名", max_length=50, blank=True)
+    category = models.CharField("カテゴリ", max_length=50, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.name
     
 class EventItem(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="event_items")
@@ -46,10 +52,10 @@ class EventItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
 class Invitation(models.Model):
-    STATUS_PENFING = 0
-    STATUS_ACTIVE = 1
-    STATUS_EXPIRED = 2
-    STATUS_REVOKED = 3
+    class Status(models.IntegerChoices):
+        ACTIVE = 1, "有効"
+        REVOKED = 2, "無効"
+        USED = 3, "使用済"
     
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name="invitations")
