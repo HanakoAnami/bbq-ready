@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.db.models import Q
 from datetime import datetime
 from django.views.generic import CreateView, UpdateView
+from django.contrib import messages
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
@@ -186,8 +187,8 @@ def mypage_name(request):
         if form.is_valid():
             user.first_name = form.cleaned_data["name"]
             user.save()
-            request.user.save()
-        return redirect("mypage")
+            messages.success(request, 'ユーザー名を変更しました。')
+            return redirect("mypage")
     else:
         form = UserNameForm(initial={"name": user.first_name})
         
