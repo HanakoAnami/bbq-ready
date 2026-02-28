@@ -34,9 +34,16 @@ class Participant(models.Model):
 
 #持ち物テンプレ    
 class BbqItem(models.Model):
+    class Category(models.IntegerChoices):
+        FIRE = 1, "火起こし・調理グッズ"
+        PLACE = 2, "会場設営"
+        FOOD = 3, "食材・持ち物"
+        CONVENIENCE = 4, "便利グッズ"
+        OTHER = 5, "その他"
+        
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="bbq_items")
-    name = models.CharField("持ち物名", max_length=50, blank=True)
-    category = models.CharField("カテゴリ", max_length=50, blank=True)
+    name = models.CharField("持ち物名", max_length=50)
+    category = models.IntegerField(choices=Category.choices)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -45,12 +52,35 @@ class BbqItem(models.Model):
     
 class EventItem(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="event_items")
-    bbq_item = models.ForeignKey(BbqItem, on_delete=models.CASCADE)
-    participant = models.ForeignKey(Participant, null=True, blank=True, on_delete=models.CASCADE, related_name="invitations")
+    bbq_item = models.ForeignKey(BbqItem, on_delete=models.CASCADE, related_name="event_items")
+    
+    #主催者が「このイベントで必要」とチェック
     is_selected = models.BooleanField(default=False)
-    status = models.IntegerField(default=1)
+    
+    #主催者が担当を割り当てる（未設定あり）
+    assignee = models.ForeignKey(
+        "Participant",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="assigned_items"
+    )
+    
+    #参加者が「準備完了」をチェック
+    is_ready = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["event", "bbq_item"],
+                name="unique_event_bbq_item"
+            )
+        ]
+    
+    def __str__(self):
+        return f"{self.event} - {self.bbw_item.name}"
     
 class Invitation(models.Model):
     class Status(models.IntegerChoices):
@@ -71,7 +101,6 @@ class Invitation(models.Model):
         on_delete=models.CASCADE,
         related_name="invitations"
     )
-    
     token = models.CharField(max_length=300, unique=True)
     
     #招待された参加者が最初に入力する名前
