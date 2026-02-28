@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 class Event(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="events")
@@ -53,19 +54,39 @@ class EventItem(models.Model):
     
 class Invitation(models.Model):
     class Status(models.IntegerChoices):
-        ACTIVE = 1, "有効"
-        REVOKED = 2, "無効"
-        USED = 3, "使用済"
+        PENDING = 0, "pending"   #未アクセス（期限内）
+        ACTIVE = 1, "active"     #アクセス済・有効
+        EXPIRED = 2, "expired"   #期限切れ
+        REVOKED = 3, "revoked"   #主催者が無効化
+        
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="invitations"
+    )
     
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    participant = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name="invitations")
+    #参加者ごとに招待リンクは１つ
+    participant = models.OneToOneField(
+        "Participant",
+        on_delete=models.CASCADE,
+        related_name="invitations"
+    )
+    
     token = models.CharField(max_length=300, unique=True)
-    guest_name = models.CharField(max_length=30, blank=True)
-    status = models.IntegerField(default=0) 
+    
+    #招待された参加者が最初に入力する名前
+    guest_name = models.CharField(max_length=30)
+    status = models.IntegerField(choices=Status.choices, default=Status.PENDING) 
     revoked_at = models.DateTimeField(null=True, blank=True)
-    expires_at = models.DateTimeField(null=True, blank=True)
+    expires_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def is_expired(self):
+        return timezone.now() >= self.expires_at
+    
+    def __str__(self):
+        return f"Invitation for participant={self.participant_id}"
  
 
 
