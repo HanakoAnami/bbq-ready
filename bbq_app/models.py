@@ -33,7 +33,17 @@ class EventItem(models.Model):
     status = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
- 
+    
+class Invitation(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name="invitations")
+    token = models.CharField(max_length=300, unique=True)
+    guest_name = models.CharField(max_length=30, blank=True)
+    status = models.IntegerField(default=0) #0=pending
+    revoked_at = models.DateTimeField(null=True, blank=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
  
 
 
