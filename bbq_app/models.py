@@ -5,9 +5,13 @@ class Event(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="events")
     name = models.CharField("イベント名", max_length=30)
     held_at = models.DateTimeField("開催日時", null=True, blank=True)
-    location = models.CharField("開催場所", max_length=50)
+    location = models.CharField("開催場所", max_length=50, blank=True)
     created_at = models.DateTimeField("作成日時", auto_now_add=True)
     updated_at = models.DateTimeField("更新日時", auto_now=True)
+    
+    def __str__(self):
+        return self.name
+    
 
 #イベント参加者    
 class Participant(models.Model):
@@ -35,11 +39,16 @@ class EventItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
 class Invitation(models.Model):
+    STATUS_PENFING = 0
+    STATUS_ACTIVE = 1
+    STATUS_EXPIRED = 2
+    STATUS_REVOKED = 3
+    
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name="invitations")
     token = models.CharField(max_length=300, unique=True)
     guest_name = models.CharField(max_length=30, blank=True)
-    status = models.IntegerField(default=0) #0=pending
+    status = models.IntegerField(default=0) 
     revoked_at = models.DateTimeField(null=True, blank=True)
     expires_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
