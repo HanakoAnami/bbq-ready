@@ -200,9 +200,10 @@ def mypage_email(request):
         form = EmailUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
+            messages.success(request, "メールアドレスを変更しました。")
             return redirect("mypage")
         
     else:
         form = EmailUpdateForm()
         
-    return render(request, "bbq_app/mypage_email.html", {"form": form, "current_email": request.user.emailgit})
+    return render(request, "bbq_app/mypage_email.html", {"form": form, "current_email": request.user.email})
