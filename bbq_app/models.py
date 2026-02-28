@@ -8,9 +8,6 @@ class Event(models.Model):
     location = models.CharField("開催場所", max_length=50)
     created_at = models.DateTimeField("作成日時", auto_now_add=True)
     updated_at = models.DateTimeField("更新日時", auto_now=True)
-    
-    def __str__(self):
-        return self.name
 
 #イベント参加者    
 class Participant(models.Model):
@@ -22,12 +19,9 @@ class Participant(models.Model):
 
 #持ち物テンプレ    
 class BbqItem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="event_items")
     name = models.CharField(max_length=50, blank=True)
     category = models.CharField(max_length=50, blank=True)
-    
-    def __str__(self):
-        return self.name
  
  #イベント用にコピーされた持ち物（チェック状態を保つように）   
 class EventItem(models.Model):
