@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .forms import SignupForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm
@@ -9,11 +9,13 @@ from django.db.models import Q
 from datetime import datetime
 from django.views.generic import CreateView, UpdateView
 from django.contrib import messages
+from django.views.decorators.cache import never_cache
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
 
 #ホームにイベントを３つまで表示
+@never_cache
 @login_required
 def home(request):
     now = timezone.localtime()
@@ -172,7 +174,8 @@ def event_participants(request, event_id):
         "participants":participants,
     })          
  
-#マイページ           
+#マイページ  
+@never_cache        
 @login_required
 def mypage(request):
     return render(request, "bbq_app/mypage.html")

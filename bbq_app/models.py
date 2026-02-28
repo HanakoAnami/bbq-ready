@@ -12,6 +12,14 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
+#イベント参加者    
+class Participant(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="participants")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
+    name = models.CharField(max_length=30)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)    
+
 #持ち物テンプレ    
 class BbqItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

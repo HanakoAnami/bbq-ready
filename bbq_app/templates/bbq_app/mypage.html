@@ -9,7 +9,10 @@
     <a class="btn" href="{% url 'mypage_name' %}">ユーザー名変更</a>
     <a class="btn" href="{% url 'mypage_email' %}">メールアドレス変更</a>
     <a class="btn" href="{% url 'mypage_password' %}">パスワード変更</a>
-    <a class="btn" href="{% url 'logout' %}">ログアウト</a>
+    <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">ログアウト</button>
+</form>
 </div>
 {% endblock %}
 
