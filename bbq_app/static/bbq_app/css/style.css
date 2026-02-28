@@ -39,3 +39,19 @@ body{
 .event_header__top {
     padding: 16px;
 }
+
+.flash-messages{
+    padding: 10px;
+}
+
+.flash{
+    margin: 8px 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.flash.success{ background: #dff0d8; }
+.flash.error{ background: #f2dede; }
+.flash.warning{ background: #fcf8e3; }
+.flash.info{ background: #d9edf7; }
