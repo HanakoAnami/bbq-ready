@@ -1,0 +1,60 @@
+{% extends "bbq_app/base.html" %}
+{% load static %}
+
+{% block header %}
+    {% include "bbq_app/partials/event_header.html" %}
+{% endblock %}
+
+{% block content %}
+<h1>担当者割り当て</h1>
+
+<p>進捗： {{ ready_count }} / {{ total_count }}</p>
+
+<form method="post">
+    {% csrf_token %}
+
+    <table>
+        <head>
+            <tr>
+                <th>持ち物</th>
+                <th>担当者</th>
+                <th>準備完了</th>
+            </tr>
+        </head>
+        <tbody>
+            {% for event_item in items %}
+            <tr>
+                <td>{{ event_item.bbq_item.name }}</td>
+
+                <td>
+                    <select name="assignee_{{ event_item.id }}">
+                        <option value="">未設定</option>
+
+                        {% for participant in participants %}
+                            <option value="{{ participant.id }}"
+                                {% if event_item.assignee_id == participant.id %}selected{% endif %}>
+                                {{ participant.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+
+                <td>
+                    {% if event_item.is_ready %}
+                        ☑️
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">必要な持ち物がありません。</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    
+    <button type="submit">担当者を保存</button>
+</form>
+
+<p><a href="{% url 'item_edit', event.id %}"持ち物リストに戻る</a></p>
+{% endblock %}
