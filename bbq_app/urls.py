@@ -21,5 +21,6 @@ urlpatterns = [
     path("mypage/name/", views.mypage_name, name="mypage_name"),
     path("mypage/email/", views.mypage_email, name="mypage_email"),
     path("mypage/password/", auth_views.PasswordChangeView.as_view(template_name="bbq_app/mypage_password.html",success_url=reverse_lazy("mypage")), name="mypage_password"),
+    path("items/templates/", views.bbqitem_list_create, name="bbq_list_create"),
 ]
 

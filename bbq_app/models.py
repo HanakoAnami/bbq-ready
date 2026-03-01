@@ -37,7 +37,7 @@ class BbqItem(models.Model):
     class Category(models.IntegerChoices):
         FIRE = 1, "火起こし・調理グッズ"
         PLACE = 2, "会場設営"
-        FOOD = 3, "食材・持ち物"
+        FOOD = 3, "食材・飲み物"
         CONVENIENCE = 4, "便利グッズ"
         OTHER = 5, "その他"
         
@@ -80,7 +80,7 @@ class EventItem(models.Model):
         ]
     
     def __str__(self):
-        return f"{self.event} - {self.bbw_item.name}"
+        return f"{self.event} - {self.bbq_item.name}"
     
 class Invitation(models.Model):
     class Status(models.IntegerChoices):

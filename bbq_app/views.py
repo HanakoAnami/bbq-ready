@@ -84,32 +84,19 @@ def event_edit(request, event_id):
 @login_required
 def item_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
-    items = EventItem.objects.filter(event=event).select_related("bbq_item")
-    total_count = items.count()#持ち物進捗
-    selected_count = items.filter(is_selected=True).count()
     
-    if request.method == "POST":
-        selected_ids = request.POST.getlist("selected_items")
-        
-        #全部一旦False
-        EventItem.objects.filter(event=event).update(is_selected=False)
-        
-        #チェックされたものだけTrue
-        EventItem.objects.filter(event=event, id__in=selected_ids).update(is_selected=True)
-        
-        return redirect("item_edit", event_id=event.id)
+    #IventItemがない場合はテンプレ(BbqItem)を全部コピーして作る
+    if not EventItem.objects.filter(event=event).exists():
+        bbq_items = BbqItem.objects.filter(user=request.user)
+        EventItem.objects.bulk_create(
+            [EventItem(event=event, bbq_item=item) for item in bbq_items]
+        )
     
-    if total_count > 0:
-        progress_percent = int((selected_count / total_count) * 100)
-    else:
-        progress_percent = 0
-    
+    items = EventItem.objects.filter(event=event).select_related("bbq_item").order_by("bbq_item__category", "bbq_item__name")
+        
     return render(request, "bbq_app/item_edit.html", {
         "event":event, 
         "items":items,
-        "total_count":total_count,
-        "selected_count":selected_count,
-        "progress_percent":progress_percent,
     })
 
 #イベント複製
