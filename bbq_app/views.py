@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .forms import SignupForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm
-from .models import Event, BbqItem, EventItem
+from .models import Event, BbqItem, EventItem, Participant
 from django.utils import timezone
 from django.db.models import Q
 from datetime import datetime
@@ -115,6 +115,62 @@ def item_edit(request, event_id):
         "progress_percent": progress_percent,
     }
     return render(request, "bbq_app/item_edit.html", context)
+
+
+@login_required
+def item_assign(request, event_id):
+    event = get_object_or_404(Event, id=event_id, user=request.user)
+    
+    #このイベントの参加者
+    participants = Participant.objects.filter(event=event).order_by("id")
+    
+    #このイベントの持ち物
+    items = (
+        EventItem.objects
+        .filter(event=event, is_selected=True)
+        .select_related("bbq_item", "assignee")
+        .order_by("id")
+    )
+    
+    #進捗状況
+    total_count = items.count()
+    ready_count = items.filter(is_ready=True).count()
+    
+    if request.method == "POST":
+        updated = []
+        for event_item in items:
+            key = f"assignee_{event_item.id}"
+            participant_id = request.POST.get(key)
+            
+            if participant_id:
+                #このイベントの参加者かチェック
+                assignee = participants.filter(id=participant_id).first()
+            else:
+                assignee = None
+            
+            if event_item.assignee_id != (assignee.id if assignee else None):
+                event_item.assignee = assignee
+                updated.append(event_item)
+                
+        if updated:
+            EventItem.objects.bulk_update(updated, ["assignee"])
+            
+            return redirect("item_assign", event_id=event.id)
+        
+    return render(
+        request,
+        "bbq_app/item_assign.html",
+        {
+            "event": event,
+            "participants": participants,
+            "items": items,
+            "total_count": total_count,
+            "ready_count": ready_count,
+        },
+    )
+            
+        
+
 
 #イベント複製
 @login_required
