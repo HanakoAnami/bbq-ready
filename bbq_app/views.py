@@ -93,11 +93,28 @@ def item_edit(request, event_id):
         )
     
     items = EventItem.objects.filter(event=event).select_related("bbq_item").order_by("bbq_item__category", "bbq_item__name")
+    
+    if request.method == "POST":
+        selected_ids = set(request.POST.getlist("selected_items"))
         
-    return render(request, "bbq_app/item_edit.html", {
-        "event":event, 
-        "items":items,
-    })
+        #チェック状態を保存
+        for event_item in items:
+            event_item.is_selected = str(event_item.id) in selected_ids
+        EventItem.objects.bulk_update(items, ["is_selected"])
+        return redirect("item_edit", event_id=event.id)
+    
+    total_count = items.count()
+    selected_count = items.filter(is_selected=True).count()
+    progress_percent = int((selected_count / total_count) * 100) if total_count else 0
+    
+    context = {
+        "event": event,
+        "items": items,
+        "total_count": total_count,
+        "selected_count": selected_count,
+        "progress_percent": progress_percent,
+    }
+    return render(request, "bbq_app/item_edit.html", context)
 
 #イベント複製
 @login_required
