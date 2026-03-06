@@ -65,6 +65,11 @@ def event_create(request):
         
     return render(request, "bbq_app/event_form.html", {"form":form})
 
+@login_required
+def bbq_item_list_create(request):
+    return render(request, "bbq_app/bbqitem_list_create.html")
+
+
 #イベント詳細
 @login_required
 def event_edit(request, event_id):
@@ -169,8 +174,6 @@ def item_assign(request, event_id):
         },
     )
             
-        
-
 
 #イベント複製
 @login_required
