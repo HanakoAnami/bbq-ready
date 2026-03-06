@@ -127,19 +127,8 @@ def item_edit(request, event_id):
 def item_assign(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     
-    #このイベントの参加者
-    participants = list(
-        Participant.objects.filter(event=event).order_by("id")
-    )
-    
-    #主催者を追加
-    participants.insert(
-        0,
-        type("HOST", (), {
-            "id": f"user_{event.user.id}",
-            "name": event.user.first_name,
-        })
-    )
+    #このイベントの参加者(主催者も含めて)
+    participants = Participant.objects.filter(event=event).order_by("id")
     
     #このイベントの持ち物
     items = (
