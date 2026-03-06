@@ -1,18 +1,23 @@
 {% extends "bbq_app/base.html" %}
 
-{% block title %}イベント共有{% endblock %}
-
 {% block content %}
-<h2>参加者一覧</h2>
+<h1>イベント参加者追加</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="参加者名を入力">
+    <button type="submit">追加</button>
+</form>
+
+<hr>
 
 <ul>
-    {% for participant in paeticipants %}
-        <li>
-            {{ participant.name }}
-            <a href="#"URL表示</a>
-        </li>
+    {% for participant in participants %}
+        <li>{{ participant.name }}</li>
     {% empty %}
-    <li>このイベントの参加者はいません。</li>    
+        <li>参加者はまだいません</li>
     {% endfor %}
 </ul>
+
+<p><a href="{% url 'item_assign' event.id %}">担当者割り当てへ</a></p>
 {% endblock %}
