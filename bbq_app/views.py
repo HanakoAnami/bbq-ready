@@ -53,6 +53,10 @@ def event_create(request):
             event.user = request.user
             event.save()
             
+            Participant.objects.get_or_create(
+                event=event, user=request.user, defaults={"name": request.user.first_name or request.user.username}
+            )
+            
             #共通テンプレ（user=None)+自分のテンプレをイベントにコピー
             templates = BbqItem.objects.filter(
                 models.Q(user=request.user) | models.Q(user__isnull=True)
