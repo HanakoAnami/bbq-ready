@@ -41,7 +41,7 @@ class BbqItem(models.Model):
         CONVENIENCE = 4, "便利グッズ"
         OTHER = 5, "その他"
         
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="bbq_items")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE, related_name="bbq_items")
     name = models.CharField("持ち物名", max_length=50)
     category = models.IntegerField(choices=Category.choices)
     created_at = models.DateTimeField(auto_now_add=True)

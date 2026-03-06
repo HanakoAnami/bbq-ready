@@ -4,5 +4,16 @@
 
 {% block content %}
 <h1>持ち物テンプレ管理</h1>
-<p>まずは画面表示の確認</p>
+
+<ul>
+{% for item in items %}
+    <li>
+        {{ item.name }}({{ item.get_category_display }})
+    </li>
+
+{% empty %}
+    <li>テンプレ持ち物はまだありません</li>
+{% endfor %}
+</ul>
+
 {% endblock %}

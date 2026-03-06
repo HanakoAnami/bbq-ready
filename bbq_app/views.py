@@ -67,7 +67,13 @@ def event_create(request):
 
 @login_required
 def bbq_item_list_create(request):
-    return render(request, "bbq_app/bbqitem_list_create.html")
+    
+    items = BbqItem.objects.filter(user=request.user).order_by("category")
+    return render(
+        request,
+        "bbq_app/bbqitem_list_create.html",
+        {"items":items}
+        )
 
 
 #イベント詳細
