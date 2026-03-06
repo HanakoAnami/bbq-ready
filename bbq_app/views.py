@@ -10,6 +10,7 @@ from datetime import datetime
 from django.views.generic import CreateView, UpdateView
 from django.contrib import messages
 from django.views.decorators.cache import never_cache
+from django.db import models
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
@@ -52,11 +53,14 @@ def event_create(request):
             event.user = request.user
             event.save()
             
-            #テンプレートをイベントにコピー
-            templates = BbqItem.objects.filter(user=request.user)
+            #共通テンプレ（user=None)+自分のテンプレをイベントにコピー
+            templates = BbqItem.objects.filter(
+                models.Q(user=request.user) | models.Q(user__isnull=True)
+            )
+            
             EventItem.objects.bulk_create([
-                EventItem(event=event, bbq_item=t, status=1, is_selected=False)
-                for t in templates
+                EventItem(event=event, bbq_item=template, is_selected=False, is_ready=False)
+                for template in templates
             ])
             
             return redirect("item_edit", event_id=event.id)
@@ -96,14 +100,8 @@ def event_edit(request, event_id):
 def item_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     
-    #IventItemがない場合はテンプレ(BbqItem)を全部コピーして作る
-    if not EventItem.objects.filter(event=event).exists():
-        bbq_items = BbqItem.objects.filter(user=request.user)
-        EventItem.objects.bulk_create(
-            [EventItem(event=event, bbq_item=item) for item in bbq_items]
-        )
-    
-    items = EventItem.objects.filter(event=event).select_related("bbq_item").order_by("bbq_item__category", "bbq_item__name")
+    items = (
+        EventItem.objects.filter(event=event).select_related("bbq_item").order_by("bbq_item__category", "bbq_item__name"))
     
     if request.method == "POST":
         selected_ids = set(request.POST.getlist("selected_items"))
@@ -114,16 +112,9 @@ def item_edit(request, event_id):
         EventItem.objects.bulk_update(items, ["is_selected"])
         return redirect("item_edit", event_id=event.id)
     
-    total_count = items.count()
-    selected_count = items.filter(is_selected=True).count()
-    progress_percent = int((selected_count / total_count) * 100) if total_count else 0
-    
     context = {
         "event": event,
         "items": items,
-        "total_count": total_count,
-        "selected_count": selected_count,
-        "progress_percent": progress_percent,
     }
     return render(request, "bbq_app/item_edit.html", context)
 
