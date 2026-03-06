@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Event
+from .models import Event, BbqItem
 from django.contrib.auth import get_user_model
 
 class SignupForm(UserCreationForm):
@@ -45,6 +45,13 @@ class EventForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["held_at"].input_formats = ["%Y-%m-%dT%H:%M"]
+        
+
+class BbqItemForm(forms.ModelForm):
+    class Meta:
+        model = BbqItem
+        fields = ["name", "category"]
+    
         
 class UserNameForm(forms.Form):
     name = forms.CharField(label="新しいユーザー名", max_length=30, required=True)
