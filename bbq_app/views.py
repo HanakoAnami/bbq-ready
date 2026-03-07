@@ -150,7 +150,7 @@ def item_edit(request, event_id):
         "grouped_items": grouped_items,
         "total_count": total_count,
         "selected_count": selected_count,
-        "progress_percent": progress_percent
+        "progress_percent": progress_percent,
     }
     return render(request, "bbq_app/item_edit.html", context)
 

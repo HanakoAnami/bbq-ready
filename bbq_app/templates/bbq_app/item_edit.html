@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>持ち物リスト編集</h1>
+<p>選択済み {{ selected_count }} / {{ total_count }}（{{ progress_percent }}%）</p>
 
 <form method="post">
     {% csrf_token %}
