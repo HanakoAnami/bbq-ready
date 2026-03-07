@@ -11,6 +11,7 @@ from django.views.generic import CreateView, UpdateView
 from django.contrib import messages
 from django.views.decorators.cache import never_cache
 from django.db import models
+from collections import defaultdict
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
@@ -127,9 +128,22 @@ def item_edit(request, event_id):
         EventItem.objects.bulk_update(items, ["is_selected"])
         return redirect("item_edit", event_id=event.id)
     
+    grouped_dict =defaultdict(list)
+    category_labels = dict(BbqItem.Category.choices)
+    
+    for event_item in items:
+        grouped_dict[event_item.bbq_item.category].append(event_item)
+        
+    grouped_items = []
+    for category, event_items in grouped_dict.items():
+        grouped_items.append({
+            "label": category_labels[category],
+            "items": event_items,
+        })    
+    
     context = {
         "event": event,
-        "items": items,
+        "grouped_items": grouped_items,
     }
     return render(request, "bbq_app/item_edit.html", context)
 
