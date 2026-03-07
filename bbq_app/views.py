@@ -139,11 +139,18 @@ def item_edit(request, event_id):
         grouped_items.append({
             "label": category_labels[category],
             "items": event_items,
-        })    
+        })  
+        
+    total_count = items.count()
+    selected_count = items.filter(is_selected=True).count()
+    progress_percent = int((selected_count / total_count) * 100) if total_count else 0  
     
     context = {
         "event": event,
         "grouped_items": grouped_items,
+        "total_count": total_count,
+        "selected_count": selected_count,
+        "progress_percent": progress_percent
     }
     return render(request, "bbq_app/item_edit.html", context)
 
