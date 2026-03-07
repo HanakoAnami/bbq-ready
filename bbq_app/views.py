@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from .forms import SignupForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm
+from .forms import SignupForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm, BbqItemForm
 from .models import Event, BbqItem, EventItem, Participant
 from django.utils import timezone
 from django.db.models import Q
@@ -75,13 +75,24 @@ def event_create(request):
 
 @login_required
 def bbq_item_list_create(request):
+    items = BbqItem.objects.filter(
+        Q(user=request.user) | Q(user__isnull=True)).order_by("category", "name")
     
-    items = BbqItem.objects.filter(user=request.user).order_by("category")
+    if request.method == "POST":
+        form = BbqItemForm(request.POST)
+        if form.is_valid():
+            bbq_item = form.save(commit=False)
+            bbq_item.user = request.user
+            bbq_item.save()
+            return redirect("bbq_item_list_create")
+        
+    else:
+        form = BbqItemForm()
+            
     return render(
         request,
         "bbq_app/bbqitem_list_create.html",
-        {"items":items}
-        )
+        {"items":items, "form":form})
 
 
 #イベント詳細

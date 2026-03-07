@@ -5,6 +5,12 @@
 {% block content %}
 <h1>持ち物テンプレ管理</h1>
 
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">追加</button>
+</form>
+
 <ul>
 {% for item in items %}
     <li>
