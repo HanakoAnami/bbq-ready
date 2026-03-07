@@ -1,41 +1,38 @@
 {% extends "bbq_app/base.html" %}
 
-{% block header %}
-    {% include "bbq_app/partials/event_header.html" %}
-{% endblock %}
-
 {% block content %}
-<h1>{{ event.name }}の持ち物一覧</h1>
-<p>
-    準備進捗：{{ selected_count }} / {{ total_count }}
-        ({{ progress_percent }}%)
-</p>
+<h1>持ち物リスト編集</h1>
 
-<form method="POST">
+<form method="post">
     {% csrf_token %}
+    
+    {% for group in grouped_items %}
+        <details class="item-accordion">
+            <summary class="item-accordion__summary">
+                {{ group.label }}
+            </summary>
 
-<ul>
-    {% for item in items %}
-        <li>
-            <label>
-                <input type="checkbox"
-                       name="selected_items"
-                       value="{{ item.id }}"
-                       {% if item.is_selected %}checked{% endif %}>
-                {{ item.bbq_item.name }}
-            </label>
-        </li>
+            <ul class="item-accordion__list">
+                {% for event_item in group.items %}
+                    <li class="item-accordion__item">
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="selected_items"
+                                value="{{ event_item.id }}"
+                                {% if event_item.is_selected %}checked{% endif %}
+                            >
+                            {{ event_item.bbq_item.name }}
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul> 
+        </details>       
     {% endfor %}
-</ul>
 
-<a href="{% url 'event_duplicate' event.id %}">
-    このイベントを複製
-</a>
+    <button type="submit">保存</button>
 
-<button type="submit">保存</button>
 </form>
-{% endblock %}
 
-{% block footer %}
-{% include "bbq_app/partials/footer_nav.html" %}
+<p><a href="{% url 'item_assign' event.id %}">担当者割り当てへ</a></p>
 {% endblock %}
