@@ -61,8 +61,7 @@ class ForgottenItemForm(forms.ModelForm):
         model =BbqItem
         fields = ["name", "category"]
         labels = {"name": "持ち物名", "category": "カテゴリー",}
-    
-    
+
         
 class UserNameForm(forms.Form):
     name = forms.CharField(label="新しいユーザー名", max_length=30, required=True)

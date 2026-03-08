@@ -216,16 +216,25 @@ def forgotten_item_create(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     
     if request.method == "POST":
-        form = ForgottenItemForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data["name"]
-            category = form.cleaned_data["category"]
-            
-            BbqItem.objects.get_or_create(
+        name =request.POST.get("name")
+        category = request.POST.get("category")
+        
+        #同じ名前があるかチェック
+        exists = BbqItem.objects.filter(
+            Q(user=request.user) | Q(user__isnull=True),
+            name=name
+        ).exists()
+        
+        if exists:
+            messages.error(request, "この忘れ物は既に登録されています。")
+        else:
+            BbqItem.objects.create(
                 user=request.user,
                 name=name,
-                defaults={"category": category}
+                category=category
             )
+            messages.success(request, "忘れ物を登録しました。")
+            
     return redirect("item_edit", event_id=event.id)    
     
             
