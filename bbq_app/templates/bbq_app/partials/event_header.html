@@ -19,28 +19,36 @@
   </div>
 
   <div class="event-header__nav">
+
+    <!-- 持ち物 -->
     <a href="{% url 'item_edit' event.id %}"
-      class="{% if request.resolver_match.url_name == 'item_edit' %}"active{% endif %}">
-      <img src="{% static 'bbq_app/images/item_edit.png' %}" width="28" alt="持ち物">
+       class="{% if request.resolver_match.url_name == 'item_edit' %}active{% endif %}">
+      <img src="{% static 'bbq_app/images/item_edit.png' %}" width="28">
       <span>持ち物編集</span>
     </a>
 
+    <!-- 担当者 -->
     <a href="{% url 'event_participants' event.id %}"
-      class="{% if request.resolver_match.url_name == 'event_participants' %}"active{% endif %}">
-      <img src="{% static 'bbq_app/images/event_participants.png' %}" width="28" alt="担当者">
+       class="{% if request.resolver_match.url_name == 'event_participants' %}active{% endif %}">
+      <img src="{% static 'bbq_app/images/event_participants.png' %}" width="28">
       <span>担当者一覧</span>
-
-     <a href="#"
-      class="{% if request.resolver_match.url_name == 'event_share' %}"active{% endif %}">
-      <img src="{% static 'bbq_app/images/event_share.png' %}" width="28" alt="共有">
-      <span>イベント共有</span>
-
-       <a href="#"
-      class="{% if request.resolver_match.url_name == 'forgot_item' %}"active{% endif %}">
-      <img src="{% static 'bbq_app/images/forgot_item.png' %}" width="28" alt="忘物">
-      <span>忘れ物登録</span>
-
     </a>
+
+    <!-- イベント共有 -->
+    <a href="#"
+       class="{% if request.resolver_match.url_name == 'event_share' %}active{% endif %}">
+      <img src="{% static 'bbq_app/images/event_share.png' %}" width="28">
+      <span>イベント共有</span>
+    </a>
+
+    <!-- 忘れ物登録 -->
+    <a href="#"
+       onclick="openForgotModal(); return false;">
+      <img src="{% static 'bbq_app/images/forgot_item.png' %}" width="28">
+      <span>忘れ物登録</span>
+    </a>
+
+  </div>
 
 </div>
 {% endif %}

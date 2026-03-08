@@ -34,8 +34,57 @@
         </details>       
     {% endfor %}
 
+
+
     <button type="submit">保存</button>
 
+    <button type="button" onclick="openForgotModal()">忘れ物登録</button>
+
+    <div id="forgotModal" class="modal">
+        <div class="modal-content">
+
+            <h2>忘れ物を追加</h2>
+
+            <form method="post" action="{% url 'forgotten_item_create' event.id %}">
+                {% csrf_token %}
+
+                <input type="text" name="name" placeholder="持ち物名">
+
+                <p>該当カテゴリーを選択してください。</p>
+
+                <label>
+                    <input type="radio" name="category" value="1">
+                    火起こし・調理グッズ
+                </label>
+
+                <label>
+                    <input type="radio" name="category" value="2">
+                    会場設営
+                </label>
+
+                <label>
+                    <input type="radio" name="category" value="3">
+                    食材・飲み物
+                </label>
+
+                <label>
+                    <input type="radio" name="category" value="4">
+                    便利グッズ
+                </label>
+
+                <label>
+                    <input type="radio" name="category" value="5">
+                    その他
+                </label>
+
+                <br>
+
+                <button type="submit">登録</button>
+                <button type="button" onclick="closeForgotModal()">閉じる</button>
+
+        </div>
+    </div>
+    
 </form>
 
 <p><a href="{% url 'item_assign' event.id %}">担当者割り当てへ</a></p>
