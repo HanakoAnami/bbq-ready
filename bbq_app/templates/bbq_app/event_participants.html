@@ -13,7 +13,15 @@
 
 <ul>
     {% for participant in participants %}
-        <li>{{ participant.name }}</li>
+        <li>
+            {{ participant.name }}
+
+            <form method="post" action="{% url 'invitation_create' event.id %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="participant_id" value="{{ participant.id }}">
+                <button type="submit">招待リンク発行</button>
+            </form>
+        </li>
     {% empty %}
         <li>参加者はまだいません</li>
     {% endfor %}

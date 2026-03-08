@@ -3,15 +3,16 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .forms import SignupForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm, BbqItemForm, ForgottenItemForm
-from .models import Event, BbqItem, EventItem, Participant
+from .models import Event, BbqItem, EventItem, Participant, Invitation
 from django.utils import timezone
 from django.db.models import Q
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.views.generic import CreateView, UpdateView
 from django.contrib import messages
 from django.views.decorators.cache import never_cache
 from django.db import models
 from collections import defaultdict
+import secrets
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
@@ -309,7 +310,29 @@ def event_participants(request, event_id):
     return render(request, "bbq_app/event_participants.html",{
         "event": event,
         "participants":participants,
-    })          
+    }) 
+
+#イベント共有    
+@login_required
+def invitation_create(request, event_id):
+    event = get_object_or_404(Event, id=event_id, user=request.user)
+    
+    if request.method == "POST":
+        participant_id = request.POST.get("participant_id")
+        participant = get_object_or_404(Participant, id=participant_id, event=event)
+        
+        invitation = Invitation.objects.create(
+            user=request.user,
+            participant=participant,
+            token=secrets.token_urlsafe(32),
+            status=Invitation.Status.PENDING,
+            expires_at=timezone.now() +timedelta(hours=3),
+        )   
+        
+        messages.success(request, "招待リンクを発行しました。")
+        return redirect("event_participants", event_id=event.id)
+    
+    return redirect("event_participants", event_id=event.id)      
  
 #マイページ  
 @never_cache        

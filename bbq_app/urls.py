@@ -24,5 +24,7 @@ urlpatterns = [
     path("events/<int:event_id>/assign/", views.item_assign, name="item_assign"),
     path("bbq-items/", views.bbq_item_list_create, name="bbq_item_list_create"),
     path("events/<int:event_id>/forgotten-item/", views.forgotten_item_create, name="forgotten_item_create"),
+    path("events/<int:event_id>/invitations/create", views.invitation_create, name="invitation_create"),
+    path("invite/<str:token>/", views.invitation_access, name="invitation_access"),
 ]
 
