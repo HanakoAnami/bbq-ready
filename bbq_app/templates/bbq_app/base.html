@@ -1,5 +1,5 @@
 {% load static %}
-<!DOCTYPE>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -17,7 +17,7 @@
     {% endif %}
     <main>{% block content %}{% endblock %}</main>
 
-    {% block footer%}
+    {% block footer %}
         {% include "bbq_app/partials/footer_nav.html" %}
     {% endblock %}
 </body>

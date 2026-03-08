@@ -55,6 +55,13 @@ class BbqItemForm(forms.ModelForm):
             "name": "持ち物名",
             "category": "カテゴリー",
         }
+        
+class ForgottenItemForm(forms.ModelForm):
+    class Meta:
+        model =BbqItem
+        fields = ["name", "category"]
+        labels = {"name": "持ち物名", "category": "カテゴリー",}
+    
     
         
 class UserNameForm(forms.Form):

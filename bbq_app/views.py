@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from .forms import SignupForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm, BbqItemForm
+from .forms import SignupForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm, BbqItemForm, ForgottenItemForm
 from .models import Event, BbqItem, EventItem, Participant
 from django.utils import timezone
 from django.db.models import Q
@@ -140,17 +140,10 @@ def item_edit(request, event_id):
             "label": category_labels[category],
             "items": event_items,
         })  
-        
-    total_count = items.count()
-    selected_count = items.filter(is_selected=True).count()
-    progress_percent = int((selected_count / total_count) * 100) if total_count else 0  
     
     context = {
         "event": event,
         "grouped_items": grouped_items,
-        "total_count": total_count,
-        "selected_count": selected_count,
-        "progress_percent": progress_percent,
     }
     return render(request, "bbq_app/item_edit.html", context)
 
@@ -173,9 +166,12 @@ def item_assign(request, event_id):
     #進捗状況
     total_count = items.count()
     ready_count = items.filter(is_ready=True).count()
+    progress_percent = int((ready_count / total_count) * 100 ) if total_count else 0
     
     if request.method == "POST":
         updated = []
+        ready_item_ids = set(request.POST.getlist("ready_items"))
+        
         for event_item in items:
             key = f"assignee_{event_item.id}"
             participant_id = request.POST.get(key)
@@ -186,14 +182,20 @@ def item_assign(request, event_id):
             else:
                 assignee = None
             
-            if event_item.assignee_id != (assignee.id if assignee else None):
+            new_is_ready = str(event_item.id) in ready_item_ids
+            
+            if (
+                event_item.assignee_id != (assignee.id if assignee else None)
+                or event_item.is_ready != new_is_ready
+            ):
                 event_item.assignee = assignee
+                event_item.is_ready = new_is_ready
                 updated.append(event_item)
                 
         if updated:
-            EventItem.objects.bulk_update(updated, ["assignee"])
+            EventItem.objects.bulk_update(updated, ["assignee", "is_ready"])
             
-            return redirect("item_assign", event_id=event.id)
+        return redirect("item_assign", event_id=event.id)
         
     return render(
         request,
@@ -204,8 +206,28 @@ def item_assign(request, event_id):
             "items": items,
             "total_count": total_count,
             "ready_count": ready_count,
+            "progress_percent": progress_percent,
         },
     )
+    
+#忘れ物登録
+@login_required
+def forgotten_item_create(request, event_id):
+    event = get_object_or_404(Event, id=event_id, user=request.user)
+    
+    if request.method == "POST":
+        form = ForgottenItemForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            category = form.cleaned_data["category"]
+            
+            BbqItem.objects.get_or_create(
+                user=request.user,
+                name=name,
+                defaults={"category": category}
+            )
+    return redirect("item_edit", event_id=event.id)    
+    
             
 
 #イベント複製

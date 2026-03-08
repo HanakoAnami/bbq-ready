@@ -1,8 +1,11 @@
 {% extends "bbq_app/base.html" %}
 
+{% block header %}
+  {% include "bbq_app/partials/event_header.html" %}
+{% endblock %}
+
 {% block content %}
 <h1>持ち物リスト編集</h1>
-<p>選択済み {{ selected_count }} / {{ total_count }}（{{ progress_percent }}%）</p>
 
 <form method="post">
     {% csrf_token %}
