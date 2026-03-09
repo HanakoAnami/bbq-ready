@@ -35,9 +35,9 @@
     </a>
 
     <!-- イベント共有 -->
-    <a href="#"
+    <a href="{% url 'event_share' event.id %}"
        class="{% if request.resolver_match.url_name == 'event_share' %}active{% endif %}">
-      <img src="{% static 'bbq_app/images/event_share.png' %}" width="28">
+      <img src="{% static 'bbq_app/images/event_share.png' %}" width="28" alt="共有">
       <span>イベント共有</span>
     </a>
 

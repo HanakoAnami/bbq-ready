@@ -31,4 +31,14 @@ function openForgotModal() {
 function closeForgotModal() {
     document.getElementById("forgotModal").style.display = "none";
 }
+
+function copyInviteUrl(url) {
+    navigator.clipboard.writeText(url)
+        .then(() => {
+            alert("リンクをコピーしました。");
+        })
+        .catch(() => {
+            alert("コピーに失敗しました。");
+        });
+}
 </script>

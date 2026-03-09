@@ -1,0 +1,54 @@
+{% extends "bbq_app/base.html" %}
+
+{% block header %}
+  {% include "bbq_app/partials/event_header.html" %}
+{% endblock %}
+
+{% block content %}
+<h1>イベント共有</h1>
+<p>参加者ごとに共有リンクを発行できます。</p>
+
+<ul class="share-list">
+    {% for row in share_rows %}
+        <li class="share-list__item">
+            <div class="share-list__name">
+                {{ row.participant.name }}
+            </div>
+
+            <div class="share-list__status">
+                {% if row.share_status == "pending" %}
+                    共有リンク未発行
+                {% elif row.share_status == "active" %}
+                    共有リンク発行済み
+                {% elif row.share_status == "expired" %}
+                    共有リンク期限切れ
+                {% endif %}
+            </div>
+
+            <div class="share-list__actions">
+                {% if row.share_status == "pending" %}
+                    <form method="post" action="{% url 'invitation_create' event.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="participant_id" value="{{ row.participant.id }}">
+                        <button type="submit">共有リンク発行</button>
+                    </form>
+
+                {% elif row.share_status == "active" %}
+                    <button type="button" onclick="copyInviteUrl('{{ row.invite_url }}')">
+                        リンクコピー
+                    </button>
+
+                {% elif row.share_status == "expired" %}
+                    <form method="post" action="{% url 'invitation_create' event.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="participant_id" value="{{ row.participant.id }}">
+                        <button type="submit">再発行</button>
+                    </form>
+                {% endif %}
+            </div>
+        </li>
+    {% empty %}
+        <li>参加者はまだいません</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -356,6 +356,54 @@ def invitation_create(request, event_id):
     
     return redirect("event_participants", event_id=event.id) 
 
+@login_required
+def event_share(request, event_id):
+    event = get_object_or_404(Event, id=event_id, user=request.user)
+    
+    participants =Participant.objects.filter(event=event).order_by("id")
+    invitations = Invitation.objects.filter(
+        participant__event=event
+    ).select_related("participant")
+    
+    invitation_map ={
+        invitation.participant_id: invitation for invitation in invitations
+    }
+    
+    share_rows =[]
+    for participant in participants:
+        invitation = invitation_map.get(participant.id)
+        
+        invite_url = None
+        share_status = "pending"
+        
+        if invitation:
+            invite_url = request.build_absolute_uri(
+                reverse("invitation_access", args=[invitation.token])
+            )
+            
+            if invitation.expires_at and invitation.expires_at < timezone.now():
+                share_status = "expired"
+            else:
+                share_status = "active"
+        
+        share_rows.append({
+            "participant": participant,
+            "invitation": invitation,
+            "invite_url": invite_url,
+            "share_status": share_status,
+        })
+        
+    return render(
+        request,
+        "bbq_app/event_share.html",
+        {
+            "event": event,
+            "share_rows": share_rows,
+        }
+    )        
+                
+            
+
 
 #イベント参加者招待画面
 def invitation_access(request, token):

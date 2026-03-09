@@ -140,3 +140,36 @@ body{
     background: #e8f5e9;
     color: #2e7d32;
 }
+
+.share-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.share-list__item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #fff;
+}
+
+.share-list__name {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.share-list__status {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.share-list__actions form {
+    display: inline;
+}
+
+.share-list__actions button {
+    padding: 8px 12px;
+}
