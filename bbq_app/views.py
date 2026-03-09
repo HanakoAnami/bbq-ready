@@ -298,11 +298,10 @@ def event_delete(request, event_id):
     
     if request.method =="POST":
         event.delete()
+        messages.success(request, "イベントを削除しました。")
         return redirect("home")
     
-    return render(request, "bbq_app/event_confirm_delete.html", {
-        "event":event
-    })
+    return redirect("event_edit", event_id=event.id)
     
 @login_required
 def event_participants(request, event_id):

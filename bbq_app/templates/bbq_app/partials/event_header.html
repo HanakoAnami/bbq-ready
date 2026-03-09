@@ -14,9 +14,23 @@
 
     <div class="event-header__actions">
       <a href="{% url 'event_edit' event.id %}">✏️ 編集</a>
-      <a href="{% url 'event_delete' event.id %}">🗑 削除</a>
+      <a href="#" onclick="openDeleteModal({{ event.id }}); return false;">🗑 削除</a>
     </div>
-  </div>
+
+    <div id="deleteModal-{{ event.id }}" class="modal">
+      <div class="modal-content">
+        <h2>このイベントを削除しますか？</h2>
+
+        <div class="modal-actions">
+          <form method="post" action="{% url 'event_delete' event.id %}">
+            {% csrf_token %}
+            <button typa="submit">はい</button>
+          </form>
+
+          <button type="button" onclick="closeDeleteModal({{ event.id }})">いいえ</button>
+        </div>
+      </div>
+    </div>
 
   <div class="event-header__nav">
 
