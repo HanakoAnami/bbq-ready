@@ -258,6 +258,7 @@ def event_duplicate(request, event_id):
             "name": request.user.first_name or request.user.username
             }
         )
+    
     #元のEventItemを取得
     original_items = EventItem.objects.filter(event=original_event)
     
