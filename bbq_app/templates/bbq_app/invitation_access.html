@@ -14,14 +14,29 @@
 {% else %}
     <p>{{ invitation.guest_name }} さんの担当持ち物</p>
 
-    <ul>
-        {% for event_item in assigned_items %}
-        <li>
-            {{ event_item.bbq_item.name }}
-        </li>
-        {% empty %}
-            <li>担当の持ち物はありません。</li>
-        {% endfor %}
-    </ul>
+    <form method="post">
+        {% csrf_token %}
+        <ul>
+            {% for event_item in assigned_items %}
+                <li>
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="ready_items"
+                            value="{{ event_item.id }}"
+                            {% if event_item.is_ready %}checked{% endif %}
+                        >
+                        {{ event_item.bbq_item.name }}
+                    </label>
+                </li>
+            {% empty %}
+                <li>担当の持ち物はありません。</li>
+            {% endfor %}
+        </ul>
+    
+        {% if assigned_items %}
+        <button type="submit">保存</button>
+        {% endif %}
+    </form>
 {% endif %}
 {% endblock %}
