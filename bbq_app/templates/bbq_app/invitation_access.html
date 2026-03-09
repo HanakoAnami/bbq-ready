@@ -1,7 +1,19 @@
 {% extends "bbq_app/base.html" %}
 
 {% block content %}
-<h1>招待リンク画面</h1>
-<p>参加者: {{ invitation.participant.name }}</p>
-<p>トークン: {{ invitation.token }}</p>
+<h1>参加準備ページ</h1>
+
+{% if not invitation.guest_name %}
+    <p>お名前を入力してください。</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="guest_name" placeholder="名前を入力">
+        <button_type="submit">次へ</button>
+    </form>
+{% else %}
+    <p>{{ invitation.guest_name }} さん</p>
+    <p>名前の登録が完了しました。</p>
+    <p>次は担当一覧画面を作ります。</p>
+{% endif %}
 {% endblock %}
