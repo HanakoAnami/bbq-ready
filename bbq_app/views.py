@@ -245,11 +245,12 @@ def event_duplicate(request, event_id):
     new_event = Event.objects.create(
         user=request.user,
         name=f"{original_event.name} (複製)",
-        held_at=original_event.held_at,
+        held_at=None,
         location=original_event.location,
     )
     #元のEventItemを取得
     original_items = EventItem.objects.filter(event=original_event)
+    
     #コピー
     EventItem.objects.bulk_create([
         EventItem(
@@ -261,6 +262,8 @@ def event_duplicate(request, event_id):
         )
         for item in original_items
     ])
+    
+    messages.success(request, "イベントを複製しました。")
     return redirect("event_edit", event_id=new_event.id)
 
 #全イベント一覧

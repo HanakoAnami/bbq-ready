@@ -48,4 +48,12 @@ function openSharedUsersModal() {
 function closeSharedUsersModal() {
     document.getElementById("sharedUsersModal").style.display = "none";
 }
+
+function openDuplicateModal(eventId){
+    document.getElementById("duplicateModal-" + eventId).style.display = "block";
+}
+
+function closeDuplicateModal(eventId){
+    document.getElementById("duplicateModal-" + eventId).style.display = "none";
+}
 </script>
