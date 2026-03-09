@@ -104,23 +104,6 @@ body{
     transition: width 0.3s ease;
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-}
-
-.modal-content {
-    background: white;
-    padding: 20px;
-    width: 300px;
-    margin: 100px auto;
-}
-
 .message-area {
     margin: 12px 0;
 }
@@ -183,4 +166,58 @@ body{
 .shared-users-list__item {
     padding: 10px 0;
     border-bottom: 1px solid #eee;
+}
+
+/*モーダル背景*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+}
+
+/*モーダルカード*/
+.modal-content {
+    background: #e9e5df;
+    padding: 24px;
+    width: 300px;
+    margin: 18% auto;
+    border-radius: 20px;
+    text-align: center;
+}
+
+/*モーダルタイトル*/
+.modal-content h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+}
+
+/*ボタン横並び*/
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+/*共通ボタン*/
+.modal-actions button {
+    border: 1px solid #333;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/*はい*/
+.modal-actions button[type="submit"] {
+    background: #f0a23a;
+}
+
+/*いいえ*/
+.modal-actions button[type="button"] {
+    background: #9fb4c9;
 }
