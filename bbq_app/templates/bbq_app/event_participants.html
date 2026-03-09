@@ -3,7 +3,7 @@
 {% block content %}
 <h1>イベント参加者追加</h1>
 
-<form method="post">
+<form method="post" action="{% url 'event_participants' event.id %}">
     {% csrf_token %}
     <input type="text" name="name" placeholder="参加者名を入力">
     <button type="submit">追加</button>
@@ -12,15 +12,20 @@
 <hr>
 
 <ul>
-    {% for participant in participants %}
+    {% for row in participant_rows %}
         <li>
-            {{ participant.name }}
+            <p>{{ row.participant.name }}</p>
 
             <form method="post" action="{% url 'invitation_create' event.id %}" style="display:inline;">
                 {% csrf_token %}
-                <input type="hidden" name="participant_id" value="{{ participant.id }}">
+                <input type="hidden" name="participant_id" value="{{ row.participant.id }}">
                 <button type="submit">招待リンク発行</button>
             </form>
+
+            {% if row.invite_url %}
+                <p>招待URL:</p>
+                <p>{{ row.invite_url }}</p>
+            {% endif %}
         </li>
     {% empty %}
         <li>参加者はまだいません</li>

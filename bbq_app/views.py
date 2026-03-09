@@ -13,6 +13,7 @@ from django.views.decorators.cache import never_cache
 from django.db import models
 from collections import defaultdict
 import secrets
+from django.urls import reverse
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
@@ -295,21 +296,40 @@ def event_delete(request, event_id):
 @login_required
 def event_participants(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
-    participants = Participant.objects.filter(event=event).order_by("id")
     
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
         
         if name:
-            Participant.objects.create(
-                event=event,
-                name=name
-            )
+            Participant.objects.create(event=event,name=name)
             return redirect("event_participants", event_id=event.id)
+    
+    participants = Participant.objects.filter(event=event).order_by("id")
+    invitations = Invitation.objects.filter(
+        participant__event=event,
+    ).select_related("participant")
+    
+    invitation_map = {invitation.participant_id: invitation for invitation in invitations}
+    
+    participant_rows = []
+    for participant in participants:
+        invitation = invitation_map.get(participant.id)
+        
+        invite_url = None
+        if invitation:
+            invite_url = request.build_absolute_uri(
+                reverse("invitation_access", args=[invitation.token])
+            )
+            
+        participant_rows.append({
+            "participant": participant,
+            "invitation": invitation,
+            "invite_url": invite_url,
+        })
     
     return render(request, "bbq_app/event_participants.html",{
         "event": event,
-        "participants":participants,
+        "participant_rows":participant_rows,
     }) 
 
 #イベント共有    
@@ -321,18 +341,54 @@ def invitation_create(request, event_id):
         participant_id = request.POST.get("participant_id")
         participant = get_object_or_404(Participant, id=participant_id, event=event)
         
-        invitation = Invitation.objects.create(
-            user=request.user,
+        invitation, created = Invitation.objects.update_or_create(
             participant=participant,
-            token=secrets.token_urlsafe(32),
-            status=Invitation.Status.PENDING,
-            expires_at=timezone.now() +timedelta(hours=3),
+            defaults={
+                "user": request.user,
+                "token": secrets.token_urlsafe(32),
+                "status": Invitation.Status.PENDING,
+                "expires_at": timezone.now() +timedelta(hours=3),
+            }
         )   
+        
+        invite_url = request.build_absolute_uri(
+            reverse("invitation_access", args=[invitation.token])
+        )
         
         messages.success(request, "招待リンクを発行しました。")
         return redirect("event_participants", event_id=event.id)
     
-    return redirect("event_participants", event_id=event.id)      
+    return redirect("event_participants", event_id=event.id) 
+
+
+#イベント参加者招待画面
+def invitation_access(request, token):
+    invitation = get_object_or_404(Invitation, token=token)
+    
+    #期限切れチェック
+    if invitation.expires_at and invitation.expires_at < timezone.now():
+        return render(
+        request,
+        "bbq_app/invitation_expired.html",
+        {"invitation": invitation}
+    )
+        
+    #名前入力フォーム送信
+    if request.method == "POST":
+        guest_name = request.POST.get("guest_name", "").strip()
+        
+        if guest_name:
+            invitation.guest_name = guest_name
+            invitation.status = Invitation.Status.ACTIVE
+            invitation.save()
+            
+            return redirect("invitation_access", token=invitation.token)
+    
+    return render(
+        request,
+        "bbq_app/invitation_access.html",
+        {"invitation": invitation}
+    )
  
 #マイページ  
 @never_cache        

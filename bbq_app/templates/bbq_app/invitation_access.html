@@ -1,0 +1,7 @@
+{% extends "bbq_app/base.html" %}
+
+{% block content %}
+<h1>招待リンク画面</h1>
+<p>参加者: {{ invitation.participant.name }}</p>
+<p>トークン: {{ invitation.token }}</p>
+{% endblock %}
