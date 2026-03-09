@@ -8,6 +8,10 @@
 <h1>イベント共有</h1>
 <p>参加者ごとに共有リンクを発行できます。</p>
 
+<button type="button" onclick="openSharedUsersModal()">
+    イベント共有者確認
+</button>
+
 <ul class="share-list">
     {% for row in share_rows %}
         <li class="share-list__item">
@@ -51,4 +55,21 @@
         <li>参加者はまだいません</li>
     {% endfor %}
 </ul>
+<div id="sharedUsersModal" class="modal">
+    <div class="modal-content">
+        <h2>イベント共有者一覧</h2>
+
+        <ul class="shared-users-list">
+            {% for row in shared_rows %}
+                <li class="shared-users-list__item">
+                    {{ row.participant.name }}
+                </li>
+            {% empty %}
+                <li>共有者はまだいません</li>
+            {% endfor %}
+        </ul>
+
+        <button type="button" onclick="closeSharedUsersModal()">閉じる</button>
+    </div>
+</div>
 {% endblock %}

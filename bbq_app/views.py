@@ -370,7 +370,9 @@ def event_share(request, event_id):
         invitation.participant_id: invitation for invitation in invitations
     }
     
-    share_rows =[]
+    share_rows = []
+    shared_rows = []
+    
     for participant in participants:
         invitation = invitation_map.get(participant.id)
         
@@ -386,13 +388,17 @@ def event_share(request, event_id):
                 share_status = "expired"
             else:
                 share_status = "active"
-        
-        share_rows.append({
+                
+        row = {
             "participant": participant,
             "invitation": invitation,
             "invite_url": invite_url,
             "share_status": share_status,
-        })
+        }
+        share_rows.append(row)
+        
+        if share_status == "active":
+            shared_rows.append(row)    
         
     return render(
         request,
@@ -400,6 +406,7 @@ def event_share(request, event_id):
         {
             "event": event,
             "share_rows": share_rows,
+            "shared_rows": shared_rows
         }
     )        
                 
