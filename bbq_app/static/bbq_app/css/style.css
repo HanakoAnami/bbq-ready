@@ -221,3 +221,7 @@ body{
 .modal-actions button[type="button"] {
     background: #9fb4c9;
 }
+
+.forgot-category {
+    text-align: left;
+}

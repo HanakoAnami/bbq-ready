@@ -3,14 +3,6 @@
 {% block title %}HOME{% endblock %}
 
 {% block content %}
-    <h1>🍖 はなこのBBQ準備アプリ 🍖</h1>
-    <div class="box">
-        <p>ここは、BBQの持ち物や予算を管理するページになります！</p>
-        <p><strong>現在のステータス：開発中（順調！）</strong></p>
-    <br>
-    <form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">ログアウト</button>
     </form>
     <p><a href="{% url 'event_create' %}">+新規イベント作成</a></p>
     <h2>開催予定のイベント</h2>
