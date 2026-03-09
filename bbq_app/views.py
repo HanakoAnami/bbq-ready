@@ -373,6 +373,12 @@ def invitation_access(request, token):
         {"invitation": invitation}
     )
         
+    assigned_items = EventItem.objects.filter(
+        event=invitation.participant.event,
+        assignee=invitation.participant,
+        is_selected=True
+    ).select_related("bbq_item").order_by("id")
+        
     #名前入力フォーム送信
     if request.method == "POST":
         guest_name = request.POST.get("guest_name", "").strip()
@@ -383,11 +389,31 @@ def invitation_access(request, token):
             invitation.save()
             
             return redirect("invitation_access", token=invitation.token)
+        
+    #準備完了保存
+    if request.method == "POST" and invitation.guest_name:
+        ready_item_ids = set(request.POST.getlist("ready_items"))
+        updated = []
+        
+        for event_item in assigned_items:
+            new_is_ready = str(event_item.id) in ready_item_ids
+            
+            if event_item.is_ready != new_is_ready:
+                event_item.is_ready = new_is_ready
+                updated.append(event_item)
+                
+        if updated:
+            EventItem.objects.bulk_update(updated, ["is_ready"])
+            
+        return redirect("invitation_access", token=invitation.token)
     
     return render(
         request,
         "bbq_app/invitation_access.html",
-        {"invitation": invitation}
+        {
+            "invitation": invitation,
+            "assigned_items": assigned_items,
+        }
     )
  
 #マイページ  

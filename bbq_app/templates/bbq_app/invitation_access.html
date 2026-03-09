@@ -9,11 +9,19 @@
     <form method="post">
         {% csrf_token %}
         <input type="text" name="guest_name" placeholder="名前を入力">
-        <button_type="submit">次へ</button>
+        <button type="submit">登録</button>
     </form>
 {% else %}
-    <p>{{ invitation.guest_name }} さん</p>
-    <p>名前の登録が完了しました。</p>
-    <p>次は担当一覧画面を作ります。</p>
+    <p>{{ invitation.guest_name }} さんの担当持ち物</p>
+
+    <ul>
+        {% for event_item in assigned_items %}
+        <li>
+            {{ event_item.bbq_item.name }}
+        </li>
+        {% empty %}
+            <li>担当の持ち物はありません。</li>
+        {% endfor %}
+    </ul>
 {% endif %}
 {% endblock %}
