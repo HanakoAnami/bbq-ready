@@ -356,6 +356,7 @@ def invitation_create(request, event_id):
     
     return redirect("event_participants", event_id=event.id) 
 
+
 @login_required
 def event_share(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
@@ -409,21 +410,19 @@ def event_share(request, event_id):
             "shared_rows": shared_rows
         }
     )        
-                
-            
 
 
 #イベント参加者招待画面
 def invitation_access(request, token):
     invitation = get_object_or_404(Invitation, token=token)
     
-    #期限切れチェック
-    if invitation.expires_at and invitation.expires_at < timezone.now():
+    #まだ名前登録していない人だけ期限切れチェック
+    if not invitation.guest_name and invitation.expires_at and invitation.expires_at < timezone.now():
         return render(
-        request,
-        "bbq_app/invitation_expired.html",
-        {"invitation": invitation}
-    )
+            request,
+            "bbq_app_invitation_expired.html",
+            {"invitation": invitation}
+        )
         
     assigned_items = EventItem.objects.filter(
         event=invitation.participant.event,
@@ -432,7 +431,7 @@ def invitation_access(request, token):
     ).select_related("bbq_item").order_by("id")
         
     #名前入力フォーム送信
-    if request.method == "POST":
+    if request.method == "POST" and not invitation.guest_name:
         guest_name = request.POST.get("guest_name", "").strip()
         
         if guest_name:
