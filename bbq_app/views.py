@@ -172,7 +172,6 @@ def item_assign(request, event_id):
     
     if request.method == "POST":
         updated = []
-        ready_item_ids = set(request.POST.getlist("ready_items"))
         
         for event_item in items:
             key = f"assignee_{event_item.id}"
@@ -183,20 +182,14 @@ def item_assign(request, event_id):
                 assignee = participants.filter(id=participant_id).first()
             else:
                 assignee = None
-            
-            new_is_ready = str(event_item.id) in ready_item_ids
-            
-            if (
-                event_item.assignee_id != (assignee.id if assignee else None)
-                or event_item.is_ready != new_is_ready
-            ):
-                event_item.assignee = assignee
-                event_item.is_ready = new_is_ready
-                updated.append(event_item)
                 
+            if event_item.assignee_id != (assignee.id if assignee else None):
+                event_item.assignee = assignee
+                updated.append(event_item)
+        
         if updated:
-            EventItem.objects.bulk_update(updated, ["assignee", "is_ready"])
-            
+            EventItem.objects.bulk_update(updated, ["assignee"])
+        
         return redirect("item_assign", event_id=event.id)
         
     return render(

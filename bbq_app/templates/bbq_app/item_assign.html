@@ -38,15 +38,11 @@
                 </div>   
                 
                 <div class="assign-list__status">
-                    <label>
-                        <input
-                            type="checkbox"
-                            name="ready_items"
-                            value="{{ event_item.id }}"
-                            {% if event_item.is_ready %}checked{% endif %}
-                        >
-                        準備完了
-                    </label>
+                    {% if event_item.is_ready %}
+                        <span>準備完了</span>
+                    {% else %}
+                        <span>未準備</span>
+                    {% endif %}
                 </div>
             </li>   
         {% empty %}
