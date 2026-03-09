@@ -21,48 +21,66 @@
         {% include "bbq_app/partials/footer_nav.html" %}
     {% endblock %}
 
-<script>
-function openForgotModal() {
-    document.getElementById("forgotModal").style.display = "block";
-}
+    <script>
+    function openForgotModal() {
+        const modal = document.getElementById("forgotModal");
+        if (modal) modal.style.display = "block";
+    }
 
-function closeForgotModal() {
-    document.getElementById("forgotModal").style.display = "none";
-}
+    function closeForgotModal() {
+        const modal = document.getElementById("forgotModal");
+        if (modal) modal.style.display = "none";
+    }
 
-function copyInviteUrl(url) {
-    navigator.clipboard.writeText(url)
-        .then(() => {
-            alert("リンクをコピーしました。");
-        })
-        .catch(() => {
-            alert("コピーに失敗しました。");
-        });
-}
+    function copyInviteUrl(url) {
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                alert("リンクをコピーしました");
+            })
+            .catch(() => {
+                alert("コピーに失敗しました");
+            });
+    }
 
-function openSharedUsersModal() {
-    document.getElementById("sharedUsersModal").style.display = "block";
-}
-function closeSharedUsersModal() {
-    document.getElementById("sharedUsersModal").style.display = "none";
-}
+    function openSharedUsersModal() {
+        const modal = document.getElementById("sharedUsersModal");
+        if (modal) modal.style.display = "block";
+    }
 
-function openDuplicateModal(eventId){
-    document.getElementById("duplicateModal-" + eventId).style.display = "block";
-}
+    function closeSharedUsersModal() {
+        const modal = document.getElementById("sharedUsersModal");
+        if (modal) modal.style.display = "none";
+    }
 
-function closeDuplicateModal(eventId){
-    document.getElementById("duplicateModal-" + eventId).style.display = "none";
-}
+    function openDuplicateModal(eventId) {
+        const modal = document.getElementById("duplicateModal-" + eventId);
+        if (modal) modal.style.display = "block";
+    }
 
-function openDeleteModal(eventId){
-    document.getElementById("deleteModal-" + eventId).style.display = "block";
-}
+    function closeDuplicateModal(eventId) {
+        const modal = document.getElementById("duplicateModal-" + eventId);
+        if (modal) modal.style.display = "none";
+    }
 
-function closeDeleteModal(eventId){
-    document.getElementById("deleteModal-" + eventId).style.display = "none";
-}
+    function openDeleteModal(eventId) {
+        const modal = document.getElementById("deleteModal-" + eventId);
+        if (modal) modal.style.display = "block";
+    }
 
-</script>
+    function closeDeleteModal(eventId) {
+        const modal = document.getElementById("deleteModal-" + eventId);
+        if (modal) modal.style.display = "none";
+    }
 
+    function openParticipantsModal() {
+        const modal = document.getElementById("participantsModal");
+        if (modal) modal.style.display = "block";
+    }
+
+    function closeParticipantsModal() {
+        const modal = document.getElementById("participantsModal");
+        if (modal) modal.style.display = "none";
+    }
+    </script>
 </body>
+</html>
