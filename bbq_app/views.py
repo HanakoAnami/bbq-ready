@@ -360,7 +360,8 @@ def invitation_create(request, event_id):
 def event_share(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     
-    participants =Participant.objects.filter(event=event).order_by("id")
+    participants =Participant.objects.filter(event=event).exclude(user=event.user).order_by("id")
+        
     invitations = Invitation.objects.filter(
         participant__event=event
     ).select_related("participant")
