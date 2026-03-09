@@ -81,7 +81,8 @@ class EventItem(models.Model):
     
     def __str__(self):
         return f"{self.event} - {self.bbq_item.name}"
-    
+
+#招待リンク発行   
 class Invitation(models.Model):
     class Status(models.IntegerChoices):
         PENDING = 0, "pending"   #未アクセス（期限内）

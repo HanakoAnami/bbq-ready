@@ -177,18 +177,21 @@ def item_assign(request, event_id):
             key = f"assignee_{event_item.id}"
             participant_id = request.POST.get(key)
             
+            #このイベントの参加者かチェック
             if participant_id:
-                #このイベントの参加者かチェック
                 assignee = participants.filter(id=participant_id).first()
             else:
                 assignee = None
                 
-            if event_item.assignee_id != (assignee.id if assignee else None):
+            new_assignee_id = assignee.id if assignee else None
+                
+            if event_item.assignee_id != new_assignee_id:
                 event_item.assignee = assignee
+                event_item.is_ready = False
                 updated.append(event_item)
         
         if updated:
-            EventItem.objects.bulk_update(updated, ["assignee"])
+            EventItem.objects.bulk_update(updated, ["assignee", "is_ready"])
         
         return redirect("item_assign", event_id=event.id)
         
