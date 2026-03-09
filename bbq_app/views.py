@@ -256,11 +256,12 @@ def event_duplicate(request, event_id):
             event=new_event,
             bbq_item=item.bbq_item,
             is_selected=item.is_selected,
-            status=item.status,
+            is_ready=False,
+            assignee=None,
         )
         for item in original_items
     ])
-    return redirect("item_edit", event_id=new_event.id)
+    return redirect("event_edit", event_id=new_event.id)
 
 #全イベント一覧
 @login_required
