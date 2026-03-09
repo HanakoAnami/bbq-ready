@@ -28,8 +28,8 @@
     </a>
 
     <!-- 担当者 -->
-    <a href="{% url 'event_participants' event.id %}"
-       class="{% if request.resolver_match.url_name == 'event_participants' %}active{% endif %}">
+    <a href="{% url 'item_assign' event.id %}"
+       class="{% if request.resolver_match.url_name == 'item_assign' %}active{% endif %}">
       <img src="{% static 'bbq_app/images/event_participants.png' %}" width="28">
       <span>担当者一覧</span>
     </a>

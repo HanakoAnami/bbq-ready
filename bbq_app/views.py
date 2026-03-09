@@ -57,7 +57,8 @@ def event_create(request):
             event.save()
             
             Participant.objects.get_or_create(
-                event=event, user=request.user, defaults={"name": request.user.first_name or request.user.username}
+                event=event,
+                user=request.user, defaults={"name": request.user.first_name or request.user.username}
             )
             
             #共通テンプレ（user=None)+自分のテンプレをイベントにコピー
@@ -248,6 +249,15 @@ def event_duplicate(request, event_id):
         held_at=None,
         location=original_event.location,
     )
+    
+    #主催者を参加者として登録
+    Participant.objects.get_or_create(
+        event=new_event,
+        user=request.user,
+        defaults={
+            "name": request.user.first_name or request.user.username
+            }
+        )
     #元のEventItemを取得
     original_items = EventItem.objects.filter(event=original_event)
     
