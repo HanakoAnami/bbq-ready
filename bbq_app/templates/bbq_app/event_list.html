@@ -21,44 +21,47 @@
 
 <hr>
 
-<ul>
-{% for event in events %}
-    <li>
-        <strong>
-            <a href="{% url 'item_edit' event.id %}">
-                {{event.name}}
-            </a>
-        </strong><br>
+<div class="event-list-scroll">
 
-        開催日時:
-        {% if event.held_at %}
-            {{ event.held_at|date:"Y年m月d日 H:i" }}
-        {% else %}
-            未定
-        {% endif %}
-        <br>
+    <ul>
+    {% for event in events %}
+        <li>
+            <strong>
+                <a href="{% url 'item_edit' event.id %}">
+                    {{event.name}}
+                </a>
+            </strong><br>
 
-        開催場所:{{ event.location|default:"未定" }}
-        <br><br>
+            開催日時:
+            {% if event.held_at %}
+                {{ event.held_at|date:"Y年m月d日 H:i" }}
+            {% else %}
+                未定
+            {% endif %}
+            <br>
 
-        <a href="#" onclick="openDuplicateModal({{ event.id }}); return false;">イベントを複製する</a>
-        <div id="duplicateModal-{{ event.id }}" class="modal">
-            <div class="modal-content">
-                <h2>このイベントを複製しますか？</h2>
+            開催場所:{{ event.location|default:"未定" }}
+            <br><br>
 
-                <div class="modal-actions">
-                    <form method="get" action="{% url 'event_duplicate' event.id %}">
-                        <button type="submit">はい</button>
-                    </form>
-                    <button type="button" onclick="closeDuplicateModal({{ event.id }})">いいえ</button>
-                </div>
-            </div>    
-        </div>
-        <hr>
-    </li>
-{% empty %}
-    <li>イベントがありません</li>
-{% endfor %}
-</ul>
+            <a href="#" onclick="openDuplicateModal({{ event.id }}); return false;">イベントを複製する</a>
+            <div id="duplicateModal-{{ event.id }}" class="modal">
+                <div class="modal-content">
+                    <h2>このイベントを複製しますか？</h2>
+
+                    <div class="modal-actions">
+                        <form method="get" action="{% url 'event_duplicate' event.id %}">
+                            <button type="submit">はい</button>
+                        </form>
+                        <button type="button" onclick="closeDuplicateModal({{ event.id }})">いいえ</button>
+                    </div>
+                </div>    
+            </div>
+            <hr>
+        </li>
+    {% empty %}
+        <li>イベントがありません</li>
+    {% endfor %}
+    </ul>
+</div>
 {% endblock %}
 
