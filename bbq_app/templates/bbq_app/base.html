@@ -90,9 +90,32 @@
     function closeAddItemModal() {
     const modal = document.getElementById("addItemModal");
     const form = document.getElementById("addItemForm");
+    const error = document.getElementById("addItemError");
 
     if (modal) modal.style.display = "none";
     if (form) form.reset();
+    if (error) error.textContent = "";
+    }
+
+    function validateAddItemForm() {
+    const form = document.getElementById("addItemForm");
+    const error = document.getElementById("addItemError");
+    const name = form.querySelector('input[name="name"]').value.trim();
+    const category = form.querySelector('input[name="category"]:checked');
+
+    error.textContent = "";
+
+    if (!name) {
+        error.textContent = "持ち物名を入力してください。";
+        return false;
+    }
+
+    if (!category) {
+        error.textContent = "カテゴリーを選択してください。";
+        return false;
+    }
+
+    return true;
     }
     
     </script>

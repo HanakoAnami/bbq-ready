@@ -234,7 +234,7 @@ def event_item_add(request, event_id):
                 )
                 
             #今回のイベントにも追加
-            EventItem.objects.get_or_create(
+            event_item, created =EventItem.objects.get_or_create(
                 event=event,
                 bbq_item=bbq_item,
                 defaults={
@@ -244,7 +244,10 @@ def event_item_add(request, event_id):
                 }
             )
             
-            messages.success(request, "持ち物を追加しました。")
+            if created:
+                messages.success(request, "持ち物を追加しました。")
+            else:
+                messages.error(request, "この持ち物はすでに登録されています。")
     
     return redirect("item_edit", event_id=event.id)       
             
