@@ -81,6 +81,20 @@
         const modal = document.getElementById("participantsModal");
         if (modal) modal.style.display = "none";
     }
+
+    function openAddItemModal() {
+    const modal = document.getElementById("addItemModal");
+    if (modal) modal.style.display = "block";
+    }
+
+    function closeAddItemModal() {
+    const modal = document.getElementById("addItemModal");
+    const form = document.getElementById("addItemForm");
+
+    if (modal) modal.style.display = "none";
+    if (form) form.reset();
+    }
+    
     </script>
 </body>
 </html>

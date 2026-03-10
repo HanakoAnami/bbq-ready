@@ -209,6 +209,47 @@ def item_assign(request, event_id):
         },
     )
     
+#持ち物追加
+@login_required
+def event_item_add(request, event_id):
+    event = get_object_or_404(Event, id=event_id, user=request.user)
+    
+    if request.method =="POST":
+        name = request.POST.get("name", "").strip()
+        category = request.POST.get("category")
+        
+        if name and category:
+            #すでに同じ名前の持ち物が自分のテンプレと共通テンプレにあるか確認
+            bbq_item = BbqItem.objects.filter(
+                Q(user=request.user) | Q(user__isnull=True),
+                name=name
+            ).first()
+            
+            #なければ自分のテンプレとして新規作成
+            if not bbq_item:
+                bbq_item = BbqItem.objects.create(
+                    user=request.user,
+                    name=name,
+                    category=category,
+                )
+                
+            #今回のイベントにも追加
+            EventItem.objects.get_or_create(
+                event=event,
+                bbq_item=bbq_item,
+                defaults={
+                    "is_selected": True,
+                    "is_ready": False,
+                    "assignee": None
+                }
+            )
+            
+            messages.success(request, "持ち物を追加しました。")
+    
+    return redirect("item_edit", event_id=event.id)       
+            
+        
+    
 #忘れ物登録
 @login_required
 def forgotten_item_create(request, event_id):

@@ -234,3 +234,13 @@ body{
 .event-sort{
     margin:10px 0;
 }
+
+.item-add-category {
+    text-align: left;
+    margin: 12px 0;
+}
+
+.item-add-category label {
+    display: block;
+    margin-bottom: 6px;
+}
