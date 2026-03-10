@@ -230,3 +230,7 @@ body{
     max-height: 500px;
     overflow-y: auto;
 }
+
+.event-sort{
+    margin:10px 0;
+}

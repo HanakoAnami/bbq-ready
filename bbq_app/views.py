@@ -281,7 +281,7 @@ def event_duplicate(request, event_id):
 @login_required
 def event_list(request):
     status = request.GET.get("status", "upcoming")
-    sort =request.GET.get("sort", "hela_at_asc")
+    sort =request.GET.get("sort", "held_at_asc")
     
     now = timezone.now()
     qs = Event.objects.filter(user=request.user)
@@ -291,14 +291,15 @@ def event_list(request):
     else:
         events = qs.filter(Q(held_at__gte=now) | Q(held_at__isnull=True))
         
-    if sort == "held_at_asc":
-        events = events.order_by("held_at")
-        
-    elif sort == "held_at_desc":
+    if sort == "held_at_desc":
         events = events.order_by("-held_at")
         
     elif sort == "created_desc":
         events = events.order_by("-created_at")
+        
+    else:
+        sort = "held_at_asc"
+        events =events.order_by("held_at")
         
     return render(request, "bbq_app/event_list.html",{"events":events,"status":status,"sort":sort})
 

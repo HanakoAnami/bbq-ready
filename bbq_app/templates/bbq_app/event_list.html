@@ -18,8 +18,8 @@
         <a href="{% url 'event_list' %}?status=past">開催済</a>
     {% endif %}
 
-    <form method="get">
-        <input type="hidden" name="status" value={{ status }}>
+    <form method="get" class="event-sort">
+        <input type="hidden" name="status" value="{{ status }}">
 
         <select name="sort" onchange="this.form.submit()">
             <option value="held_at_asc" {% if sort == "held_at_asc" %}selected{% endif %}>
@@ -27,10 +27,10 @@
             </option>
 
             <option value="held_at_desc" {% if sort == "held_at_desc" %}selected{% endif %}>
-            作成日が古い順
+            開催日が古い順
             </option>
 
-            <option value="held_at_desc" {% if sort == "held_at_desc" %}selected{% endif %}>
+            <option value="created_desc" {% if sort == "created_desc" %}selected{% endif %}>
             作成日が新しい順
             </option>
         </select>  
