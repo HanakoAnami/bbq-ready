@@ -281,15 +281,26 @@ def event_duplicate(request, event_id):
 @login_required
 def event_list(request):
     status = request.GET.get("status", "upcoming")
+    sort =request.GET.get("sort", "hela_at_asc")
+    
     now = timezone.now()
     qs = Event.objects.filter(user=request.user)
     
     if status == "past":
-        events = qs.filter(held_at__lt=now).order_by("-held_at")
+        events = qs.filter(held_at__lt=now)
     else:
-        events = qs.filter(Q(held_at__gte=now) | Q(held_at__isnull=True)).order_by("held_at")
+        events = qs.filter(Q(held_at__gte=now) | Q(held_at__isnull=True))
         
-    return render(request, "bbq_app/event_list.html",{"events":events,"status":status,})
+    if sort == "held_at_asc":
+        events = events.order_by("held_at")
+        
+    elif sort == "held_at_desc":
+        events = events.order_by("-held_at")
+        
+    elif sort == "created_desc":
+        events = events.order_by("-created_at")
+        
+    return render(request, "bbq_app/event_list.html",{"events":events,"status":status,"sort":sort})
 
 #イベント削除
 @login_required
