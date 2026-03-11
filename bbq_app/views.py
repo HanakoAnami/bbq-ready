@@ -56,10 +56,22 @@ def event_create(request):
             event.user = request.user
             event.save()
             
+            #主催者を参加者として登録。
             Participant.objects.get_or_create(
                 event=event,
                 user=request.user, defaults={"name": request.user.first_name or request.user.username}
             )
+            
+            #参加者を追加
+            participants_text = request.POST.get("participants", "")
+            participant_names = [
+                name.strip()
+                for name in participants_text.splitlines()
+                if name.strip()
+            ]
+            
+            for name in participant_names:
+                Participant.objects.create(event=event,name=name)
             
             #共通テンプレ（user=None)+自分のテンプレをイベントにコピー
             templates = BbqItem.objects.filter(
@@ -71,6 +83,7 @@ def event_create(request):
                 for template in templates
             ])
             
+            messages.success(request, "イベントを作成しました。")
             return redirect("item_edit", event_id=event.id)
     else:
         form = EventForm()
@@ -99,7 +112,7 @@ def bbq_item_list_create(request):
         {"items":items, "form":form})
 
 
-#イベント詳細
+#イベント編集
 @login_required
 def event_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
@@ -108,6 +121,19 @@ def event_edit(request, event_id):
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
             form.save()
+            
+            #参加者を追加
+            participants_text = request.POST.get("participants","")
+            participant_name = [
+                name.strip()
+                for name in participants_text.splitlines()
+                if name.strip()
+            ]
+            
+            for name in participant_name:
+                Participant.objects.create(event=event, name=name)
+                
+            messages.success(request, "イベントを更新しました。")
             return redirect("item_edit", event_id=event.id)
     else:
         form = EventForm(instance=event)
@@ -148,8 +174,8 @@ def item_edit(request, event_id):
         "event": event,
         "grouped_items": grouped_items,
     }
+    
     return render(request, "bbq_app/item_edit.html", context)
-
 
 @login_required
 def item_assign(request, event_id):
@@ -194,6 +220,7 @@ def item_assign(request, event_id):
         if updated:
             EventItem.objects.bulk_update(updated, ["assignee", "is_ready"])
         
+        messages.success(request, "担当者を登録しました。")
         return redirect("item_assign", event_id=event.id)
         
     return render(

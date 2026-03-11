@@ -14,9 +14,15 @@
     {% endif %}
 
     <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">{% if event %}更新{% else %}保存{% endif %}</button>
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <p>参加者を追加（1行に1人）</p>
+        <textarea name="participants" rows="5" placeholder="のぶ&#10;たけし&#10;ゆき"></textarea>
+
+        <br><br>
+
+        <button type="submit">{% if event %}更新{% else %}保存{% endif %}</button>
     </form>
 
     {% if event %}

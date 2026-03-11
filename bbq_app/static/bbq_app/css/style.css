@@ -168,6 +168,11 @@ body{
     border-bottom: 1px solid #eee;
 }
 
+.modal-content{
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
 /*モーダル背景*/
 .modal {
     display: none;
@@ -261,5 +266,17 @@ body{
 .share-list{
   max-height:400px;
   overflow-y:auto;
+  padding: 0;
+}
+
+.shared-users-list{
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.participants-modal-list{
+  max-height: 300px;
+  overflow-y: auto;
   padding: 0;
 }
