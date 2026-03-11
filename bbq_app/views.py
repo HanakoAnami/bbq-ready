@@ -457,16 +457,16 @@ def event_share(request, event_id):
             else:
                 share_status = "active"
                 
-            row = {
-                "participant": participant,
-                "invitation": invitation,
-                "invite_url": invite_url,
-                "share_status": share_status,
-            }
-            share_rows.append(row)
+        row = {
+            "participant": participant,
+            "invitation": invitation,
+            "invite_url": invite_url,
+            "share_status": share_status,
+        }
+        share_rows.append(row)
             
-            if share_status in ["active", "joined"]:
-                shared_rows.append(row)
+        if share_status in ["active", "joined"]:
+            shared_rows.append(row)
                 
     return render(
         request,
@@ -476,7 +476,24 @@ def event_share(request, event_id):
             "share_rows": share_rows,
             "shared_rows": shared_rows
         }
-    )        
+    )     
+    
+@login_required
+def invitation_delete(request, event_id, invitation_id):
+    event = get_object_or_404(Event, id=event_id, user=request.user)
+    
+    invitation = get_object_or_404(
+        Invitation,
+        id=invitation_id,
+        participant__event=event
+    )   
+    
+    if request.method == "POST":
+        invitation.delete()
+        messages.success(request, "共有を削除しました。")
+        return redirect("event_share", event_id=event.id)
+    
+    return redirect("event_share", event_id=event.id)
 
 
 #イベント参加者招待画面

@@ -143,6 +143,16 @@
 
     return true;
     }
+
+    function openDeleteShareModal(invitationId) {
+    const modal = document.getElementById("deleteShareModal-" + invitationId);
+    if (modal) modal.style.display = "block";
+    }
+
+    function closeDeleteShareModal(invitationId) {
+    const modal = document.getElementById("deleteShareModal-" + invitationId);
+    if (modal) modal.style.display = "none";
+    }
     
     </script>
 </body>

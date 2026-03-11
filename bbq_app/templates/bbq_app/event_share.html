@@ -59,7 +59,7 @@
             </div>
         </li>
     {% empty %}
-        <li>参加者はまだいません</li>
+        <li>イベント参加者はまだいません</li>
     {% endfor %}
 </ul>
 <div id="sharedUsersModal" class="modal">
@@ -69,14 +69,37 @@
         <ul class="shared-users-list">
             {% for row in shared_rows %}
                 <li class="shared-users-list__item">
-                    {{ row.participant.name }}
+                    <span>{{ row.participant.name }}</span>
+
+                <button type="button" onclick="openDeleteShareModal({{ row.invitation.id }})">
+                    共有削除
+                </button>
+
+                <div id="deleteShareModal-{{ row.invitation.id }}" class="modal">
+                    <div class="modal-content">
+                        <h2>共有を削除しますか？</h2>
+
+                        <div class="modal-actions">
+                            <form method="post" action="{% url 'invitation_delete' event.id row.invitation.id %}">
+                                {% csrf_token %}
+                                <button type="submit">はい</button>
+                            </form>
+
+                            <button type="button" onclick="closeDeleteShareModal({{ row.invitation.id }})">
+                                いいえ
+                            </button>
+                        </div>
+                    </div>
+                </div>        
                 </li>
             {% empty %}
                 <li>共有者はまだいません</li>
             {% endfor %}
         </ul>
 
-        <button type="button" onclick="closeSharedUsersModal()">閉じる</button>
+        <div class="modal-actions">
+            <button type="button" onclick="closeSharedUsersModal()">閉じる</button>
+        </div>
     </div>
 </div>
 {% endblock %}

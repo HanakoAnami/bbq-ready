@@ -101,7 +101,7 @@
     <h2>イベント参加者</h2>
 
     <ul class="participants-modal-list">
-      {% for participant in event.participant_set.all %}
+      {% for participant in event.participants.all %}
         <li class="participants-modal-list__item">
             {{ participant.name }}
         </li>
