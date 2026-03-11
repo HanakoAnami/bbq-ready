@@ -12,11 +12,38 @@ from django.contrib import messages
 from django.views.decorators.cache import never_cache
 from django.db import models
 from collections import defaultdict
-import secrets
+import secrets, json
 from django.urls import reverse
+
+
+def add_participants_from_list(request, event):
+    participant_names = [
+        name.strip()
+        for name in request.POST.getlist("participants")
+        if name.strip()
+    ]
+
+    for name in participant_names:
+        participant, created = Participant.objects.get_or_create(
+            event=event,
+            name=name
+        )
+
+        if not created:
+            messages.warning(request, f"{name} はすでに参加者に登録されています。")
+
 
 def portfolio(request):
     return render(request, 'bbq_app/portfolio.html')
+
+    for name in participant_names:
+        participant, created = Participant.objects.get_or_create(
+            event=event,
+            name=name
+        )
+
+        if not created:
+            messages.warning(request, f"{name} はすでに参加者に登録されています。")
 
 #ホームにイベントを３つまで表示
 @never_cache
@@ -59,19 +86,12 @@ def event_create(request):
             #主催者を参加者として登録。
             Participant.objects.get_or_create(
                 event=event,
-                user=request.user, defaults={"name": request.user.first_name or request.user.username}
+                user=request.user,
+                defaults={"name": request.user.first_name or request.user.username}
             )
             
-            #参加者を追加
-            participants_text = request.POST.get("participants", "")
-            participant_names = [
-                name.strip()
-                for name in participants_text.splitlines()
-                if name.strip()
-            ]
-            
-            for name in participant_names:
-                Participant.objects.get_or_create(event=event,name=name)
+            # 参加者追加
+            add_participants_from_list(request, event)
             
             #共通テンプレ（user=None)+自分のテンプレをイベントにコピー
             templates = BbqItem.objects.filter(
@@ -88,7 +108,8 @@ def event_create(request):
     else:
         form = EventForm()
         
-    return render(request, "bbq_app/event_form.html", {"form":form})
+    return render(request, "bbq_app/event_form.html", {"form":form,"existing_participants_json": "[]","current_participants":[]})
+
 
 @login_required
 def bbq_item_list_create(request):
@@ -122,23 +143,31 @@ def event_edit(request, event_id):
         if form.is_valid():
             form.save()
             
-            #参加者を追加
-            participants_text = request.POST.get("participants","")
-            participant_name = [
-                name.strip()
-                for name in participants_text.splitlines()
-                if name.strip()
-            ]
+            # 参加者追加
+            add_participants_from_list(request, event)
             
-            for name in participant_name:
-                Participant.objects.get_or_create(event=event, name=name)
-                
             messages.success(request, "イベントを更新しました。")
             return redirect("item_edit", event_id=event.id)
+        
     else:
         form = EventForm(instance=event)
-    return render(request, "bbq_app/event_form.html", {"form": form, "event":event})
-    
+        
+    current_participants = event.participants.exclude(user=event.user).order_by("id")
+    existing_participants = list(
+        current_participants.values_list("name", flat=True)
+    )
+
+    return render(
+        request,
+        "bbq_app/event_form.html",
+        {
+            "form": form,
+            "event":event,
+            "current_participants": current_participants,
+            "existing_participants": existing_participants
+        }
+    )
+        
 
 #持ち物編集リスト①
 @login_required

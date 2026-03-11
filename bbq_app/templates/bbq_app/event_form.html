@@ -17,10 +17,28 @@
         {% csrf_token %}
         {{ form.as_p }}
 
-        <p>参加者を追加（1行に1人）</p>
-        <textarea name="participants" rows="5" placeholder="のぶ&#10;たけし&#10;ゆき"></textarea>
+        <h3>参加者</h3>
 
-        <br><br>
+        {% if event %}
+            <p>現在の参加者</p>
+            <ul class="current-participants-list">
+                {% for participant in current_participants %}
+                    <li>{{ participant.name }}</li>
+                {% empty %}
+                    <li>参加者はまだいません</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p>参加者を追加</p>
+        <div class="participant-add-box">
+            <input type="text" id="participantInput" placeholder="参加者名を入力">
+            <button type="button" onclick="addParticipant()">＋参加者を追加</button>
+        </div>
+
+        <p id="participantError" class="form-error"></p>
+
+        <div id="participantsPreview" class="participants-preview"></div>
 
         <button type="submit">{% if event %}更新{% else %}保存{% endif %}</button>
     </form>
@@ -32,9 +50,94 @@
     {% endif %}
 
     <p><a href="{% url 'home' %}">戻る</a></p>
+
+    <script id="existingParticipantsData" type="application/json">
+        {{ existing_participants_json|default:"[]"|safe }}
+    </script>
+
+    <script>
+        let newParticipants = [];
+        let existingParticipants = [];
+
+        function renderParticipants() {
+            const preview = document.getElementById("participantsPreview");
+            const error = document.getElementById("participantError");
+
+            preview.innerHTML = "";
+            error.textContent = "";
+
+            newParticipants.forEach((name, index) => {
+                const row = document.createElement("div");
+                row.className = "participant-row";
+
+                const text = document.createElement("span");
+                text.textContent = name;
+
+                const removeBtn = document.createElement("button");
+                removeBtn.type = "button";
+                removeBtn.textContent = "✖️";
+                removeBtn.onclick = function () {
+                    newParticipants.splice(index, 1);
+                    renderParticipants();
+                };
+
+                const hidden = document.createElement("input");
+                hidden.type = "hidden";
+                hidden.name = "participants";
+                hidden.value = name;
+
+                row.appendChild(text);
+                row.appendChild(removeBtn);
+                row.appendChild(hidden);
+
+                preview.appendChild(row);
+            });
+        }
+
+        function addParticipant() {
+            const input = document.getElementById("participantInput");
+            const error = document.getElementById("participantError");
+            const name = input.value.trim();
+
+            error.textContent = "";
+
+            if (!name) {
+                error.textContent = "参加者を入力してください。";
+                return;
+            }
+
+            if (newParticipants.includes(name)) {
+                error.textContent = name + " はすでに追加されています。";
+                return;
+            }
+
+            if (existingParticipants.includes(name)) {
+                error.textContent = name + " はすでに参加者に登録されています。";
+                return;
+            }
+
+            newParticipants.push(name);
+            input.value = "";
+            renderParticipants();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const dataEl = document.getElementById("existingParticipantsData");
+
+            if (dataEl) {
+                try {
+                    const initialData = JSON.parse(dataEl.textContent || "[]");
+                    existingParticipants = Array.isArray(initialData) ? initialData : [];
+                } catch (e) {
+                    existingParticipants = [];
+                }
+            }
+
+            renderParticipants();
+        });
+    </script>
 {% endblock %}
 
 {% block footer %}
     {% include "bbq_app/partials/footer_nav.html" %}
 {% endblock %}
-    
