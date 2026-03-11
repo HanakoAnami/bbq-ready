@@ -146,7 +146,11 @@ def item_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     
     items = (
-        EventItem.objects.filter(event=event).select_related("bbq_item").order_by("bbq_item__category", "bbq_item__name"))
+        EventItem.objects
+        .filter(event=event, bbq_item__name__gt="")
+        .select_related("bbq_item")
+        .order_by("bbq_item__category", "bbq_item__name")
+    )
     
     if request.method == "POST":
         selected_ids = set(request.POST.getlist("selected_items"))
