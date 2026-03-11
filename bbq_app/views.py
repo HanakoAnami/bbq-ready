@@ -131,7 +131,7 @@ def event_edit(request, event_id):
             ]
             
             for name in participant_name:
-                Participant.objects.create(event=event, name=name)
+                Participant.objects.get_or_create(event=event, name=name)
                 
             messages.success(request, "イベントを更新しました。")
             return redirect("item_edit", event_id=event.id)
