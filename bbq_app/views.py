@@ -71,7 +71,7 @@ def event_create(request):
             ]
             
             for name in participant_names:
-                Participant.objects.create(event=event,name=name)
+                Participant.objects.get_or_create(event=event,name=name)
             
             #共通テンプレ（user=None)+自分のテンプレをイベントにコピー
             templates = BbqItem.objects.filter(
