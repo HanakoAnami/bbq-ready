@@ -103,8 +103,31 @@
     <ul class="participants-modal-list">
       {% for participant in event.participants.all %}
         <li class="participants-modal-list__item">
-            {{ participant.name }}
-        </li>
+          <span>{{ participant.name }}</span>
+
+          {% if participant.user != event.user %}
+            <button type="button" onclick="openDeleteParticipantModal({{ participant.id }})">
+              参加者削除
+            </button>
+
+            <div id="deleteParticipantModal-{{ participant.id }}" class="modal">
+              <div class="modal-content">
+                <h2>参加者を削除しますか？</h2>
+
+                <div class="modal-actions">
+                  <form method="post" action="{% url 'participant_delete' event.id participant.id %}">
+                    {% csrf_token %}
+                    <button type="submit">はい</button>
+                  </form>
+
+                  <button type="button" onclick="closeDeleteParticipantModal({{ participant.id }})">
+                    いいえ
+                  </button>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </li>    
       {% empty %}
         <li>イベント参加者はいません</li>
       {% endfor %}

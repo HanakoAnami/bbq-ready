@@ -154,6 +154,16 @@
     if (modal) modal.style.display = "none";
     }
     
+    function openDeleteParticipantModal(participantId) {
+    const modal = document.getElementById("deleteParticipantModal-" + participantId);
+    if (modal) modal.style.display = "block";
+    }
+
+    function closeDeleteParticipantModal(participantId) {
+    const modal = document.getElementById("deleteParticipantModal-" + participantId);
+    if (modal) modal.style.display = "none";
+    }
+    
     </script>
 </body>
 </html>
