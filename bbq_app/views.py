@@ -397,6 +397,34 @@ def event_participants(request, event_id):
         "event": event,
         "participant_rows":participant_rows,
     }) 
+    
+
+#参加者削除
+@login_required
+def participant_delete(request, event_id, participant_id):
+    event = get_object_or_404(Event, id=event_id, user=request.user)
+    
+    participant = get_object_or_404(
+        Participant,
+        id=participant_id,
+        event=event
+    )
+    
+    if request.method == "POST":
+        #この参加者が担当だった持ち物を未設定に戻す
+        EventItem.objects.filter(
+            event=event,
+            assignee=participant
+        ).update(
+            assignee=None,
+            is_ready=False
+        )
+        
+        participant.delete()
+        messages.success(request, "参加者を削除しました。")
+        return redirect("item_edit", event_id=event.id)
+    
+    return redirect("item_edit", event_id=event.id)
 
 #イベント共有    
 @login_required

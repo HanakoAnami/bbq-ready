@@ -29,5 +29,7 @@ urlpatterns = [
     path("events/<int:event_id>/share", views.event_share, name="event_share"),
     path("events/<int:event_id>/items/add/", views.event_item_add, name="event_item_add"),
     path("events/<int:event_id>/invitations/<int:invitation_id>/delete", views.invitation_delete, name="invitation_delete"),
+    path("events/<int:event_id>/participants/<int:participant_id>/delete", views.participant_delete, name="participant_delete"),
 ]
+
 
