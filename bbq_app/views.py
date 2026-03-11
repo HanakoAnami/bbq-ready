@@ -417,14 +417,10 @@ def invitation_create(request, event_id):
             }
         )   
         
-        invite_url = request.build_absolute_uri(
-            reverse("invitation_access", args=[invitation.token])
-        )
-        
         messages.success(request, "招待リンクを発行しました。")
-        return redirect("event_participants", event_id=event.id)
+        return redirect("event_share", event_id=event.id)
     
-    return redirect("event_participants", event_id=event.id) 
+    return redirect("event_share", event_id=event.id) 
 
 
 @login_required
@@ -454,23 +450,24 @@ def event_share(request, event_id):
             invite_url = request.build_absolute_uri(
                 reverse("invitation_access", args=[invitation.token])
             )
-            
-            if invitation.expires_at and invitation.expires_at < timezone.now():
+            if invitation.guest_name:
+                share_status = "joined"
+            elif invitation.expires_at and invitation.expires_at < timezone.now():
                 share_status = "expired"
             else:
                 share_status = "active"
                 
-        row = {
-            "participant": participant,
-            "invitation": invitation,
-            "invite_url": invite_url,
-            "share_status": share_status,
-        }
-        share_rows.append(row)
-        
-        if share_status == "active":
-            shared_rows.append(row)    
-        
+            row = {
+                "participant": participant,
+                "invitation": invitation,
+                "invite_url": invite_url,
+                "share_status": share_status,
+            }
+            share_rows.append(row)
+            
+            if share_status in ["active", "joined"]:
+                shared_rows.append(row)
+                
     return render(
         request,
         "bbq_app/event_share.html",
@@ -487,10 +484,15 @@ def invitation_access(request, token):
     invitation = get_object_or_404(Invitation, token=token)
     
     #まだ名前登録していない人だけ期限切れチェック
-    if not invitation.guest_name and invitation.expires_at and invitation.expires_at < timezone.now():
+    if (
+        not invitation.guest_name 
+        and invitation.expires_at 
+        and invitation.expires_at < timezone.now()
+    ):
+        
         return render(
             request,
-            "bbq_app_invitation_expired.html",
+            "bbq_app/invitation_expired.html",
             {"invitation": invitation}
         )
         

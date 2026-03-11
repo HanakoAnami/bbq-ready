@@ -24,6 +24,8 @@
                     共有リンク未発行
                 {% elif row.share_status == "active" %}
                     共有リンク発行済み
+                {% elif row.share_status == "joined" %}
+                    イベント参加済み
                 {% elif row.share_status == "expired" %}
                     共有リンク期限切れ
                 {% endif %}
@@ -38,6 +40,11 @@
                     </form>
 
                 {% elif row.share_status == "active" %}
+                    <button type="button" onclick="copyInviteUrl('{{ row.invite_url }}')">
+                        リンクコピー
+                    </button>
+
+                {% elif row.share_status == "joined" %}
                     <button type="button" onclick="copyInviteUrl('{{ row.invite_url }}')">
                         リンクコピー
                     </button>

@@ -23,14 +23,40 @@
 
     <script>
     function openForgotModal() {
-        const modal = document.getElementById("forgotModal");
-        if (modal) modal.style.display = "block";
-    }
+    const modal = document.getElementById("forgotModal");
+    if (modal) modal.style.display = "block";
+}
 
     function closeForgotModal() {
-        const modal = document.getElementById("forgotModal");
-        if (modal) modal.style.display = "none";
+    const modal = document.getElementById("forgotModal");
+    const form = document.getElementById("forgotForm");
+    const error = document.getElementById("forgotError");
+
+    if (modal) modal.style.display = "none";
+    if (form) form.reset();
+    if (error) error.textContent = "";
+}
+
+    function validateForgotForm() {
+    const form = document.getElementById("forgotForm");
+    const error = document.getElementById("forgotError");
+    const name = form.querySelector('input[name="name"]').value.trim();
+    const category = form.querySelector('input[name="category"]:checked');
+
+    error.textContent = "";
+
+    if (!name) {
+        error.textContent = "持ち物名を入力してください。";
+        return false;
     }
+
+    if (!category) {
+        error.textContent = "カテゴリーを選択してください。";
+        return false;
+    }
+
+    return true;
+}
 
     function copyInviteUrl(url) {
         navigator.clipboard.writeText(url)

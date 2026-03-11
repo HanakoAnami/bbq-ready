@@ -224,6 +224,12 @@ body{
 
 .forgot-category {
     text-align: left;
+    margin: 12px 0;
+}
+
+.forgot-category label {
+    display: block;
+    margin-bottom: 6px;
 }
 
 .event-list-scroll {
