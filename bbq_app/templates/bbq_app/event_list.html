@@ -1,67 +1,66 @@
 {% extends "bbq_app/base.html" %}
 
-{% block title %}全イベント詳細確認{% endblock %}
-
 {% block content %}
-<h1>全イベント詳細確認</h1>
+<h1 class="event-list-page-title">全イベント詳細確認</h1>
 
-<div>
-    {% if status == "upcoming" %}
-        <strong>開催予定</strong>
-    {% else %}
-        <a href="{% url 'event_list' %}?status=upcoming">開催予定</a>
-    {% endif %}
+<div class="event-list-toolbar">
+    <div class="event-list-tabs">
+        {% if status == "upcoming" %}
+            <strong>開催予定</strong>
+        {% else %}
+            <a href="{% url 'event_list' %}?status=upcoming&sort={{ sort }}">開催予定</a>
+        {% endif %}
 
-    {% if status == "past" %}
-         <strong>開催済</strong>
-    {% else %}
-        <a href="{% url 'event_list' %}?status=past">開催済</a>
-    {% endif %}
+        {% if status == "past" %}
+            <strong>開催済</strong>
+        {% else %}
+            <a href="{% url 'event_list' %}?status=past&sort={{ sort }}">開催済</a>
+        {% endif %}
+    </div>
 
     <form method="get" class="event-sort">
         <input type="hidden" name="status" value="{{ status }}">
 
         <select name="sort" onchange="this.form.submit()">
             <option value="held_at_asc" {% if sort == "held_at_asc" %}selected{% endif %}>
-            開催日が近い順
+                開催日が近い順
             </option>
 
             <option value="held_at_desc" {% if sort == "held_at_desc" %}selected{% endif %}>
-            開催日が古い順
+                開催日が古い順
             </option>
 
             <option value="created_desc" {% if sort == "created_desc" %}selected{% endif %}>
-            作成日が新しい順
+                作成日が新しい順
             </option>
         </select>  
     </form>      
 </div>
-
-<hr>
-
-<div class="event-list-scroll">
-
-    <ul>
+<div class="event-card-list">
     {% for event in events %}
-        <li>
-            <strong>
-                <a href="{% url 'item_edit' event.id %}">
-                    {{event.name}}
-                </a>
-            </strong><br>
+        <div class="event-list-card">
+            <a href="{% url 'item_edit' event.id %}" class="event-list-card__link">
+                <p class="event-list-card__title">{{ event.name }}</p>
 
-            開催日時:
-            {% if event.held_at %}
-                {{ event.held_at|date:"Y年m月d日 H:i" }}
-            {% else %}
-                未定
-            {% endif %}
-            <br>
+                <p class="event-list-card__text">
+                    開催日時：
+                    {% if event.held_at %}
+                        {{ event.held_at|date:"Y年m月d日 H:i" }}
+                    {% else %}
+                        未定
+                    {% endif %}
+                </p>
 
-            開催場所:{{ event.location|default:"未定" }}
-            <br><br>
-
-            <a href="#" onclick="openDuplicateModal({{ event.id }}); return false;">イベントを複製する</a>
+                <p class="event-list-card__text">
+                    開催場所：:{{ event.location|default:"未定"}}
+                </p>
+            </a>
+            
+            <button type="button" class="event-list-card__duplicate-btn"
+                    onclick="openDuplicateModal({{ event.id }}); return false;">
+                イベントを複製する
+            </button>
+            
             <div id="duplicateModal-{{ event.id }}" class="modal">
                 <div class="modal-content">
                     <h2>このイベントを複製しますか？</h2>
@@ -70,16 +69,14 @@
                         <form method="get" action="{% url 'event_duplicate' event.id %}">
                             <button type="submit">はい</button>
                         </form>
+
                         <button type="button" onclick="closeDuplicateModal({{ event.id }})">いいえ</button>
                     </div>
-                </div>    
-            </div>
-            <hr>
-        </li>
+                </div>
+            </div>    
+        </div>
     {% empty %}
-        <li>イベントがありません</li>
+        <p class="event-list-empty">イベントがありません</p>
     {% endfor %}
-    </ul>
 </div>
 {% endblock %}
-
