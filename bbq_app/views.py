@@ -650,6 +650,9 @@ def invitation_access(request, token):
         
     #準備完了保存
     if request.method == "POST" and invitation.guest_name:
+        print("保存処理に入った")
+        print("ready_items", request.POST.getlist("ready_items"))
+        
         ready_item_ids = set(request.POST.getlist("ready_items"))
         updated = []
         
@@ -662,7 +665,8 @@ def invitation_access(request, token):
                 
         if updated:
             EventItem.objects.bulk_update(updated, ["is_ready"])
-            
+        
+        messages.success(request, "保存しました。")    
         return redirect("invitation_access", token=invitation.token)
     
     return render(

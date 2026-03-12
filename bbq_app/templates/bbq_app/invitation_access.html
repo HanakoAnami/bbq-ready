@@ -1,42 +1,89 @@
-{% extends "bbq_app/base.html" %}
+<DOCTYPE html>
+<html lang="ja">
 
-{% block content %}
-<h1>参加準備ページ</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>参加準備ページ</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bbq_app/css/style.css' %}">
+</head>
 
-{% if not invitation.guest_name %}
-    <p>お名前を入力してください。</p>
+<body class="guest-page">
 
-    <form method="post">
-        {% csrf_token %}
-        <input type="text" name="guest_name" placeholder="名前を入力">
-        <button type="submit">登録</button>
-    </form>
-{% else %}
-    <p>{{ invitation.guest_name }} さんの担当持ち物</p>
+<div class="guest-page__container">
+    <header class="guest-page__header">
+        <h1 class="guest-page__title">BBQ Ready</h1>
+    </header>
 
-    <form method="post">
-        {% csrf_token %}
-        <ul>
-            {% for event_item in assigned_items %}
-                <li>
-                    <label>
-                        <input
-                            type="checkbox"
-                            name="ready_items"
-                            value="{{ event_item.id }}"
-                            {% if event_item.is_ready %}checked{% endif %}
-                        >
-                        {{ event_item.bbq_item.name }}
-                    </label>
-                </li>
-            {% empty %}
-                <li>担当の持ち物はありません。</li>
-            {% endfor %}
-        </ul>
-    
-        {% if assigned_items %}
-        <button type="submit">保存</button>
+    <main class="guest-page__content">
+
+        {% if messages %}
+            <div class="guest-messages">
+                {% for message in messages %}
+                    <p class="guest-message">{{ message }}</p>
+                {% endfor %}
+            </div>
         {% endif %}
-    </form>
-{% endif %}
-{% endblock %}
+        
+        <section class="guest-card">
+            <h2 class="guest-card__heading">参加者準備ページ</h2>
+
+            {% if not invitation.guest_name %}
+                <p class="guest-card__text">お名前を入力してください。</p>
+
+                <form method="post" class="guest-form">
+                    {% csrf_token %}
+                    <input type="text" name="guest_name" placeholder="名前を入力" class="guest-input">
+                    <button type="submit" class="guest-button">登録</button>
+                </form>
+
+            {% else %}
+                {% include "bbq_app/partials/guest_event_header.html" with event=invitation.participant.event %}
+
+                <p class="guest-card__text">{{ invitation.guest_name }} さんの担当持ち物</p>
+
+                <form method="post" class="guest-form">
+                    {% csrf_token %}
+
+                    <ul class="guest-items">
+                        {% for event_item in assigned_items %}
+                            <li class="guest-item">
+                                <label class="guest-item__label">
+                                    <input
+                                        type="checkbox"
+                                        name="ready_items"
+                                        value="{{ event_item.id }}"
+                                        {% if event_item.is_ready %}checked{% endif %}
+                                    >
+                                    <span>{{ event_item.bbq_item.name }}</span>
+                                </label>
+                            </li>
+                        {% empty %}
+                            <li class="guest-empty">担当の持ち物はありません。</li>
+                        {% endfor %}
+                    </ul>
+
+                    {% if assigned_items %}
+                        <button type="submit" class="guest-button">保存</button>
+                    {% endif %}
+                </form>
+            {% endif %}
+        </section>
+    </main>
+</div>
+
+</body>
+</html>
+
+<script>
+function openParticipantsModal() {
+    const modal = document.getElementById("participantsModal");
+    if (modal) modal.style.display = "block";
+}
+
+function closeParticipantsModal() {
+    const modal = document.getElementById("participantsModal");
+    if (modal) modal.style.display = "none";
+}
+</script>

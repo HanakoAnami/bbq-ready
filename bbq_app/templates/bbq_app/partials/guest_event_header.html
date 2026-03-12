@@ -1,0 +1,46 @@
+{% load static %}
+
+{% if event %}
+<div class="event-header guest-event-header">
+
+  <div class="event_header__top">
+    <div>
+      <div class="event-header__title">{{ event.name }}</div>
+      <div class="event-header__meta">
+        開催日時：
+        {% if event.held_at %}
+          {{ event.held_at|date:"Y年m月d日 H:i" }}
+        {% else %}
+          未定
+        {% endif %}
+        <br>
+        開催場所：{{ event.location|default:"未定" }}
+        <br>
+        参加者一覧：詳細は
+        <a href="#" onclick="openParticipantsModal(); return false;">こちら</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="participantsModal" class="modal">
+  <div class="modal-content">
+    <h2>イベント参加者</h2>
+
+    <ul class="participants-modal-list">
+      {% for participant in event.participants.all %}
+        <li class="participants-modal-list__item">
+          {{ participant.name }}
+        </li>
+      {% empty %}
+        <li>イベント参加者はいません</li>
+      {% endfor %}
+    </ul>
+
+    <div class="modal-actions">
+      <button type="button" onclick="closeParticipantsModal()">閉じる</button>
+    </div>
+  </div>
+</div>
+{% endif %}
