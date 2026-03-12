@@ -233,6 +233,9 @@ def item_assign(request, event_id):
     if request.method == "POST":
         updated = []
         
+        #チェックされた持ち物id
+        ready_item_ids = set(request.POST.getlist("ready_items"))
+        
         for event_item in items:
             key = f"assignee_{event_item.id}"
             participant_id = request.POST.get(key)
@@ -240,22 +243,36 @@ def item_assign(request, event_id):
             #このイベントの参加者かチェック
             if participant_id:
                 assignee = participants.filter(id=participant_id).first()
+                
             else:
                 assignee = None
                 
             new_assignee_id = assignee.id if assignee else None
+            
+            #主催者担当の時だけ主催者画面で準備進捗更新許可
+            if assignee and assignee.user == event.user:
+                new_is_ready = str(event_item.id) in ready_item_ids
+            else:
+                #主催者以外が担当の時は主催者画面では変更しない
+                new_is_ready = event_item.is_ready
                 
+            #担当者が変わったら準備完了をリセット
             if event_item.assignee_id != new_assignee_id:
                 event_item.assignee = assignee
                 event_item.is_ready = False
                 updated.append(event_item)
+                
+            #担当者が同じで主催者担当の時だけチェック更新
+            elif event_item.is_ready != new_is_ready:
+                event_item.is_ready = new_is_ready
+                updated.append(event_item)
         
         if updated:
             EventItem.objects.bulk_update(updated, ["assignee", "is_ready"])
-        
-        messages.success(request, "担当者を登録しました。")
+            
+        messages.success(request, "更新しました。")
         return redirect("item_assign", event_id=event.id)
-        
+    
     return render(
         request,
         "bbq_app/item_assign.html",
@@ -265,9 +282,10 @@ def item_assign(request, event_id):
             "items": items,
             "total_count": total_count,
             "ready_count": ready_count,
-            "progress_percent": progress_percent,
-        },
+            "progress_percent": progress_percent
+        }
     )
+       
     
 #持ち物追加
 @login_required

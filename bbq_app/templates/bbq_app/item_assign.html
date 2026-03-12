@@ -20,13 +20,30 @@
 
     <ul class="assign-list">
         {% for event_item in items %}
-            <li class="assign-list__item">
-                <div class="assign-list__name">
+            <li class="assign-row">
+                <div class="assign-check">
+                    {% if event_item.assignee and event_item.assignee.user == event.user %}
+                        <input
+                            type="checkbox"
+                            name="ready_items"
+                            value="{{ event_item.id }}"
+                            {% if event_item.is_ready %}checked{% endif %}
+                        >
+                    {% else %}
+                        <input
+                            type="checkbox"
+                            {% if event_item.is_ready %}checked{% endif %}
+                            disabled
+                        >
+                    {% endif %}
+                </div>
+                
+                <div class="assign-select">
                     {{ event_item.bbq_item.name }}
                 </div>
 
-                <div class="assign-list__select">
-                    <select name="assignee_{{ event_item.id}}">
+                <div class="assign-select">
+                    <select name="assignee_{{ event_item.id }}">
                         <option value="">未設定</option>
                         {% for participant in participants %}
                             <option value="{{ participant.id }}"
@@ -35,23 +52,24 @@
                             </option>
                         {% endfor %}
                     </select>
-                </div>   
-                
-                <div class="assign-list__status">
-                    {% if event_item.is_ready %}
-                        <span>準備完了</span>
+                </div>
+
+                <div class="assign_status">
+                    {% if not event_item.assignee %}
+                        担当者未設定
+                    {% elif event_item.is_ready %}
+                        準備完了
                     {% else %}
-                        <span>未準備</span>
+                        準備中
                     {% endif %}
                 </div>
-            </li>   
+            </li>
         {% empty %}
             <li>必要な持ち物がありません。</li>
         {% endfor %}
-    </ul>    
+    </ul>
     
     <button type="submit">保存</button>
 </form>
 
-<p><a href="{% url 'item_edit' event.id %}">持ち物リスト編集へ戻る</a></p>
 {% endblock %}
