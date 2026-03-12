@@ -49,13 +49,20 @@ def portfolio(request):
 @never_cache
 @login_required
 def home(request):
-    now = timezone.localtime()
-    upcoming_events = (
+
+    now = timezone.now()
+
+    events = (
         Event.objects
         .filter(user=request.user, held_at__gte=now)
         .order_by("held_at")[:3]
     )
-    return render(request, 'bbq_app/home.html', {"upcoming_events": upcoming_events})
+
+    return render(
+        request,
+        "bbq_app/home.html",
+        {"events": events}
+    )
 
 #ログイン
 class UserLoginView(LoginView):
