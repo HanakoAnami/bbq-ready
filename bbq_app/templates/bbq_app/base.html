@@ -3,23 +3,34 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}BBQ Ready{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'bbq_app/css/style.css' %}">
 </head>
+
 <body>
-    {% block header %}{% endblock %}
+    {% block header %}
+        {% include "bbq_app/partials/top_bar.html" %}
+    {% endblock %}
+
+    <main class="main-content">
+
     {% if messages %}
-        <div class="flash-messages">
-            {% for message in messages %}
-                <div class="flash {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
+    <div class="flash-messages">
+        {% for message in messages %}
+            <div class="flash {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
     {% endif %}
-    <main>{% block content %}{% endblock %}</main>
+    {% block content %}{% endblock %}
+
+    </main>
 
     {% block footer %}
         {% include "bbq_app/partials/footer_nav.html" %}
     {% endblock %}
+</body>
+</html>
 
     <script>
     function openForgotModal() {
@@ -165,5 +176,3 @@
     }
     
     </script>
-</body>
-</html>

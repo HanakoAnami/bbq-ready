@@ -222,6 +222,11 @@ def item_assign(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
     
     #このイベントの参加者(主催者も含めて)
+    Participant.objects.get_or_create(
+        event=event,
+        user=request.user,
+        defaults={"name":request.user.first_name or request.user.username}
+    )
     participants = Participant.objects.filter(event=event).order_by("id")
     
     #このイベントの持ち物

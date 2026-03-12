@@ -45,14 +45,25 @@
                 <div class="assign-select">
                     <select name="assignee_{{ event_item.id }}">
                         <option value="">未設定</option>
+
                         {% for participant in participants %}
-                            <option value="{{ participant.id }}"
-                                {% if event_item.assignee_id == participant.id %}selected{% endif %}>
-                                {{ participant.name }}
-                            </option>
+                            {% if participant.user == event.user %}
+                                <option value="{{ participant.id }}"
+                                    {% if event_item.assignee_id == participant.id %}selected{% endif %}>
+                                    {{ participant.name }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% for participant in participants %}
+                            {% if participant.user != event.user %}
+                                <option value="{{ participant.id }}"
+                                    {% if event_item.assignee_id == participant.id %}selected{% endif %}>
+                                    {{ participant.name }}
+                                </option>
+                            {% endif %}
                         {% endfor %}
                     </select>
-                </div>
 
                 <div class="assign_status">
                     {% if not event_item.assignee %}
