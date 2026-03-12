@@ -2,18 +2,21 @@
 {% block title %}マイページ{% endblock %}
 
 {% block content %}
-<h1>マイページ</h1>
-<p>こちらで登録アカウント内容を変更できます。</p>
+<div class="mypage-page">
+    <h2 class="mypage-title">マイページ</h2>
+    <p class="mypage-description">こちらで登録アカウント内容を変更できます。</p>
 
-<div class="mypage-menu">
-    <a class="btn" href="{% url 'mypage_name' %}">ユーザー名変更</a>
-    <a class="btn" href="{% url 'mypage_email' %}">メールアドレス変更</a>
-    <a class="btn" href="{% url 'mypage_password' %}">パスワード変更</a>
-    <form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">ログアウト</button>
-</form>
+    <div class="mypage-card">
+        <div class="mypage-menu">
+            <a class="mypage-menu__item" href="{% url 'mypage_name' %}">ユーザー名変更</a>
+            <a class="mypage-menu__item" href="{% url 'mypage_email' %}">メールアドレス変更</a>
+            <a class="mypage-menu__item" href="{% url 'mypage_password' %}">パスワード変更</a>
+
+            <form method="post" action="{% url 'logout' %}" class="mypage-logout-form">
+                {% csrf_token %}
+                <button type="submit" class="mypage-logout-btn">ログアウト</button>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
-
-

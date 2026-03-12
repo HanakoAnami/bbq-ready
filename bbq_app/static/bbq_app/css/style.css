@@ -697,3 +697,60 @@ body{
     margin: 0;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
+
+/* =====================
+   mypage
+===================== */
+
+.mypage-page {
+    text-align: center;
+}
+
+.mypage-title {
+    margin-bottom: 8px;
+}
+
+.mypage-description {
+    margin-bottom: 20px;
+    color: #5c554d;
+}
+
+.mypage-card {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    padding: 20px 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: left;
+}
+
+.mypage-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mypage-menu__item {
+    display: block;
+    text-decoration: none;
+    color: #3f3a34;
+    background: #fdfaf5;
+    border: 1px solid #ece7de;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-weight: 500;
+}
+
+.mypage-logout-form {
+    margin: 0;
+}
+
+.mypage-logout-btn {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 16px;
+    background: #e65a5a;
+    color: white;
+    font-size: 15px;
+}
