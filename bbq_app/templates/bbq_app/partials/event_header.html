@@ -17,8 +17,13 @@
     </div>
 
     <div class="event-header__actions">
-      <a href="{% url 'event_edit' event.id %}">✏️ 編集</a>
-      <a href="#" onclick="openDeleteModal({{ event.id }}); return false;">🗑 削除</a>
+      <a href="{% url 'event_edit' event.id %}">
+        <img src="{% static 'bbq_app/images/pencil.png' %}" width="24">
+      </a>
+
+      <a href="#" onclick="openDeleteModal({{ event.id }}); return false;">
+        <img src="{% static 'bbq_app/images/trashcan.png' %}" width="24">
+      </a>
     </div>
   </div>
 

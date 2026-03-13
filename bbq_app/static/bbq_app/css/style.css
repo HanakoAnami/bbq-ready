@@ -280,6 +280,7 @@ body {
     margin: 16px;
     padding: 16px;
     margin-top: 76px;
+    position: relative;
 }
 
 .event-header__top {
@@ -316,6 +317,19 @@ body {
     background: #c7ddc7;
 }
 
+.event-header__actions{
+  position: absolute;
+  top: 16px;
+  right: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.event-header__actions a {
+  text-decoration: none;
+}
 
 /* =====================
    event list
