@@ -2,19 +2,59 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ログイン</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'bbq_app/css/style.css' %}">
 </head>
+
 <body>
-  <h1>BBQ Ready</h1>
+<div class="auth-page">
+  <div class="auth-card">
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+    <h1 class="auth-title">BBQ Ready</h1>
 
-    <button type="submit">ログイン</button>
-  </form>
-  <p>
-    <a href="{% url 'signup' %}" class="btn-primary">新規アカウント登録</a>
-  </p>
+    {% if form.non_field_errors %}
+      <div class="auth-form-errors">
+        {% for error in form.non_field_errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" class="auth-form" novalidate>
+      {% csrf_token %}
+
+      <p>
+        <label for="{{ form.username.id_for_label }}">メールアドレス</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          {% for error in form.username.errors %}
+            <span class="auth-inline-error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </p>
+
+        <div class="auth-label-row">
+          <label for="{{ form.password.id_for_label }}">パスワード</label>
+        </div>
+
+        {{ form.password }}
+
+        {% if form.password.errors %}
+          {% for error in form.password.errors %}
+            <span class="auth-inline-error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </p>
+
+      <div class="auth-actions">
+        <button type="submit" class="auth-main-btn">ログイン</button>
+        <a href="{% url 'signup' %}" class="auth-sub-btn">アカウント登録</a>
+      </div>
+    </form>
+
+  </div>
+</div>
 </body>
 </html>

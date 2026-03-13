@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from .forms import SignupForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm, BbqItemForm, ForgottenItemForm
+from .forms import SignupForm, LoginForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm, BbqItemForm, ForgottenItemForm
 from .models import Event, BbqItem, EventItem, Participant, Invitation
 from django.utils import timezone
 from django.db.models import Q
@@ -67,6 +67,7 @@ def home(request):
 #ログイン
 class UserLoginView(LoginView):
     template_name = 'bbq_app/login.html'
+    form_class =LoginForm
     
 def signup(request):
     if request.method == "POST":

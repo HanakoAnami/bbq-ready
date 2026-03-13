@@ -1,28 +1,83 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from .models import Event, BbqItem
 from django.contrib.auth import get_user_model
 
+class LoginForm(AuthenticationForm):
+
+    username = forms.EmailField(
+        label="メールアドレス",
+        error_messages={
+            "required": "メールアドレスを入力してください",
+        }
+    )
+
+    password = forms.CharField(
+        label="パスワード",
+        widget=forms.PasswordInput,
+        error_messages={
+            "required": "パスワードを入力してください",
+        }
+    )
+
+    error_messages = {
+        "invalid_login": "メールアドレスまたはパスワードが正しくありません",
+        "inactive": "このアカウントは利用できません",
+    }
+
+
 class SignupForm(UserCreationForm):
-    nickname = forms.CharField(label="名前/ニックネーム", max_length=30, required=True)
-    email = forms.EmailField(label="メールアドレス", required=True)
+    nickname = forms.CharField(
+        label="名前/ニックネーム",
+        max_length=30, 
+        required=True,
+        error_messages={
+            "required": "名前を入力してください",
+        },
+        widget=forms.TextInput(attrs={
+            "placeholder": "名前 / ニックネーム"
+        })
+    )
+    
+    email = forms.EmailField(
+        label="メールアドレス",
+        required=True,
+        error_messages={
+            "required": "メールアドレスを入力してください",
+        },
+        widget=forms.EmailInput(attrs={
+            "placeholder": "メールアドレス"
+        })
+    )
 
     class Meta:
         model = User
         fields = ("nickname", "email", "password1", "password2")
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.fields["password1"].widget.attrs["placeholder"] = "パスワード"
+        self.fields["password2"].widget.attrs["placeholder"] = "パスワード再入力"
     
+        self.fields["password1"].error_messages["required"] = "パスワードを入力してください"
+        self.fields["password2"].error_messages["required"] = "パスワードを再入力してください"
+     
     def clean_email(self):
         email = self.cleaned_data["email"].lower()
         #usernameにemailを入れて運用、usernameの重複をチェックする
         if User.objects.filter(username=email).exists():
             raise forms.ValidationError("このメールアドレスは既に登録されています。")
+        
         return email
         
     def save(self, commit=True):
         user = super().save(commit=False)
+        
         email = self.cleaned_data["email"].lower()
         nickname = self.cleaned_data["nickname"]
+        
         user.username = email
         user.email = email
         user.first_name = nickname

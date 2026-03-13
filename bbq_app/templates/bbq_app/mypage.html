@@ -2,21 +2,45 @@
 {% block title %}マイページ{% endblock %}
 
 {% block content %}
-<div class="mypage-page">
-    <h2 class="mypage-title">マイページ</h2>
-    <p class="mypage-description">こちらで登録アカウント内容を変更できます。</p>
+<h1>マイページ</h1>
+<p>こちらで登録アカウント内容を変更できます。</p>
 
-    <div class="mypage-card">
-        <div class="mypage-menu">
-            <a class="mypage-menu__item" href="{% url 'mypage_name' %}">ユーザー名変更</a>
-            <a class="mypage-menu__item" href="{% url 'mypage_email' %}">メールアドレス変更</a>
-            <a class="mypage-menu__item" href="{% url 'mypage_password' %}">パスワード変更</a>
+<div class="mypage-card">
+    <div class="mypage-menu">
+        <a class="mypage-menu__item" href="{% url 'mypage_name' %}">ユーザー名変更</a>
+        <a class="mypage-menu__item" href="{% url 'mypage_email' %}">メールアドレス変更</a>
+        <a class="mypage-menu__item" href="{% url 'mypage_password' %}">パスワード変更</a>
 
-            <form method="post" action="{% url 'logout' %}" class="mypage-logout-form">
+        <button type="button" class="mypage-logout-btn" onclick="openLogoutModal()">
+            ログアウト
+        </button>
+    </div>
+</div>
+
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <h2>ログアウトしますか？</h2>
+
+        <div class="modal-actions">
+            <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button type="submit" class="mypage-logout-btn">ログアウト</button>
+                <button type="submit">はい</button>
             </form>
+
+            <button type="button" onclick="closeLogoutModal()">いいえ</button>
         </div>
     </div>
 </div>
+
+<script>
+function openLogoutModal() {
+    const modal = document.getElementById("logoutModal");
+    if (modal) modal.style.display = "block";
+}
+
+function closeLogoutModal() {
+    const modal = document.getElementById("logoutModal");
+    if (modal) modal.style.display = "none";
+}
+</script>
 {% endblock %}
