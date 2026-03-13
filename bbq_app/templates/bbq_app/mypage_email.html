@@ -1,17 +1,31 @@
 {% extends "bbq_app/base.html" %}
-
 {% block title %}メールアドレス変更{% endblock %}
 
 {% block content %}
-<h1>メールアドレス変更<lh1>
+<div class="mypage-edit-page">
+    <h1 class="mypage-edit-title">メールアドレス変更</h1>
 
-<p>現在のメールアドレス:{{ request.user.email }}</p>
+    <div class="mypage-edit-card">
+        <p class="mypage-edit-current-label">現在登録のメールアドレス</p>
+        <p class="mypage-edit-current-value">{{ request.user.email }}</p>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">変更</button>
-</form>
+        <form method="post" class="mypage-edit-form">
+            {% csrf_token %}
 
-<p><a href="{% url 'mypage' %}">戻る</a></p>
-{% endblock %}   
+            <label class="mypage-edit-label" for="{{ form.email.id_for_label }}">
+                新たなメールアドレス：
+            </label>
+            {{ form.email }}
+
+            {% if form.email.errors %}
+                <p class="mypage-inline-error">{{ form.email.errors.0 }}</p>
+            {% endif %}
+
+            <div class="mypage-edit-actions">
+                <button type="submit" class="modal-confirm-btn">変更</button>
+                <a href="{% url 'mypage' %}" class="modal-cancel-btn">戻る</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

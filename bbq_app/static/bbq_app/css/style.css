@@ -754,3 +754,96 @@ body{
     color: white;
     font-size: 15px;
 }
+
+/* =====================
+   mypage edit
+===================== */
+
+.mypage-edit-page {
+    text-align: center;
+}
+
+.mypage-edit-title {
+    margin-bottom: 20px;
+}
+
+.mypage-edit-card {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 18px;
+    padding: 24px 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.mypage-edit-current-label {
+    margin: 0 0 8px;
+    font-size: 16px;
+    color: #3f3a34;
+}
+
+.mypage-edit-current-value {
+    margin: 0 0 28px;
+    font-size: 18px;
+    color: #3f3a34;
+    word-break: break-word;
+}
+
+.mypage-edit-form {
+    text-align: left;
+}
+
+.mypage-edit-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #3f3a34;
+}
+
+.mypage-edit-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #cfcfcf;
+    border-radius: 12px;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.mypage-inline-error {
+    margin: 0 0 16px;
+    font-size: 14px;
+    color: #d9534f;
+    text-align: left;
+}
+
+.mypage-edit-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* モーダルの「はい」「いいえ」と同じ雰囲気 */
+.modal-confirm-btn,
+.modal-cancel-btn {
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 16px;
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border: none;
+}
+
+.modal-confirm-btn {
+    background: #e49542;
+    color: white;
+}
+
+.modal-cancel-btn {
+    background: #a9c0c9;
+    color: #2f2f2f;
+}

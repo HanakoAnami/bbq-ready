@@ -2,14 +2,30 @@
 {% block title %}ユーザー名変更{% endblock %}
 
 {% block content %}
-<h1>ユーザ名変更<lh1>
+<div class="mypage-edit-page">
+    <h1 class="mypage-edit-title">ユーザー名変更</h1>
 
-<p>現在のユーザー名：{{ user_obj.first_name|default:"未設定" }}</p>
+    <div class="mypage-edit-card">
+        <p class="mypage-edit-current-label">現在のユーザー名</p>
+        <p class="mypage-edit-current-value">{{ user_obj.first_name|default:"未設定" }}</p>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">変更</button>
-</form>
-<p><a href={% url 'mypage' %}>戻る</a></p>
-{% endblock %}    
+        <form method="post" class="mypage-edit-form">
+            {% csrf_token %}
+
+            <label class="mypage-edit-label" for="{{ form.name.id_for_label }}">
+                新たなユーザー名：
+            </label>
+            {{ form.name }}
+
+            {% if form.name.errors %}
+                <p class="mypage-inline-error">{{ form.name.errors.0 }}</p>
+            {% endif %}
+
+            <div class="mypage-edit-actions">
+                <button type="submit" class="modal-confirm-btn">変更</button>
+                <a href="{% url 'mypage' %}" class="modal-cancel-btn">戻る</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
