@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{% if event %}イベント編集{% else %}新規イベント作成{% endif %}</h1>
+    <h2>{% if event %}イベント編集{% else %}新規イベント登録{% endif %}</h2>
 
     {% if form.errors %}
         <div style="color: red;">
@@ -17,7 +17,7 @@
         {% csrf_token %}
         {{ form.as_p }}
 
-        <h3>参加者</h3>
+        <p>参加者:</p>
 
         {% if event %}
             <p>現在の参加者</p>
@@ -30,26 +30,22 @@
             </ul>
         {% endif %}
 
-        <p>参加者を追加</p>
         <div class="participant-add-box">
             <input type="text" id="participantInput" placeholder="参加者名を入力">
-            <button type="button" onclick="addParticipant()">＋参加者を追加</button>
+            <button type="button" class="btn btn-secondary" onclick="addParticipant()">参加者を追加</button>
         </div>
 
         <p id="participantError" class="form-error"></p>
 
         <div id="participantsPreview" class="participants-preview"></div>
 
-        <button type="submit">{% if event %}更新{% else %}保存{% endif %}</button>
+        <div class="form-submit">
+            <button type="submit" class="btn btn-primary">
+                {% if event %}編集完了{% else %}イベント登録{% endif %}
+            </button>
+        </div>
+
     </form>
-
-    {% if event %}
-        <p>
-            <a href="{% url 'event_delete' event.id %}">削除</a>
-        </p>
-    {% endif %}
-
-    <p><a href="{% url 'home' %}">戻る</a></p>
 
     <script id="existingParticipantsData" type="application/json">
         {{ existing_participants_json|default:"[]"|safe }}

@@ -5,7 +5,11 @@
 {% endblock %}
 
 {% block content %}
-<h1>持ち物リスト編集</h1>
+
+<p>
+    イベントに必要な持ち物を該当カテゴリーをタップしてテンプレートから登録しましょう。<br>
+    テンプレートに登録されていない持ち物は持ち物を追加ボタンから登録できます。
+</p>
 
 <form method="post">
     {% csrf_token %}
@@ -34,24 +38,33 @@
         </details>       
     {% endfor %}
 
-    <button type="button" onclick="openAddItemModal()">＋持ち物を追加</button>
-    <button type="submit">保存</button>
+    <div class="item-add-button">
+        <button type="button" class="btn btn-secondary" onclick="openAddItemModal()">
+            持ち物を追加
+        </button>
+    </div>
+
+    <div class="item-save-button">
+        <button type="submit" class="btn btn-primary">
+            登録
+        </button>
+    </div>
 </form>
 
 <div id="addItemModal" class="modal">
     <div class="modal-content">
         <h2>持ち物を追加</h2>
 
-        <form id="addItemForm" method="post" action="{% url 'event_item_add' event.id %}" onsubmit="return validateAddItemForm()">
+        <form id="addItemForm" method="post" action="{% url 'item_edit' event.id %}">
             {% csrf_token %}
 
             <p id="addItemError" class="form-error"></p>
 
             <input type="text" name="name" placeholder="持ち物名">
 
-            <div class="item-add-category">
-                <p>該当カテゴリーを選択してください。</p>
+            <p>該当カテゴリーを選択してください。</p>
 
+            <div class="item-add-category">
                 <label><input type="radio" name="category" value="1">火起こし・調理グッズ</label>
                 <label><input type="radio" name="category" value="2">会場設営</label>
                 <label><input type="radio" name="category" value="3">食材・飲み物</label>
@@ -66,5 +79,4 @@
         </form>
     </div>
 </div>
-
 {% endblock %}

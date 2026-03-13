@@ -9,12 +9,6 @@
 
 <p>準備進捗：{{ ready_count }} / {{ total_count }}({{ progress_percent }}%)</p>
 
-<div class="progress-area">
-    <div class="progress-bar">
-        <div class="progress-bar__fill" style="width: {{ progress_percent }}%; min-width: 8px;"></div>
-    </div>
-</div>
-
 <form method="post">
     {% csrf_token %}
 
