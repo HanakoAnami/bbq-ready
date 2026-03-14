@@ -5,9 +5,15 @@
 {% endblock %}
 
 {% block content %}
-<h1>担当者割り当て</h1>
 
-<p>準備進捗：{{ ready_count }} / {{ total_count }}({{ progress_percent }}%)</p>
+<p class="assign-progress">
+準備状況：{{ ready_count }} / {{ total_count }}  完了     ({{ progress_percent }}%)
+</p>
+
+<p class="assign-description">
+持ち物の準備担当者を設定してください。<br>
+準備が完了したらチェックを入れてください。
+</p>
 
 <form method="post">
     {% csrf_token %}
@@ -73,8 +79,11 @@
             <li>必要な持ち物がありません。</li>
         {% endfor %}
     </ul>
-    
-    <button type="submit">保存</button>
+    <div class="assign-save">
+        <button type="submit" class="btn btn-primary">
+            保存
+        </button>
+    </div>
 </form>
 
 {% endblock %}

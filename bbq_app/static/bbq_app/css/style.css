@@ -643,6 +643,24 @@ body {
     white-space: nowrap;
 }
 
+.assign-progress{
+    text-align:center;
+    font-size:20px;
+    margin-bottom:12px;
+}
+
+.assign-description{
+    text-align:center;
+    font-size:15px;
+    margin-bottom:20px;
+    color:#555;
+}
+
+.assign-save{
+    text-align:center;
+    margin-top:20px;
+}
+
 
 /* =====================
    share
@@ -835,6 +853,8 @@ body {
 .mypage-description {
     margin-bottom: 20px;
     color: #5c554d;
+    text-align: center;
+    font-size: 18px;
 }
 
 .mypage-card {
@@ -849,7 +869,7 @@ body {
 .mypage-menu {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .mypage-menu__item {
@@ -859,22 +879,40 @@ body {
     background: #fdfaf5;
     border: 1px solid #ece7de;
     border-radius: 12px;
-    padding: 14px 16px;
+    padding: 10px 14px;
     font-weight: 500;
+    text-align: center;
+    max-width: 260px;
+    margin: auto;
 }
 
 .mypage-logout-form {
     margin: 0;
 }
 
-.mypage-logout-btn {
-    width: 100%;
-    border: none;
-    border-radius: 12px;
-    padding: 14px 16px;
-    background: #e65a5a;
-    color: white;
-    font-size: 15px;
+.mypage-menu-btn{
+    display:block;
+    width:260px;
+    margin:0 auto;
+
+    padding:10px 14px;
+
+    border-radius:12px;
+    border:1px solid #ece7de;
+
+    background:#fdfaf5;
+    color:#3f3a34;
+
+    text-decoration:none;
+    text-align:center;
+
+    font-size:15px;
+}
+
+.logout-btn{
+    background:#e65a5a;
+    color:white;
+    border:none;
 }
 
 
