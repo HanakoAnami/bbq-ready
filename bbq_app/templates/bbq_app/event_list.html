@@ -1,21 +1,21 @@
 {% extends "bbq_app/base.html" %}
 
 {% block content %}
-<h1 class="event-list-page-title">全イベント詳細確認</h1>
+<h2 class="event-list-page-title">全イベント詳細確認</h2>
 
 <div class="event-list-toolbar">
     <div class="event-list-tabs">
-        {% if status == "upcoming" %}
-            <strong>開催予定</strong>
-        {% else %}
-            <a href="{% url 'event_list' %}?status=upcoming&sort={{ sort }}">開催予定</a>
-        {% endif %}
 
-        {% if status == "past" %}
-            <strong>開催済</strong>
-        {% else %}
-            <a href="{% url 'event_list' %}?status=past&sort={{ sort }}">開催済</a>
-        {% endif %}
+        <a href="{% url 'event_list' %}?status=upcoming&sort={{ sort }}"
+        class="event-tab {% if status == 'upcoming' %}active{% endif %}">
+            開催予定
+        </a>
+
+        <a href="{% url 'event_list' %}?status=past&sort={{ sort }}"
+        class="event-tab {% if status == 'past' %}active{% endif %}">
+            開催済
+        </a>
+
     </div>
 
     <form method="get" class="event-sort">
@@ -27,7 +27,7 @@
             </option>
 
             <option value="held_at_desc" {% if sort == "held_at_desc" %}selected{% endif %}>
-                開催日が古い順
+                開催日が遠い順
             </option>
 
             <option value="created_desc" {% if sort == "created_desc" %}selected{% endif %}>

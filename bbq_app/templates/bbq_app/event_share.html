@@ -5,12 +5,8 @@
 {% endblock %}
 
 {% block content %}
-<h1>イベント共有</h1>
-<p>参加者ごとに共有リンクを発行できます。</p>
 
-<button type="button" onclick="openSharedUsersModal()">
-    イベント共有者確認
-</button>
+<p class="share-description">参加者へ共有リンクを発行できます。</p>
 
 <ul class="share-list">
     {% for row in share_rows %}
@@ -36,16 +32,16 @@
                     <form method="post" action="{% url 'invitation_create' event.id %}">
                         {% csrf_token %}
                         <input type="hidden" name="participant_id" value="{{ row.participant.id }}">
-                        <button type="submit">共有リンク発行</button>
+                        <button type="submit" class="btn btn-primary">共有リンク発行</button>
                     </form>
 
                 {% elif row.share_status == "active" %}
-                    <button type="button" onclick="copyInviteUrl('{{ row.invite_url }}')">
+                    <button type="button" class="btn btn-secondary" onclick="copyInviteUrl('{{ row.invite_url }}')">
                         リンクコピー
                     </button>
 
                 {% elif row.share_status == "joined" %}
-                    <button type="button" onclick="copyInviteUrl('{{ row.invite_url }}')">
+                    <button type="button" class="btn btn-secondary" onclick="copyInviteUrl('{{ row.invite_url }}')">
                         リンクコピー
                     </button>
 
@@ -53,7 +49,7 @@
                     <form method="post" action="{% url 'invitation_create' event.id %}">
                         {% csrf_token %}
                         <input type="hidden" name="participant_id" value="{{ row.participant.id }}">
-                        <button type="submit">再発行</button>
+                        <button type="submit" class="btn btn-primary">再発行</button>
                     </form>
                 {% endif %}
             </div>
@@ -62,6 +58,13 @@
         <li>イベント参加者はまだいません</li>
     {% endfor %}
 </ul>
+
+<div class="share-bottom-action">
+    <button type="button" class="btn-outline" onclick="openSharedUsersModal()">
+        イベント共有者確認
+    </button>
+</div>
+
 <div id="sharedUsersModal" class="modal">
     <div class="modal-content">
         <h2>イベント共有者一覧</h2>
@@ -71,26 +74,31 @@
                 <li class="shared-users-list__item">
                     <span>{{ row.participant.name }}</span>
 
-                <button type="button" onclick="openDeleteShareModal({{ row.invitation.id }})">
-                    共有削除
-                </button>
-
-                <div id="deleteShareModal-{{ row.invitation.id }}" class="modal">
-                    <div class="modal-content">
-                        <h2>共有を削除しますか？</h2>
-
-                        <div class="modal-actions">
-                            <form method="post" action="{% url 'invitation_delete' event.id row.invitation.id %}">
-                                {% csrf_token %}
-                                <button type="submit">はい</button>
-                            </form>
-
-                            <button type="button" onclick="closeDeleteShareModal({{ row.invitation.id }})">
-                                いいえ
+                    <ul class="modal-list">
+                        <li class="modal-list__item">
+                            <span class="modal-list__name">{{ participant.name }}</span>
+                            <button type="button" class="modal-small-danger-btn" onclick="openDeleteShareModal({{ row.invitation.id }})">
+                                削除
                             </button>
+                        </li>
+                    </ul>
+
+                    <div id="deleteShareModal-{{ row.invitation.id }}" class="modal">
+                        <div class="modal-content">
+                            <h2>共有を削除しますか？</h2>
+
+                            <div class="modal-actions">
+                                <form method="post" action="{% url 'invitation_delete' event.id row.invitation.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">はい</button>
+                                </form>
+
+                                <button type="button" onclick="closeDeleteShareModal({{ row.invitation.id }})">
+                                    いいえ
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>        
                 </li>
             {% empty %}
                 <li>共有者はまだいません</li>

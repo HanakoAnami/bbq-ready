@@ -113,9 +113,12 @@
           <span>{{ participant.name }}</span>
 
           {% if participant.user != event.user %}
-            <button type="button" onclick="openDeleteParticipantModal({{ participant.id }})">
-              参加者削除
-            </button>
+            <ul class="modal-list">
+                <li class="modal-list__item">
+                    <span class="modal-list__name">{{ participant.name }}</span>
+                    <button type="button" class="modal-small-danger-btn">参加者削除</button>
+                </li>
+            </ul>
 
             <div id="deleteParticipantModal-{{ participant.id }}" class="modal">
               <div class="modal-content">

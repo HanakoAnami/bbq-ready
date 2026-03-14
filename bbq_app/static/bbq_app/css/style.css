@@ -279,10 +279,12 @@ body {
 
 .modal-actions button[type="submit"] {
     background: #f0a23a;
+    color: #222;
 }
 
 .modal-actions button[type="button"] {
     background: #9fb4c9;
+    color: #222;
 }
 
 
@@ -432,13 +434,27 @@ body {
 .event-list-tabs {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 14px;
+    margin-bottom: 20px;
 }
 
 .event-list-tabs a,
 .event-list-tabs strong {
+    display: inline-block;
     font-size: 18px;
     text-decoration: none;
+    color: #3f3a34;
+    padding: 8px 14px;
+    border-radius: 999px;
+}
+
+.event-list-tab--upcoming {
+    background: #dfeadf;
+    color: #3f3a34;
+}
+
+.event-list-tab--past {
+    background: #ececec;
     color: #3f3a34;
 }
 
@@ -456,7 +472,7 @@ body {
 .event-list-card {
     background: #ffffff;
     border-radius: 18px;
-    padding: 16px;
+    padding: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -479,14 +495,13 @@ body {
 }
 
 .event-list-card__duplicate-btn {
-    margin-top: 12px;
-    width: 100%;
-    padding: 10px 14px;
-    border: none;
+    padding: 6px 14px;
     border-radius: 999px;
-    background: #e6a15a;
-    color: white;
-    font-size: 14px;
+    background:#e6a15a;
+    color:#222;
+    margin:12px auto;
+    display:block;
+    margin-top: 8px;
 }
 
 .event-list-empty {
@@ -498,6 +513,21 @@ body {
 .event-list-scroll {
     max-height: 500px;
     overflow-y: auto;
+}
+
+.event-tab{
+    padding:8px 16px;
+    border-radius:999px;
+    text-decoration:none;
+    background:#ececec;
+    color:#3f3a34;
+    font-size:14px;
+}
+
+.event-tab.active{
+    background:#e6a15a;
+    color:white;
+    font-weight:600;
 }
 
 
@@ -665,47 +695,72 @@ body {
 /* =====================
    share
 ===================== */
+.share-title {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.share-description {
+    text-align: center;
+    margin-bottom: 16px;
+    color: #5c554d;
+}
+
+.share-top-action {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
 
 .share-list {
     max-height: 400px;
     overflow-y: auto;
     padding: 0;
+    list-style: none;
 }
 
 .share-list__item {
+    background: #ffffff;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 12px;
+    border-radius: 12px;
+    padding: 14px;
     margin-bottom: 12px;
-    background: #fff;
 }
 
 .share-list__name {
-    font-weight: bold;
-    margin-bottom: 8px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-align: left;
 }
 
 .share-list__status {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-size: 14px;
     color: #666;
+    text-align: left;
+}
+
+.share-list__actions {
+    display: flex;
+    justify-content: center;
 }
 
 .share-list__actions form {
-    display: inline;
-}
-
-.share-list__actions button {
-    padding: 8px 12px;
+    margin: 0;
 }
 
 .shared-users-list {
     max-height: 300px;
     overflow-y: auto;
     padding: 0;
+    list-style: none;
 }
 
 .shared-users-list__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
     padding: 10px 0;
     border-bottom: 1px solid #eee;
 }
@@ -715,6 +770,19 @@ body {
     overflow-y: auto;
 }
 
+.btn-outline{
+    background:white;
+    border:3px solid #9fb4c9;
+    color:#3f3a34;
+    border-radius:10px;
+    padding:8px 14px;
+}
+
+.share-bottom-action{
+    display:flex;
+    justify-content:center;
+    margin-top:20px;
+}
 
 /* =====================
    guest page
@@ -1132,4 +1200,42 @@ body {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+}
+
+/* =====================
+   modal list unify
+===================== */
+
+.modal-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.modal-list__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-list__name {
+    font-size: 16px;
+    color: #222;
+    word-break: break-word;
+}
+
+.modal-small-danger-btn {
+    background: #e65a5a;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
 }
