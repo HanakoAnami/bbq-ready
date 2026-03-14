@@ -8,7 +8,7 @@
         <p class="mypage-edit-current-label">現在のユーザー名</p>
         <p class="mypage-edit-current-value">{{ user_obj.first_name|default:"未設定" }}</p>
 
-        <form method="post" class="mypage-edit-form">
+        <form method="post" class="mypage-edit-form" novalidate>
             {% csrf_token %}
 
             <label class="mypage-edit-label" for="{{ form.name.id_for_label }}">

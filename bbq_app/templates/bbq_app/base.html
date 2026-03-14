@@ -70,14 +70,38 @@
 }
 
     function copyInviteUrl(url) {
+    if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(url)
-            .then(() => {
-                alert("リンクをコピーしました");
+            .then(function () {
+                alert("コピーしました");
             })
-            .catch(() => {
-                alert("コピーに失敗しました");
+            .catch(function () {
+                fallbackCopyText(url);
             });
+    } else {
+        fallbackCopyText(url);
     }
+}
+
+function fallbackCopyText(text) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.left = "-9999px";
+
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+
+    try {
+        document.execCommand("copy");
+        alert("コピーしました");
+    } catch (err) {
+        alert("コピーできませんでした");
+    }
+
+    document.body.removeChild(textarea);
+}
 
     function openSharedUsersModal() {
         const modal = document.getElementById("sharedUsersModal");

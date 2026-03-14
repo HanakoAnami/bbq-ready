@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from .models import Event, BbqItem
 from django.contrib.auth import get_user_model
@@ -172,6 +172,29 @@ class EmailUpdateForm(forms.Form):
             raise forms.ValidationError("このメールアドレスはすでに登録されています。")
         
         return email
+    
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+
+    error_messages = {
+        "password_incorrect": "現在のパスワードが正しくありません。",
+        "password_mismatch": "新しいパスワードが一致していません。",
+    }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["old_password"].error_messages = {
+            "required": "現在のパスワードを入力してください。"
+        }
+
+        self.fields["new_password1"].error_messages = {
+            "required": "新しいパスワードを入力してください。"
+        }
+
+        self.fields["new_password2"].error_messages = {
+            "required": "確認用パスワードを入力してください。",
+        }
         
      
 

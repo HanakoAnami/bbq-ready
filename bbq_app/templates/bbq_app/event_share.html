@@ -55,7 +55,7 @@
             </div>
         </li>
     {% empty %}
-        <li>イベント参加者はまだいません</li>
+        <li class="share-empty">イベント参加者はまだいません。</li>
     {% endfor %}
 </ul>
 
@@ -69,19 +69,16 @@
     <div class="modal-content">
         <h2>イベント共有者一覧</h2>
 
-        <ul class="shared-users-list">
+        <ul class="modal-list">
             {% for row in shared_rows %}
-                <li class="shared-users-list__item">
-                    <span>{{ row.participant.name }}</span>
+                <li class="modal-list__item">
+                    <span class="modal-list__name">{{ row.participant.name }}</span>
 
-                    <ul class="modal-list">
-                        <li class="modal-list__item">
-                            <span class="modal-list__name">{{ participant.name }}</span>
-                            <button type="button" class="modal-small-danger-btn" onclick="openDeleteShareModal({{ row.invitation.id }})">
-                                削除
-                            </button>
-                        </li>
-                    </ul>
+                    <button type="button"
+                            class="modal-small-danger-btn"
+                            onclick="openDeleteShareModal({{ row.invitation.id }})">
+                        削除
+                    </button>
 
                     <div id="deleteShareModal-{{ row.invitation.id }}" class="modal">
                         <div class="modal-content">
@@ -101,7 +98,7 @@
                     </div>
                 </li>
             {% empty %}
-                <li>共有者はまだいません</li>
+                <li class="share-empty">共有者はまだいません。</li>
             {% endfor %}
         </ul>
 

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from .forms import SignupForm, LoginForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm, BbqItemForm, ForgottenItemForm
+from .forms import SignupForm, LoginForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm, BbqItemForm, ForgottenItemForm, CustomPasswordChangeForm
 from .models import Event, BbqItem, EventItem, Participant, Invitation
 from django.utils import timezone
 from django.db.models import Q
@@ -46,24 +46,6 @@ def portfolio(request):
         if not created:
             messages.warning(request, f"{name} はすでに参加者に登録されています。")
 
-#ホームにイベントを３つまで表示
-@never_cache
-@login_required
-def home(request):
-
-    now = timezone.now()
-
-    events = (
-        Event.objects
-        .filter(user=request.user, held_at__gte=now)
-        .order_by("held_at")[:3]
-    )
-
-    return render(
-        request,
-        "bbq_app/home.html",
-        {"events": events}
-    )
 
 #ログイン
 class UserLoginView(LoginView):
@@ -82,6 +64,27 @@ def signup(request):
 
     return render(request, 'bbq_app/signup.html', {'form': form})
 
+
+#ホームにイベントを３つまで表示
+@never_cache
+@login_required
+def home(request):
+
+    now = timezone.now()
+
+    events = (
+        Event.objects
+        .filter(user=request.user, held_at__gte=now)
+        .order_by("held_at")[:3]
+    )
+
+    return render(
+        request,
+        "bbq_app/home.html",
+        {"events": events}
+    )
+    
+    
 #新規イベント作成
 @login_required
 def event_create(request):
@@ -182,41 +185,63 @@ def event_edit(request, event_id):
 @login_required
 def item_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
-    
+
     items = (
         EventItem.objects
         .filter(event=event, bbq_item__name__gt="")
         .select_related("bbq_item")
         .order_by("bbq_item__category", "bbq_item__name")
     )
-    
+
     if request.method == "POST":
+
+        # 持ち物追加モーダルからの送信
+        if "name" in request.POST and "category" in request.POST:
+            name = request.POST.get("name", "").strip()
+            category = request.POST.get("category")
+
+            if name and category:
+                bbq_item, created = BbqItem.objects.get_or_create(
+                    name=name,
+                    category=int(category),
+                )
+
+                EventItem.objects.get_or_create(
+                    event=event,
+                    bbq_item=bbq_item,
+                    defaults={"is_selected": True},
+                )
+                
+            messages.success(request, "持ち物を追加しました。")
+            return redirect("item_edit", event_id=event.id)
+
+        # チェック状態の保存
         selected_ids = set(request.POST.getlist("selected_items"))
-        
-        #チェック状態を保存
+
         for event_item in items:
             event_item.is_selected = str(event_item.id) in selected_ids
+
         EventItem.objects.bulk_update(items, ["is_selected"])
         return redirect("item_edit", event_id=event.id)
-    
-    grouped_dict =defaultdict(list)
+
+    grouped_dict = {category_value: [] for category_value, _ in BbqItem.Category.choices}
     category_labels = dict(BbqItem.Category.choices)
-    
-    for event_item in items:
+
+    for event_item in event.event_items.select_related("bbq_item").all():
         grouped_dict[event_item.bbq_item.category].append(event_item)
-        
+
     grouped_items = []
     for category, event_items in grouped_dict.items():
         grouped_items.append({
             "label": category_labels[category],
             "items": event_items,
-        })  
-    
+        })
+
     context = {
         "event": event,
         "grouped_items": grouped_items,
     }
-    
+
     return render(request, "bbq_app/item_edit.html", context)
 
 @login_required
@@ -450,6 +475,7 @@ def event_delete(request, event_id):
         return redirect("home")
     
     return redirect("event_edit", event_id=event.id)
+   
     
 @login_required
 def event_participants(request, event_id):
@@ -678,11 +704,13 @@ def invitation_access(request, token):
         }
     )
  
+ 
 #マイページ  
 @never_cache        
 @login_required
 def mypage(request):
     return render(request, "bbq_app/mypage.html")
+
 
 #ユーザー名変更
 @login_required
@@ -734,3 +762,9 @@ class CustomPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
     success_url = reverse_lazy("mypage")
 
     success_message = "パスワードを変更しました。"
+    
+
+class MyPasswordChangeView(PasswordChangeView):
+    template_name = "bbq_app/mypage_password.html"
+    form_class = CustomPasswordChangeForm
+    success_url = reverse_lazy("mypage")
