@@ -1218,8 +1218,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    padding: 10px 0;
+    gap: 12px;
+    padding: 12px 0;
     border-bottom: 1px solid #eee;
 }
 
@@ -1238,4 +1238,114 @@ body {
     font-size: 13px;
     cursor: pointer;
     white-space: nowrap;
+}
+
+.modal-list__empty {
+    text-align: center;
+    padding: 12px 0;
+    color: #666;
+}
+
+.host-label {
+    font-size: 13px;
+    color: black;
+    margin-left: 6px;
+}
+
+/* =====================
+   add / forgot modal unify
+===================== */
+
+#addItemModal .modal-content,
+#forgotModal .modal-content {
+    background: #e9e5df;
+    width: 320px;
+    max-width: calc(100% - 32px);
+    margin: 18% auto;
+    padding: 24px 20px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    max-height: 80vh;
+    overflow-y: auto;
+    text-align: center;
+}
+
+#addItemModal .modal-content h2,
+#forgotModal .modal-content h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    text-align: center;
+}
+
+#addItemModal form,
+#forgotModal form {
+    margin: 0;
+}
+
+#addItemModal .modal-description,
+#forgotModal .modal-description {
+    margin: 12px 0 10px;
+    text-align: left;
+}
+
+#addItemModal .item-add-category,
+#forgotModal .forgot-category {
+    text-align: left;
+    margin: 12px 0 16px;
+}
+
+#addItemModal .item-add-category label,
+#forgotModal .forgot-category label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#addItemModal .modal-actions,
+#forgotModal .modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+/* どちらのモーダルも通常入力欄 */
+#forgotModal input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 16px;
+    border: 1px solid #cfcfcf;
+    border-radius: 12px;
+    background: white;
+    margin-bottom: 14px;
+}
+
+/* 持ち物追加だけ少し大きめ */
+#addItemModal .add-item-name-input {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 48px;
+    padding: 12px 14px;
+    font-size: 16px;
+    border: 1px solid #cfcfcf;
+    border-radius: 12px;
+    background: white;
+    margin-bottom: 14px;
+}
+
+#addItemModal .item-add-category label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+#addItemModal .item-add-category input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
 }

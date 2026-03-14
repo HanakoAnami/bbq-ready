@@ -7,8 +7,7 @@
 {% block content %}
 
 <p>
-    イベントに必要な持ち物を該当カテゴリーをタップしてテンプレートから登録しましょう。<br>
-    テンプレートに登録されていない持ち物は持ち物を追加ボタンから登録できます。
+    イベントに必要な持ち物を登録しましょう。
 </p>
 
 <form method="post">
@@ -55,14 +54,14 @@
     <div class="modal-content">
         <h2>持ち物を追加</h2>
 
-        <form id="addItemForm" method="post" action="{% url 'item_edit' event.id %}">
+        <form id="addItemForm" method="post" action="{% url 'item_edit' event.id %}" onsubmit="return validateAddItemForm()">
             {% csrf_token %}
 
             <p id="addItemError" class="form-error"></p>
 
-            <input type="text" name="name" placeholder="持ち物名">
+            <input type="text" name="name" class="add-item-name-input" placeholder="持ち物名">
 
-            <p>該当カテゴリーを選択してください。</p>
+            <p class="modal-description">該当カテゴリーを選択してください。</p>
 
             <div class="item-add-category">
                 <label><input type="radio" name="category" value="1">火起こし・調理グッズ</label>

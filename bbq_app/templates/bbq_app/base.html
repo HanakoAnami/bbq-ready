@@ -49,14 +49,14 @@
 }
 
     function validateForgotForm() {
-    const form = document.getElementById("forgotForm");
+
+    const name = document.querySelector('#forgotForm input[name="name"]').value;
+    const category = document.querySelector('#forgotForm input[name="category"]:checked');
     const error = document.getElementById("forgotError");
-    const name = form.querySelector('input[name="name"]').value.trim();
-    const category = form.querySelector('input[name="category"]:checked');
 
     error.textContent = "";
 
-    if (!name) {
+    if (!name.trim()) {
         error.textContent = "持ち物名を入力してください。";
         return false;
     }

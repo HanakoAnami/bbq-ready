@@ -85,14 +85,14 @@
 
             <input type="text" name="name" placeholder="持ち物名">
 
-            <p>該当カテゴリーを選択してください。</p>
+            <p class="modal-description">該当カテゴリーを選択してください。</p>
 
             <div class="forgot-category">
-            <label><input type="radio" name="category" value="1">火起こし・調理グッズ</label><br>
-            <label><input type="radio" name="category" value="2">会場設営</label><br>
-            <label><input type="radio" name="category" value="3">食材・飲み物</label><br>
-            <label><input type="radio" name="category" value="4">便利グッズ</label><br>
-            <label><input type="radio" name="category" value="5">その他</label>
+                <label><input type="radio" name="category" value="1">火起こし・調理グッズ</label>
+                <label><input type="radio" name="category" value="2">会場設営</label>
+                <label><input type="radio" name="category" value="3">食材・飲み物</label>
+                <label><input type="radio" name="category" value="4">便利グッズ</label>
+                <label><input type="radio" name="category" value="5">その他</label>
             </div>
             
             <div class="modal-actions">
@@ -107,18 +107,23 @@
   <div class="modal-content">
     <h2>イベント参加者</h2>
 
-    <ul class="participants-modal-list">
-      {% for participant in event.participants.all %}
-        <li class="participants-modal-list__item">
-          <span>{{ participant.name }}</span>
+    <ul class="modal-list">
+      <li class="modal-list__item">
+        <span class="modal-list__name">
+          {{ event.user.first_name }}<span class="host-label">（主催者）</span>
+        </span>
+      </li>
 
-          {% if participant.user != event.user %}
-            <ul class="modal-list">
-                <li class="modal-list__item">
-                    <span class="modal-list__name">{{ participant.name }}</span>
-                    <button type="button" class="modal-small-danger-btn">参加者削除</button>
-                </li>
-            </ul>
+      {% for participant in event.participants.all %}
+        {% if participant.user != event.user %}
+          <li class="modal-list__item">
+            <span class="modal-list__name">{{ participant.name }}</span>
+
+            <button type="button"
+                    class="modal-small-danger-btn"
+                    onclick="openDeleteParticipantModal({{ participant.id }})">
+              参加者削除
+            </button>
 
             <div id="deleteParticipantModal-{{ participant.id }}" class="modal">
               <div class="modal-content">
@@ -136,10 +141,10 @@
                 </div>
               </div>
             </div>
-          {% endif %}
-        </li>    
+          </li>
+        {% endif %}
       {% empty %}
-        <li>イベント参加者はいません</li>
+        <li class="modal-list__empty">イベント参加者はいません</li>
       {% endfor %}
     </ul>
 
@@ -147,5 +152,5 @@
       <button type="button" onclick="closeParticipantsModal()">閉じる</button>
     </div>
   </div>
-</div>  
+</div> 
 {% endif %}
