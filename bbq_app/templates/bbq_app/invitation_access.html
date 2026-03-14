@@ -27,10 +27,10 @@
         {% endif %}
         
         <section class="guest-card">
-            <h2 class="guest-card__heading">参加者準備ページ</h2>
+            <h2 class="guest-card__heading">イベントに招待されました！</h2>
 
             {% if not invitation.guest_name %}
-                <p class="guest-card__text">お名前を入力してください。</p>
+                <p class="guest-card__text">参加するお名前を入力してください。</p>
 
                 <form method="post" class="guest-form">
                     {% csrf_token %}
@@ -41,7 +41,15 @@
             {% else %}
                 {% include "bbq_app/partials/guest_event_header.html" with event=invitation.participant.event %}
 
-                <p class="guest-card__text">{{ invitation.guest_name }} さんの担当持ち物</p>
+                <div class="guest-items-info">
+                    <p class="guest-items-title">
+                        {{ invitation.guest_name }} さんの担当持ち物です。
+                    </p>
+
+                    <p class="guest-items-description">
+                        準備ができたらチェックを入れて保存してください。
+                    </p>
+                </div>
 
                 <form method="post" class="guest-form">
                     {% csrf_token %}
