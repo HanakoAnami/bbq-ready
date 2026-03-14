@@ -698,20 +698,25 @@ def mypage_name(request):
             messages.success(request, 'ユーザー名を変更しました。')
             return redirect("mypage")
     else:
-        form = UserNameForm(initial={"name": user.first_name})
+        form = UserNameForm()
         
     return render(request, "bbq_app/mypage_name.html", {"form": form, "user_obj": user })    
 
 @login_required
 def mypage_email(request):
+    user = request.user
+    
     if request.method == "POST":
-        form = EmailUpdateForm(request.POST, instance=request.user)
+        form = EmailUpdateForm(request.POST)
         if form.is_valid():
-            form.save()
+            new_email = form.cleaned_data["email"].lower()
+            user.email = new_email
+            user.username = new_email
+            user.save()
+            
             messages.success(request, "メールアドレスを変更しました。")
-            return redirect("mypage")
-        
+            return redirect("mypage")       
     else:
         form = EmailUpdateForm()
         
-    return render(request, "bbq_app/mypage_email.html", {"form": form, "current_email": request.user.email})
+    return render(request, "bbq_app/mypage_email.html", {"form": form, "current_email": user.email})

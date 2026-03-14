@@ -119,7 +119,18 @@ class ForgottenItemForm(forms.ModelForm):
 
         
 class UserNameForm(forms.Form):
-    name = forms.CharField(label="新しいユーザー名", max_length=30, required=True)
+    name = forms.CharField(
+        label="新しいユーザー名",
+        max_length=30,
+        required=True,
+        error_messages={
+            "required": "ユーザー名を入力してください。"
+        },
+        widget=forms.TextInput(attrs={
+            "placeholder": "新しいユーザー名"
+        })
+    )
+    
     
 class UserEmailForm(forms.Form):
     email = forms.EmailField(label="新しいメールアドレス", required=True)
@@ -139,12 +150,19 @@ class UserEmailForm(forms.Form):
     
 User = get_user_model()
 
-class EmailUpdateForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ("email",)
-        labels = {"email": "新しいメールアドレス"}
-        widgets = {"email": forms.EmailInput(attrs={"placeholder": "example@email.com"})}
+
+class EmailUpdateForm(forms.Form):
+    email = forms.EmailField(
+        label="新しいメールアドレス",
+        required=True,
+        error_messages={
+            "required": "メールアドレスを入力してください。",
+            "invalid": "正しいメールアドレスを入力してください。"
+        },
+        widget=forms.EmailInput(attrs={
+            "placeholder": "example@mail.com"
+        })
+    )
      
 
 
