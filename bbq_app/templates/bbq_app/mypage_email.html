@@ -6,7 +6,7 @@
 
     <div class="mypage-edit-card">
         <p class="mypage-edit-current-label">現在登録のメールアドレス</p>
-        <p class="mypage-edit-current-value">{{ request.user.email }}</p>
+        <p class="mypage-edit-current-value">{{ current_email }}</p>
 
         <form method="post" class="mypage-edit-form" novalidate>
             {% csrf_token %}
@@ -19,7 +19,7 @@
             {% if form.email.errors %}
                 {% for error in form.email.errors %}
                     <span class="auth-inline-error">{{ error }}</span>
-                {% endfor %}
+            {% endfor %}
             {% endif %}
 
             <div class="mypage-edit-actions">

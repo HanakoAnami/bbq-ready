@@ -163,6 +163,16 @@ class EmailUpdateForm(forms.Form):
             "placeholder": "example@mail.com"
         })
     )
+    
+    def clean_email(self):
+        email =self.cleaned_data["email"].lower()
+        
+        #すでに登録されているかチェック
+        if User.objects.filter(username=email).exists():
+            raise forms.ValidationError("このメールアドレスはすでに登録されています。")
+        
+        return email
+        
      
 
 

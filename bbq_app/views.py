@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .forms import SignupForm, LoginForm, EventForm, UserNameForm, UserEmailForm, EmailUpdateForm, BbqItemForm, ForgottenItemForm
@@ -13,7 +13,8 @@ from django.views.decorators.cache import never_cache
 from django.db import models
 from collections import defaultdict
 import secrets, json
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 def add_participants_from_list(request, event):
@@ -651,9 +652,7 @@ def invitation_access(request, token):
         
     #準備完了保存
     if request.method == "POST" and invitation.guest_name:
-        print("保存処理に入った")
-        print("ready_items", request.POST.getlist("ready_items"))
-        
+    
         ready_item_ids = set(request.POST.getlist("ready_items"))
         updated = []
         
@@ -702,10 +701,11 @@ def mypage_name(request):
         
     return render(request, "bbq_app/mypage_name.html", {"form": form, "user_obj": user })    
 
+
 @login_required
 def mypage_email(request):
     user = request.user
-    
+
     if request.method == "POST":
         form = EmailUpdateForm(request.POST)
         if form.is_valid():
@@ -713,10 +713,24 @@ def mypage_email(request):
             user.email = new_email
             user.username = new_email
             user.save()
-            
+
             messages.success(request, "メールアドレスを変更しました。")
-            return redirect("mypage")       
+            return redirect("mypage")
     else:
         form = EmailUpdateForm()
-        
-    return render(request, "bbq_app/mypage_email.html", {"form": form, "current_email": user.email})
+
+    return render(
+        request,
+        "bbq_app/mypage_email.html",
+        {
+            "form": form,
+            "current_email": user.email,
+        }
+    )
+    
+
+class CustomPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
+    template_name = "bbq_app/mypage_password.html"
+    success_url = reverse_lazy("mypage")
+
+    success_message = "パスワードを変更しました。"
