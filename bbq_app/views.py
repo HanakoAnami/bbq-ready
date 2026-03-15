@@ -389,7 +389,6 @@ def forgotten_item_create(request, event_id):
     return redirect("item_edit", event_id=event.id)    
     
             
-
 #イベント複製
 @login_required
 def event_duplicate(request, event_id):
