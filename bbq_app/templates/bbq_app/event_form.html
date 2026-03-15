@@ -7,46 +7,68 @@
 {% block content %}
     <h2>{% if event %}イベント編集{% else %}新規イベント登録{% endif %}</h2>
 
-    {% if form.errors %}
-        <div style="color: red;">
-            {{ form.errors }}
-        </div>
+<form method="post" novalidate>
+    {% csrf_token %}
+
+    <p>
+        <label for="{{ form.name.id_for_label }}">イベント名:</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+            {% for error in form.name.errors %}
+                <span class="form-error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </p>
+
+    <p>
+        <label for="{{ form.held_at.id_for_label }}">開催日時:</label>
+        {{ form.held_at }}
+        {% if form.held_at.errors %}
+            {% for error in form.held_at.errors %}
+                <span class="form-error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </p>
+
+    <p>
+        <label for="{{ form.location.id_for_label }}">開催場所:</label>
+        {{ form.location }}
+        {% if form.location.errors %}
+            {% for error in form.location.errors %}
+                <span class="form-error">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </p>
+
+    <p>参加者:</p>
+
+    {% if event %}
+        <p>現在の参加者</p>
+        <ul class="current-participants-list">
+            {% for participant in current_participants %}
+                <li>{{ participant.name }}</li>
+            {% empty %}
+                <li>参加者はまだいません</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+    <div class="participant-add-box">
+        <input type="text" id="participantInput" placeholder="参加者名を入力">
+        <button type="button" class="btn btn-secondary" onclick="addParticipant()">参加者を追加</button>
+    </div>
 
-        <p>参加者:</p>
+    <p id="participantError" class="form-error"></p>
 
-        {% if event %}
-            <p>現在の参加者</p>
-            <ul class="current-participants-list">
-                {% for participant in current_participants %}
-                    <li>{{ participant.name }}</li>
-                {% empty %}
-                    <li>参加者はまだいません</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+    <div id="participantsPreview" class="participants-preview"></div>
 
-        <div class="participant-add-box">
-            <input type="text" id="participantInput" placeholder="参加者名を入力">
-            <button type="button" class="btn btn-secondary" onclick="addParticipant()">参加者を追加</button>
-        </div>
-
-        <p id="participantError" class="form-error"></p>
-
-        <div id="participantsPreview" class="participants-preview"></div>
-
-        <div class="form-submit">
-            <button type="submit" class="btn btn-primary">
-                {% if event %}編集完了{% else %}イベント登録{% endif %}
-            </button>
-        </div>
-
-    </form>
-
+    <div class="form-submit">
+        <button type="submit" class="btn btn-primary">
+            {% if event %}編集完了{% else %}イベント登録{% endif %}
+        </button>
+    </div>
+</form>
+    
     <script id="existingParticipantsData" type="application/json">
         {{ existing_participants_json|default:"[]"|safe }}
     </script>
