@@ -125,9 +125,13 @@ body {
 
 .flash-messages {
     padding: 10px;
+    margin-bottom: 20px;
+    margin-top: 60px;
 }
 
 .flash {
+    text-align: center;
+    font-weight: 500;
     margin: 8px 0;
     padding: 10px 12px;
     border-radius: 8px;
@@ -295,6 +299,7 @@ body {
 
 .home-container {
     text-align: center;
+    padding-top: 70px;
 }
 
 .home-title {
