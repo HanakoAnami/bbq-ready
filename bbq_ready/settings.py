@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8ekdk35!@zef_4noshe^i)o$!3-7@#nx9@9&e3*98yj&wcyf4k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["anamihanako.pythonanywhere.com"]
 
 
 # Application definition
@@ -123,3 +123,4 @@ LOGOUT_REDIRECT_URL = '/login/'
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
