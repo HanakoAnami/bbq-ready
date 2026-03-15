@@ -642,59 +642,61 @@ def invitation_delete(request, event_id, invitation_id):
     return redirect("event_share", event_id=event.id)
 
 
-#イベント参加者招待画面
+# イベント参加者招待画面
 def invitation_access(request, token):
-    invitation = get_object_or_404(Invitation, token=token)
-    
-    #まだ名前登録していない人だけ期限切れチェック
+    invitation = Invitation.objects.filter(token=token).select_related("participant__event").first()
+
+    # 無効リンク・削除済みリンク
+    if not invitation:
+        return render(request, "bbq_app/invitation_invalid.html")
+
+    # まだ名前登録していない人だけ期限切れチェック
     if (
-        not invitation.guest_name 
-        and invitation.expires_at 
+        not invitation.guest_name
+        and invitation.expires_at
         and invitation.expires_at < timezone.now()
     ):
-        
         return render(
             request,
             "bbq_app/invitation_expired.html",
             {"invitation": invitation}
         )
-        
+
     assigned_items = EventItem.objects.filter(
         event=invitation.participant.event,
         assignee=invitation.participant,
         is_selected=True
     ).select_related("bbq_item").order_by("id")
-        
-    #名前入力フォーム送信
+
+    # 名前入力フォーム送信
     if request.method == "POST" and not invitation.guest_name:
         guest_name = request.POST.get("guest_name", "").strip()
-        
+
         if guest_name:
             invitation.guest_name = guest_name
             invitation.status = Invitation.Status.ACTIVE
             invitation.save()
-            
+
             return redirect("invitation_access", token=invitation.token)
-        
-    #準備完了保存
+
+    # 準備完了保存
     if request.method == "POST" and invitation.guest_name:
-    
         ready_item_ids = set(request.POST.getlist("ready_items"))
         updated = []
-        
+
         for event_item in assigned_items:
             new_is_ready = str(event_item.id) in ready_item_ids
-            
+
             if event_item.is_ready != new_is_ready:
                 event_item.is_ready = new_is_ready
                 updated.append(event_item)
-                
+
         if updated:
             EventItem.objects.bulk_update(updated, ["is_ready"])
-        
-        messages.success(request, "保存しました。")    
+
+        messages.success(request, "保存しました。")
         return redirect("invitation_access", token=invitation.token)
-    
+
     return render(
         request,
         "bbq_app/invitation_access.html",

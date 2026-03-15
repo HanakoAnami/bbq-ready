@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>招待リンク無効 | BBQ Ready</title>
+    <link rel="stylesheet" href="{% static 'bbq_app/css/style.css' %}">
+</head>
+<body>
+    <div class="guest-page">
+        <div class="guest-page__container">
+            <div class="guest-page__header">
+                <h1 class="guest-page__title">BBQ Ready</h1>
+            </div>
+
+            <div class="guest-page__content">
+                <div class="guest-card">
+                    <h2 class="guest-card__heading">この招待リンクは無効です</h2>
+                    <p class="guest-card__text">
+                        リンクの有効期限が切れているか、イベントが削除された可能性があります。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
