@@ -1,15 +1,56 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ポートフォリオ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBQ Ready | Portfolio</title>
+    <link rel="stylesheet" href="{% static 'bbq_app/css/style.css' %}">
 </head>
 <body>
+    <div class="portfolio-page">
+        <div class="portfolio-card">
 
-<h1>BBQ Ready</h1>
-<p>BBQ持ち物管理アプリ</p>
+            <h1 class="portfolio-title">BBQ Ready</h1>
 
-<a href="{% url 'login' %}">アプリへ</a>
+            <p class="portfolio-description">
+                BBQ Readyは、事前準備を「忘れ物の不安」から解放し、
+                当日だけでなく準備の時間も楽しめるBBQ専用の準備・共有アプリです。<br><br>
 
+                イベントごとに持ち物リストを作成し、
+                家族や友人と担当や準備状況を共有することができます。<br><br>
+
+                準備から当日までを一貫して楽しめる体験を提供します。
+                </p>
+
+            <div class="portfolio-screenshot-area">
+
+                <img src="{% static 'bbq_app/images/portfolio_top.png' %}" 
+                    alt="ホーム画面" 
+                    class="portfolio-screenshot">
+
+                <img src="{% static 'bbq_app/images/portfolio_event.png' %}" 
+                    alt="イベント画面" 
+                    class="portfolio-screenshot">
+
+            </div>
+
+            <div class="portfolio-section">
+                <h2 class="portfolio-section-title">資料</h2>
+
+                <div class="portfolio-links">
+                    <a href="{% static 'bbq_app/docs/project_plan.pdf' %}" target="_blank" class="portfolio-doc-link">企画書</a>
+                    <a href="{% static 'bbq_app/docs/screen_design.pdf' %}" target="_blank" class="portfolio-doc-link">画面設計図</a>
+                    <a href="{% static 'bbq_app/docs/screen_flow.pdf' %}" target="_blank" class="portfolio-doc-link">画面遷移図</a>
+                    <a href="{% static 'bbq_app/docs/er_diagram.pdf' %}" target="_blank" class="portfolio-doc-link">ER図</a>
+                </div>
+            </div>
+
+            <div class="portfolio-action">
+                <a href="{% url 'login' %}" class="portfolio-main-btn">アプリへ</a>
+            </div>
+
+        </div>
+    </div>
 </body>
 </html>

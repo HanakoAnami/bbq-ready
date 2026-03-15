@@ -17,25 +17,16 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 
 
+def portfolio(request):
+    return render(request, 'bbq_app/portfolio.html')
+
+
 def add_participants_from_list(request, event):
     participant_names = [
         name.strip()
         for name in request.POST.getlist("participants")
         if name.strip()
     ]
-
-    for name in participant_names:
-        participant, created = Participant.objects.get_or_create(
-            event=event,
-            name=name
-        )
-
-        if not created:
-            messages.warning(request, f"{name} はすでに参加者に登録されています。")
-
-
-def portfolio(request):
-    return render(request, 'bbq_app/portfolio.html')
 
     for name in participant_names:
         participant, created = Participant.objects.get_or_create(
