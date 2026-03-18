@@ -77,11 +77,25 @@
     <div id="participantsPreview" class="participants-preview"></div>
 
     <div class="form-submit">
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary js-disable-btn">
             {% if event %}編集完了{% else %}イベント登録{% endif %}
         </button>
     </div>
 </form>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("form").forEach(form => {
+            form.addEventListener("submit", function () {
+                const btn = form.querySelector(".js-disable-btn");
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerText = "処理中...";
+                }
+            });
+        });
+    });
+    </script>
     
     <script id="existingParticipantsData" type="application/json">
         {{ existing_participants_json|default:"[]"|safe }}

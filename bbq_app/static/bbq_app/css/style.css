@@ -124,43 +124,38 @@ body {
 ===================== */
 
 .flash-messages {
-    padding: 10px;
-    margin-bottom: 20px;
-    margin-top: 60px;
+    margin: 76px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .flash {
     text-align: center;
     font-weight: 500;
-    margin: 8px 0;
     padding: 10px 12px;
     border-radius: 8px;
     font-size: 14px;
 }
 
-.flash.success { background: #dff0d8; }
-.flash.error { background: #f2dede; }
-.flash.warning { background: #fcf8e3; }
-.flash.info { background: #d9edf7; }
-
-.message-area {
-    margin: 12px 0;
+.flash.success {
+    background: #dff0d8;
+    color: #2e7d32;
 }
 
-.message {
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 8px;
-}
-
-.message.error {
-    background: #ffe5e5;
+.flash.error {
+    background: #f2dede;
     color: #c62828;
 }
 
-.message.success {
-    background: #e8f5e9;
-    color: #2e7d32;
+.flash.warning {
+    background: #fcf8e3;
+    color: #ef6c00;
+}
+
+.flash.info {
+    background: #d9edf7;
+    color: #1565c0;
 }
 
 /* =====================
@@ -981,6 +976,11 @@ body {
     padding-top: 80px;
 }
 
+.flash-messages + .mypage-page,
+.flash-messages + .mypage-edit-page {
+    padding-top: 8px;
+}
+
 .mypage-title {
     margin-bottom: 8px;
 }
@@ -1056,7 +1056,12 @@ body {
 ===================== */
 
 .mypage-edit-page {
-    text-align: center;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+.flash-messages{
+    margin-bottom: 8px;
 }
 
 .mypage-edit-title {
