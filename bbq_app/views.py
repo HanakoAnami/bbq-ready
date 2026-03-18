@@ -749,14 +749,9 @@ def mypage_email(request):
     )
     
 
-class CustomPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
-    template_name = "bbq_app/mypage_password.html"
-    success_url = reverse_lazy("mypage")
-
-    success_message = "パスワードを変更しました。"
-    
-
-class MyPasswordChangeView(PasswordChangeView):
+class MyPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
     template_name = "bbq_app/mypage_password.html"
     form_class = CustomPasswordChangeForm
     success_url = reverse_lazy("mypage")
+
+    success_message = "パスワードを変更しました。"
