@@ -10,15 +10,18 @@
 <form method="post" novalidate>
     {% csrf_token %}
 
-    <p>
-        <label for="{{ form.name.id_for_label }}">イベント名:</label>
+    <div class="form-group">
+        <label for="{{ form.name.id_for_label }}">
+            <strong>イベント名</strong>
+            <span class="required">＊入力必須項目</span>
+        </label>
+
         {{ form.name }}
+
         {% if form.name.errors %}
-            {% for error in form.name.errors %}
-                <span class="form-error">{{ error }}</span>
-            {% endfor %}
+            <span class="form-error">{{ form.name.errors.0 }}</span>
         {% endif %}
-    </p>
+    </div>
 
     <p>
         <label for="{{ form.held_at.id_for_label }}">開催日時:</label>

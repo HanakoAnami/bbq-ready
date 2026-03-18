@@ -1517,3 +1517,19 @@ input[type="checkbox"] {
     text-decoration: none;
     font-size: 16px;
 }
+
+/* =====================
+   event form
+===================== */
+.required {
+    color: red;
+    font-size: 14px;
+    margin-left: 4px;
+}
+
+.form-error {
+    color: red;
+    font-size: 13px;
+    display: block;
+    margin-top: 4px;
+}
