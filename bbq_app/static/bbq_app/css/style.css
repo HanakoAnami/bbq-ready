@@ -409,7 +409,6 @@ body {
   position: absolute;
   top: 16px;
   right: 16px;
-
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -417,6 +416,15 @@ body {
 
 .event-header__actions a {
   text-decoration: none;
+}
+
+.event-header__nav a.active {
+    background: #5c6f4d;
+    color: white;
+}
+
+.event-header__nav a.active img {
+    filter: brightness(0) invert(1);
 }
 
 /* =====================
@@ -1525,11 +1533,4 @@ input[type="checkbox"] {
     color: red;
     font-size: 14px;
     margin-left: 4px;
-}
-
-.form-error {
-    color: red;
-    font-size: 13px;
-    display: block;
-    margin-top: 4px;
 }
