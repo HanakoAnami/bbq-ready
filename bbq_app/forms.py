@@ -88,15 +88,24 @@ class SignupForm(UserCreationForm):
     
 class EventForm(forms.ModelForm):
 
+    name = forms.CharField(
+        label="イベント名",
+        required=True,
+        error_messages={
+            "required": "イベント名を入力してください。"
+        }
+    )
+
+    held_at = forms.DateTimeField(
+        required=True,
+        error_messages={
+            "required": "開催日時を入力してください。"
+        }
+    )
+
     class Meta:
         model = Event
         fields = ("name", "held_at", "location")
-
-        error_messages = {
-            "name": {
-                "required": "イベント名を入力してください。"
-            }
-        }
 
         widgets = {
             "held_at": forms.DateTimeInput(

@@ -327,10 +327,18 @@ def event_item_add(request, event_id):
         category = request.POST.get("category")
         
         if name and category:
-            #すでに同じ名前の持ち物が自分のテンプレと共通テンプレにあるか確認
+            #このイベント内に同じ名前があれば追加しない
+            if EventItem.objects.filter(
+                event=event,
+                bbq_item__name__iexact=name
+            ).exists():
+                messages.warning(request, "この持ち物は既に登録されています。")
+                return redirect("item_edit", event_id=event.id)
+            
+            #持ち物が自分のテンプレと共通テンプレにあるか確認
             bbq_item = BbqItem.objects.filter(
                 Q(user=request.user) | Q(user__isnull=True),
-                name=name
+                name__iexact=name
             ).first()
             
             #なければ自分のテンプレとして新規作成
@@ -355,27 +363,30 @@ def event_item_add(request, event_id):
             if created:
                 messages.success(request, "持ち物を追加しました。")
             else:
-                messages.error(request, "この持ち物はすでに登録されています。")
+                messages.warning(request, "この持ち物はすでに登録されています。")
     
     return redirect("item_edit", event_id=event.id)       
             
-        
     
 #忘れ物登録
 @login_required
 def forgotten_item_create(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
-    
+
     if request.method == "POST":
-        name =request.POST.get("name")
+        name = request.POST.get("name", "").strip()
         category = request.POST.get("category")
-        
-        #同じ名前があるかチェック
+
+        if not name or not category:
+            messages.error(request, "持ち物名とカテゴリーを入力してください。")
+            return redirect("item_edit", event_id=event.id)
+
+        # 自分のテンプレ内だけで重複チェック
         exists = BbqItem.objects.filter(
-            Q(user=request.user) | Q(user__isnull=True),
-            name=name
+            user=request.user,
+            name__iexact=name
         ).exists()
-        
+
         if exists:
             messages.error(request, "この忘れ物は既に登録されています。")
         else:
@@ -385,8 +396,8 @@ def forgotten_item_create(request, event_id):
                 category=category
             )
             messages.success(request, "忘れ物を登録しました。")
-            
-    return redirect("item_edit", event_id=event.id)    
+
+    return redirect("item_edit", event_id=event.id)
     
             
 #イベント複製

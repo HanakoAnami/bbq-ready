@@ -1529,8 +1529,38 @@ input[type="checkbox"] {
 /* =====================
    event form
 ===================== */
+.form-group {
+    margin-bottom: 16px;
+}
+
 .required {
     color: red;
-    font-size: 14px;
+    font-size: 13px;
     margin-left: 4px;
 }
+
+.required-note {
+    text-align: center;
+    color: black;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+.form-container {
+    margin-top: 76px;
+}
+
+.form-error{
+    color: red;
+    font-size: 13px;
+    display: block;
+    margin-top: 4px;
+}
+
+.form-title {
+    margin-top: 76px;
+    display: flex;
+    justify-content: center;
+}
+
+
