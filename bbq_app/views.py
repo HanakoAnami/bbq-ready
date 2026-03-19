@@ -117,23 +117,38 @@ def event_create(request):
 @login_required
 def bbq_item_list_create(request):
     items = BbqItem.objects.filter(
-        Q(user=request.user) | Q(user__isnull=True)).order_by("category", "name")
-    
+        Q(user=request.user) | Q(user__isnull=True)
+    ).order_by("category", "name")
+
     if request.method == "POST":
         form = BbqItemForm(request.POST)
         if form.is_valid():
-            bbq_item = form.save(commit=False)
-            bbq_item.user = request.user
-            bbq_item.save()
+            name = form.cleaned_data["name"].strip()
+
+            # 共通テンプレ + 自分テンプレで同名チェック
+            exists = BbqItem.objects.filter(
+                Q(user=request.user) | Q(user__isnull=True),
+                name__iexact=name
+            ).exists()
+
+            if exists:
+                messages.warning(request, "この持ち物は既に登録されています。")
+            else:
+                bbq_item = form.save(commit=False)
+                bbq_item.user = request.user
+                bbq_item.save()
+                messages.success(request, "持ち物を登録しました。")
+
             return redirect("bbq_item_list_create")
-        
+
     else:
         form = BbqItemForm()
-            
+
     return render(
         request,
         "bbq_app/bbqitem_list_create.html",
-        {"items":items, "form":form})
+        {"items": items, "form": form}
+    )
 
 
 #イベント編集
@@ -186,26 +201,6 @@ def item_edit(request, event_id):
 
     if request.method == "POST":
 
-        # 持ち物追加モーダルからの送信
-        if "name" in request.POST and "category" in request.POST:
-            name = request.POST.get("name", "").strip()
-            category = request.POST.get("category")
-
-            if name and category:
-                bbq_item, created = BbqItem.objects.get_or_create(
-                    name=name,
-                    category=int(category),
-                )
-
-                EventItem.objects.get_or_create(
-                    event=event,
-                    bbq_item=bbq_item,
-                    defaults={"is_selected": True},
-                )
-                
-            messages.success(request, "持ち物を追加しました。")
-            return redirect("item_edit", event_id=event.id)
-
         # チェック状態の保存
         selected_ids = set(request.POST.getlist("selected_items"))
 
@@ -234,6 +229,7 @@ def item_edit(request, event_id):
     }
 
     return render(request, "bbq_app/item_edit.html", context)
+
 
 @login_required
 def item_assign(request, event_id):
@@ -317,58 +313,51 @@ def item_assign(request, event_id):
     )
        
     
-#持ち物追加
+# 持ち物追加
 @login_required
 def event_item_add(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
-    
-    if request.method =="POST":
+
+    if request.method == "POST":
         name = request.POST.get("name", "").strip()
         category = request.POST.get("category")
-        
-        if name and category:
-            #このイベント内に同じ名前があれば追加しない
-            if EventItem.objects.filter(
-                event=event,
-                bbq_item__name__iexact=name
-            ).exists():
-                messages.warning(request, "この持ち物は既に登録されています。")
-                return redirect("item_edit", event_id=event.id)
-            
-            #持ち物が自分のテンプレと共通テンプレにあるか確認
-            bbq_item = BbqItem.objects.filter(
-                Q(user=request.user) | Q(user__isnull=True),
-                name__iexact=name
-            ).first()
-            
-            #なければ自分のテンプレとして新規作成
-            if not bbq_item:
-                bbq_item = BbqItem.objects.create(
-                    user=request.user,
-                    name=name,
-                    category=category,
-                )
-                
-            #今回のイベントにも追加
-            event_item, created =EventItem.objects.get_or_create(
-                event=event,
-                bbq_item=bbq_item,
-                defaults={
-                    "is_selected": True,
-                    "is_ready": False,
-                    "assignee": None
-                }
-            )
-            
-            if created:
-                messages.success(request, "持ち物を追加しました。")
-            else:
-                messages.warning(request, "この持ち物はすでに登録されています。")
-    
-    return redirect("item_edit", event_id=event.id)       
+
+        if not name or not category:
+            messages.error(request, "持ち物名とカテゴリーを入力してください。")
+            return redirect("item_edit", event_id=event.id)
+
+        # 共通テンプレ + 自分テンプレに同じ名前があれば追加しない
+        exists = BbqItem.objects.filter(
+            Q(user=request.user) | Q(user__isnull=True),
+            name__iexact=name
+        ).exists()
+
+        if exists:
+            messages.warning(request, "この持ち物は既に登録されています。")
+            return redirect("item_edit", event_id=event.id)
+
+        # 新しい持ち物だけ、自分テンプレとして作成
+        bbq_item = BbqItem.objects.create(
+            user=request.user,
+            name=name,
+            category=category,
+        )
+
+        # 今回のイベントにも追加
+        EventItem.objects.create(
+            event=event,
+            bbq_item=bbq_item,
+            is_selected=True,
+            is_ready=False,
+            assignee=None,
+        )
+
+        messages.success(request, "持ち物を追加しました。")
+
+    return redirect("item_edit", event_id=event.id)   
             
     
-#忘れ物登録
+# 忘れ物登録
 @login_required
 def forgotten_item_create(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
@@ -381,14 +370,14 @@ def forgotten_item_create(request, event_id):
             messages.error(request, "持ち物名とカテゴリーを入力してください。")
             return redirect("item_edit", event_id=event.id)
 
-        # 自分のテンプレ内だけで重複チェック
+        # 共通テンプレ + 自分テンプレで同名チェック
         exists = BbqItem.objects.filter(
-            user=request.user,
+            Q(user=request.user) | Q(user__isnull=True),
             name__iexact=name
         ).exists()
 
         if exists:
-            messages.error(request, "この忘れ物は既に登録されています。")
+            messages.warning(request, "この忘れ物は既に登録されています。")
         else:
             BbqItem.objects.create(
                 user=request.user,

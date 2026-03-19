@@ -100,7 +100,11 @@ class EventForm(forms.ModelForm):
         required=True,
         error_messages={
             "required": "開催日時を入力してください。"
-        }
+        },
+        widget=forms.DateTimeInput(
+            attrs={"type": "datetime-local"},
+            format="%Y-%m-%dT%H:%M"
+        )
     )
 
     class Meta:

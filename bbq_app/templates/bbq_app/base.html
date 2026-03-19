@@ -29,8 +29,8 @@
     {% block footer %}
         {% include "bbq_app/partials/footer_nav.html" %}
     {% endblock %}
-</body>
-</html>
+
+    <div id="toast" class="toast"></div>
 
     <script>
     function openForgotModal() {
@@ -73,7 +73,7 @@
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(url)
             .then(function () {
-                alert("コピーしました");
+                showToast("コピーしました");
             })
             .catch(function () {
                 fallbackCopyText(url);
@@ -83,24 +83,36 @@
     }
 }
 
-function fallbackCopyText(text) {
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.style.position = "fixed";
-    textarea.style.left = "-9999px";
+    function fallbackCopyText(text) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
 
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
 
-    try {
-        document.execCommand("copy");
-        alert("コピーしました");
-    } catch (err) {
-        alert("コピーできませんでした");
-    }
+        try {
+            document.execCommand("copy");
+            showToast("コピーしました");
+        } catch (err) {
+            showToast("コピーできませんでした");
+        }
 
-    document.body.removeChild(textarea);
+        document.body.removeChild(textarea);
+}
+
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        if (!toast) return;
+
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        setTimeout(function () {
+            toast.classList.remove("show");
+        }, 2000);
 }
 
     function openSharedUsersModal() {
@@ -200,3 +212,7 @@ function fallbackCopyText(text) {
     }
     
     </script>
+</body>
+</html>
+
+    

@@ -54,7 +54,7 @@
     <div class="modal-content">
         <h2>持ち物を追加</h2>
 
-        <form id="addItemForm" method="post" action="{% url 'item_edit' event.id %}" onsubmit="return validateAddItemForm()">
+        <form id="addItemForm" method="post" action="{% url 'event_item_add' event.id %}" onsubmit="return validateAddItemForm()">
             {% csrf_token %}
 
             <p id="addItemError" class="form-error"></p>
