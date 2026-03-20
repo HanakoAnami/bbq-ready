@@ -58,7 +58,9 @@
         </tbody>
     </table>
     
-    <button type="submit">担当者を保存</button>
+    <button type="submit" class="js-disable-on-submit" data-loading-text="保存中...">
+        保存
+    </button>
 </form>
 
 <p><a href="{% url 'item_edit', event.id %}"持ち物リストに戻る</a></p>

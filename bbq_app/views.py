@@ -617,18 +617,29 @@ def event_share(request, event_id):
 @login_required
 def invitation_delete(request, event_id, invitation_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
-    
+
     invitation = get_object_or_404(
         Invitation,
         id=invitation_id,
         participant__event=event
-    )   
-    
+    )
+
     if request.method == "POST":
+        participant = invitation.participant
+
+        # この参加者に割り当てられていた持ち物を未完了 + 未割り当てに戻す
+        EventItem.objects.filter(
+            event=event,
+            assignee=participant
+        ).update(
+            assignee=None,
+            is_ready=False
+        )
+
         invitation.delete()
         messages.success(request, "共有を削除しました。")
         return redirect("event_share", event_id=event.id)
-    
+
     return redirect("event_share", event_id=event.id)
 
 
