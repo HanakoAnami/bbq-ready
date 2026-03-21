@@ -421,13 +421,45 @@ def forgotten_item_create(request, event_id):
 
         if exists:
             messages.warning(request, "この忘れ物は既に登録されています。")
-        else:
-            BbqItem.objects.create(
-                user=request.user,
-                name=name,
-                category=category
-            )
-            messages.success(request, "忘れ物を登録しました。")
+            return redirect("item_edit", event_id=event.id)
+
+        # 自分テンプレとして保存
+        bbq_item = BbqItem.objects.create(
+            user=request.user,
+            name=name,
+            category=category
+        )
+
+        # 自分の未開催イベントに追加
+        future_events = Event.objects.filter(
+            user=request.user
+        ).filter(
+            Q(held_at__gte=timezone.now()) | Q(held_at__isnull=True)
+        )
+
+        event_items_to_create = []
+
+        for future_event in future_events:
+            already_exists = EventItem.objects.filter(
+                event=future_event,
+                bbq_item__name__iexact=name
+            ).exists()
+
+            if not already_exists:
+                event_items_to_create.append(
+                    EventItem(
+                        event=future_event,
+                        bbq_item=bbq_item,
+                        is_selected=False,
+                        is_ready=False,
+                        assignee=None,
+                    )
+                )
+
+        if event_items_to_create:
+            EventItem.objects.bulk_create(event_items_to_create)
+
+        messages.success(request, "忘れ物を登録しました。")
 
     return redirect("item_edit", event_id=event.id)
     
@@ -768,14 +800,14 @@ def mypage_name(request):
         if form.is_valid():
             user.first_name = form.cleaned_data["name"]
             user.save()
-            messages.success(request, 'ユーザー名を変更しました。')
-            return redirect("mypage")
+            return redirect(f"{reverse('mypage')}?updated=name")
     else:
         form = UserNameForm()
         
-    return render(request, "bbq_app/mypage_name.html", {"form": form, "user_obj": user })    
+    return render(request, "bbq_app/mypage_name.html", {"form": form, "user_obj": user })  
 
 
+@login_required
 @login_required
 def mypage_email(request):
     user = request.user
@@ -787,9 +819,7 @@ def mypage_email(request):
             user.email = new_email
             user.username = new_email
             user.save()
-
-            messages.success(request, "メールアドレスを変更しました。")
-            return redirect("mypage")
+            return redirect(f"{reverse('mypage')}?updated=email")
     else:
         form = EmailUpdateForm()
 
@@ -801,11 +831,11 @@ def mypage_email(request):
             "current_email": user.email,
         }
     )
-    
 
-class MyPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
+
+class MyPasswordChangeView(PasswordChangeView):
     template_name = "bbq_app/mypage_password.html"
     form_class = CustomPasswordChangeForm
-    success_url = reverse_lazy("mypage")
 
-    success_message = "パスワードを変更しました。"
+    def get_success_url(self):
+        return reverse("mypage") + "?updated=password"

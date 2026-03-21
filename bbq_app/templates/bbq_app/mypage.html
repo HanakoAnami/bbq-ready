@@ -4,9 +4,22 @@
 {% block page_class %}page-with-topbar{% endblock %}
 
 {% block content %}
+<div class="mypage-page" style="padding-top: 76px;">
+    {% if request.GET.updated == "name" %}
+        <div style="margin: 0 0 12px; padding: 10px 12px; border-radius: 8px; background: #dff0d8; color: #2e7d32; text-align: center;">
+            ユーザー名を変更しました。
+        </div>
+    {% elif request.GET.updated == "email" %}
+        <div style="margin: 0 0 12px; padding: 10px 12px; border-radius: 8px; background: #dff0d8; color: #2e7d32; text-align: center;">
+            メールアドレスを変更しました。
+        </div>
+    {% elif request.GET.updated == "password" %}
+        <div style="margin: 0 0 12px; padding: 10px 12px; border-radius: 8px; background: #dff0d8; color: #2e7d32; text-align: center;">
+            パスワードを変更しました。
+        </div>
+    {% endif %}
 
-<div class="mypage-page" style="padding-top: 8px;">
-    <p class="mypage-description">
+    <p style="margin: 12px 0 20px; color: #5c554d; text-align: center; font-size: 18px;">
         こちらで登録アカウント内容を変更できます。
     </p>
 
