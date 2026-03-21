@@ -732,7 +732,7 @@ body {
 
 .assign-description{
     text-align:center;
-    font-size:15px;
+    font-size:14px;
     margin-bottom:20px;
     color: black;
 }
@@ -747,6 +747,11 @@ body {
     height: 18px;
 }
 
+.assign-empty {
+    text-align: center;
+    margin: 24px 0;
+    color: black;
+}
 
 /* =====================
    share
@@ -1013,7 +1018,7 @@ body {
 
 .mypage-description {
     margin-bottom: 20px;
-    color: #5c554d;
+    color: black;
     text-align: center;
     font-size: 18px;
 }
@@ -1036,7 +1041,7 @@ body {
 .mypage-menu__item {
     display: block;
     text-decoration: none;
-    color: #3f3a34;
+    color: black;
     background: #fdfaf5;
     border: 1px solid #ece7de;
     border-radius: 12px;
@@ -1062,7 +1067,7 @@ body {
     border:1px solid #ece7de;
 
     background:#fdfaf5;
-    color:#3f3a34;
+    color: black;
 
     text-decoration:none;
     text-align:center;

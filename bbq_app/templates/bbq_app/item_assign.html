@@ -7,83 +7,78 @@
 {% block content %}
 
 <p class="assign-progress">
-準備状況：{{ ready_count }} / {{ total_count }}  完了     ({{ progress_percent }}%)
+    準備状況：{{ ready_count }} / {{ total_count }} 完了 ({{ progress_percent }}%)
 </p>
 
 <p class="assign-description">
-持ち物の準備担当者を設定してください。<br>
-準備が完了したらチェックを入れてください。
+    持ち物の準備担当者を設定してください。<br>
+    準備が完了したらチェックを入れてください。
 </p>
 
 <form method="post">
     {% csrf_token %}
 
-    <ul class="assign-list">
-        {% for event_item in items %}
-            <li class="assign-row">
-                <div class="assign-check">
-                    {% if event_item.assignee and event_item.assignee.user == event.user %}
-                        <input
-                            type="checkbox"
-                            name="ready_items"
-                            value="{{ event_item.id }}"
-                            {% if event_item.is_ready %}checked{% endif %}
-                        >
-                    {% else %}
-                        <input
-                            type="checkbox"
-                            {% if event_item.is_ready %}checked{% endif %}
-                            disabled
-                        >
-                    {% endif %}
-                </div>
-                
-                <div class="assign-select">
-                    {{ event_item.bbq_item.name }}
-                </div>
+    {% if items %}
+        <ul class="assign-list">
+            {% for event_item in items %}
+                <li class="assign-row">
 
-                <div class="assign-select">
-                    <select name="assignee_{{ event_item.id }}">
-                        <option value="">未設定</option>
+                    <div class="assign-check">
+                        {% if event_item.assignee and event_item.assignee.user == event.user %}
+                            <input
+                                type="checkbox"
+                                name="ready_items"
+                                value="{{ event_item.id }}"
+                                {% if event_item.is_ready %}checked{% endif %}
+                            >
+                        {% else %}
+                            <input
+                                type="checkbox"
+                                {% if event_item.is_ready %}checked{% endif %}
+                                disabled
+                            >
+                        {% endif %}
+                    </div>
 
-                        {% for participant in participants %}
-                            {% if participant.user == event.user %}
+                    <div class="assign-item-name">
+                        {{ event_item.bbq_item.name }}
+                    </div>
+
+                    <div class="assign-right">
+                        <select name="assignee_{{ event_item.id }}">
+                            <option value="">未設定</option>
+
+                            {% for participant in participants %}
                                 <option value="{{ participant.id }}"
                                     {% if event_item.assignee_id == participant.id %}selected{% endif %}>
                                     {{ participant.name }}
                                 </option>
-                            {% endif %}
-                        {% endfor %}
+                            {% endfor %}
+                        </select>
 
-                        {% for participant in participants %}
-                            {% if participant.user != event.user %}
-                                <option value="{{ participant.id }}"
-                                    {% if event_item.assignee_id == participant.id %}selected{% endif %}>
-                                    {{ participant.name }}
-                                </option>
+                        <div class="assign-status">
+                            {% if not event_item.assignee %}
+                                担当者未設定
+                            {% elif event_item.is_ready %}
+                                準備完了
+                            {% else %}
+                                準備中
                             {% endif %}
-                        {% endfor %}
-                    </select>
+                        </div>
+                    </div>
 
-                <div class="assign_status">
-                    {% if not event_item.assignee %}
-                        担当者未設定
-                    {% elif event_item.is_ready %}
-                        準備完了
-                    {% else %}
-                        準備中
-                    {% endif %}
-                </div>
-            </li>
-        {% empty %}
-            <li>必要な持ち物がありません。</li>
-        {% endfor %}
-    </ul>
-    <div class="assign-save">
-        <button type="submit" class="btn btn-primary">
-            保存
-        </button>
-    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="assign-save">
+            <button type="submit" class="btn btn-primary">
+                保存
+            </button>
+        </div>
+    {% else %}
+        <p class="assign-empty">必要な持ち物がありません。</p>
+    {% endif %}
 </form>
 
 {% endblock %}

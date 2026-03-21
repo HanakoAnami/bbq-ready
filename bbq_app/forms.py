@@ -120,10 +120,8 @@ class EventForm(forms.ModelForm):
     def clean_held_at(self):
         held_at = self.cleaned_data.get("held_at")
 
-        # 新規作成のときだけ過去日を禁止
-        if not self.instance.pk:
-            if held_at and held_at < timezone.now():
-                raise forms.ValidationError("過去の日付は登録できません。")
+        if held_at and held_at < timezone.now():
+            raise forms.ValidationError("過去の日付は登録できません。")
 
         return held_at
         

@@ -46,9 +46,11 @@
                         {{ invitation.guest_name }} さんの担当持ち物です。
                     </p>
 
-                    <p class="guest-items-description">
-                        準備ができたらチェックを入れて保存してください。
-                    </p>
+                    {% if assigned_items %}
+                        <p class="guest-items-description">
+                            準備ができたらチェックを入れて保存してください。
+                        </p>
+                    {% endif %}
                 </div>
 
                 <form method="post" class="guest-form">
@@ -68,7 +70,7 @@
                                 </label>
                             </li>
                         {% empty %}
-                            <li class="guest-empty">担当の持ち物はありません。</li>
+                            <li class="guest-empty">準備担当の持ち物はありません。</li>
                         {% endfor %}
                     </ul>
 
