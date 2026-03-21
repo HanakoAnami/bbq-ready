@@ -22,20 +22,27 @@ def portfolio(request):
 
 
 def add_participants_from_list(request, event):
-    participant_names = [
-        name.strip()
-        for name in request.POST.getlist("participants")
-        if name.strip()
-    ]
+    names = request.POST.getlist("participants")
+    errors = []
+    added_count = 0
 
-    for name in participant_names:
-        participant, created = Participant.objects.get_or_create(
-            event=event,
-            name=name
-        )
+    for name in names:
+        name = name.strip()
+        if not name:
+            continue
 
-        if not created:
-            messages.warning(request, f"{name} はすでに参加者に登録されています。")
+        exists = event.participants.filter(name=name).exists()
+
+        if exists:
+            errors.append(f"{name} はすでに参加者に登録されています。")
+        else:
+            Participant.objects.create(
+                event=event,
+                name=name
+            )
+            added_count += 1
+
+    return errors, added_count
 
 
 #ログイン
@@ -155,21 +162,47 @@ def bbq_item_list_create(request):
 @login_required
 def event_edit(request, event_id):
     event = get_object_or_404(Event, id=event_id, user=request.user)
-    
+
     if request.method == "POST":
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
+            form_changed = form.has_changed()
             form.save()
-            
-            # 参加者追加
-            add_participants_from_list(request, event)
-            
-            messages.success(request, "イベントを更新しました。")
+
+            participant_errors, added_count = add_participants_from_list(request, event)
+
+            current_participants = event.participants.exclude(user=event.user).order_by("id")
+            existing_participants = list(
+                current_participants.values_list("name", flat=True)
+            )
+
+            if participant_errors:
+                return render(
+                    request,
+                    "bbq_app/event_form.html",
+                    {
+                        "form": form,
+                        "event": event,
+                        "current_participants": current_participants,
+                        "existing_participants_json": json.dumps(existing_participants, ensure_ascii=False),
+                        "participant_errors": participant_errors,
+                    }
+                )
+
+            if form_changed and added_count > 0:
+                messages.success(request, "イベントを更新し、参加者を追加しました。")
+
+            elif form_changed:
+                messages.success(request, "イベントを更新しました。")
+
+            elif added_count > 0:
+                messages.success(request, "参加者を追加しました。")
+
             return redirect("item_edit", event_id=event.id)
-        
+
     else:
         form = EventForm(instance=event)
-        
+
     current_participants = event.participants.exclude(user=event.user).order_by("id")
     existing_participants = list(
         current_participants.values_list("name", flat=True)
@@ -180,9 +213,9 @@ def event_edit(request, event_id):
         "bbq_app/event_form.html",
         {
             "form": form,
-            "event":event,
+            "event": event,
             "current_participants": current_participants,
-            "existing_participants": existing_participants
+            "existing_participants_json": json.dumps(existing_participants, ensure_ascii=False),
         }
     )
         

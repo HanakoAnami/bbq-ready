@@ -13,7 +13,7 @@
         {% include "bbq_app/partials/top_bar.html" %}
     {% endblock %}
 
-    <main class="main-content">
+    <main class="main-content {% block page_class %}{% endblock %}">
 
     {% if messages %}
     <div class="flash-messages">

@@ -67,6 +67,14 @@
         </ul>
     {% endif %}
 
+    {% if participant_errors %}
+        <div class="form-error">
+            {% for error in participant_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="participant-add-box">
         <input type="text" id="participantInput" placeholder="参加者名を入力">
         <button type="button" class="btn btn-secondary" onclick="addParticipant()">参加者を追加</button>
@@ -90,7 +98,7 @@
                 const btn = form.querySelector(".js-disable-btn");
                 if (btn) {
                     btn.disabled = true;
-                    btn.innerText = "処理中...";
+                    btn.innerText = "登録中";
                 }
             });
         });

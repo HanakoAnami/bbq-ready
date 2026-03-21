@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, Pass
 from django.contrib.auth.models import User
 from .models import Event, BbqItem
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 class LoginForm(AuthenticationForm):
 
@@ -86,6 +87,7 @@ class SignupForm(UserCreationForm):
             user.save()
         return user
     
+
 class EventForm(forms.ModelForm):
 
     name = forms.CharField(
@@ -111,16 +113,19 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ("name", "held_at", "location")
 
-        widgets = {
-            "held_at": forms.DateTimeInput(
-                attrs={"type": "datetime-local"},
-                format="%Y-%m-%dT%H:%M"
-            )
-        }
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["held_at"].input_formats = ["%Y-%m-%dT%H:%M"]
+
+    def clean_held_at(self):
+        held_at = self.cleaned_data.get("held_at")
+
+        # 新規作成のときだけ過去日を禁止
+        if not self.instance.pk:
+            if held_at and held_at < timezone.now():
+                raise forms.ValidationError("過去の日付は登録できません。")
+
+        return held_at
         
 
 class BbqItemForm(forms.ModelForm):
