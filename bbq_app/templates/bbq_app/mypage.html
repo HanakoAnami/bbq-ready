@@ -5,29 +5,28 @@
 
 {% block content %}
 
-<div class="mypage-page">
+<div class="mypage-page" style="padding-top: 8px;">
     <p class="mypage-description">
         こちらで登録アカウント内容を変更できます。
     </p>
 
-<div class="mypage-menu">
+    <div class="mypage-menu">
+        <a href="{% url 'mypage_name' %}" class="mypage-menu-btn">
+            ユーザー名変更
+        </a>
 
-    <a href="{% url 'mypage_name' %}" class="mypage-menu-btn">
-        ユーザー名変更
-    </a>
+        <a href="{% url 'mypage_email' %}" class="mypage-menu-btn">
+            メールアドレス変更
+        </a>
 
-    <a href="{% url 'mypage_email' %}" class="mypage-menu-btn">
-        メールアドレス変更
-    </a>
+        <a href="{% url 'mypage_password' %}" class="mypage-menu-btn">
+            パスワード変更
+        </a>
 
-    <a href="{% url 'mypage_password' %}" class="mypage-menu-btn">
-        パスワード変更
-    </a>
-
-    <button type="button" class="mypage-menu-btn logout-btn" onclick="openLogoutModal()">
-        ログアウト
-    </button>
-
+        <button type="button" class="mypage-menu-btn logout-btn" onclick="openLogoutModal()">
+            ログアウト
+        </button>
+    </div>
 </div>
 
 <div id="logoutModal" class="modal">

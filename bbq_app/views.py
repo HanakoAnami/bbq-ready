@@ -234,13 +234,23 @@ def item_edit(request, event_id):
 
     if request.method == "POST":
 
-        # チェック状態の保存
         selected_ids = set(request.POST.getlist("selected_items"))
 
-        for event_item in items:
-            event_item.is_selected = str(event_item.id) in selected_ids
+        updated = []
 
-        EventItem.objects.bulk_update(items, ["is_selected"])
+        for event_item in items:
+            new_value = str(event_item.id) in selected_ids
+
+            # 変更があった場合だけ更新対象にする
+            if event_item.is_selected != new_value:
+                event_item.is_selected = new_value
+                updated.append(event_item)
+
+        # 変更があった場合のみDB更新＆メッセージ
+        if updated:
+            EventItem.objects.bulk_update(updated, ["is_selected"])
+            messages.success(request, "持ち物を更新しました。")
+
         return redirect("item_edit", event_id=event.id)
 
     grouped_dict = {category_value: [] for category_value, _ in BbqItem.Category.choices}

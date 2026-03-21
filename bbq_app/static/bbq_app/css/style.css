@@ -987,13 +987,14 @@ body {
 }
 
 
+
 /* =====================
    mypage
 ===================== */
 
 .mypage-page,
 .mypage-edit-page {
-    padding-top: 80px;
+    padding-top: 8px;
 }
 
 .flash-messages + .mypage-page,
@@ -1589,5 +1590,9 @@ input[type="checkbox"] {
 }
 
 .page-with-topbar {
-    padding-top: 76px;
+    padding-top: 0;
+}
+
+.mypage-top-page .mypage-page {
+    padding-top: 8px;
 }

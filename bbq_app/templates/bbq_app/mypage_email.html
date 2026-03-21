@@ -4,7 +4,7 @@
 {% block page_class %}page-with-topbar{% endblock %}
 
 {% block content %}
-<div class="mypage-edit-page">
+<div class="mypage-edit-page" style="padding-top: 8px;">
 
     <div class="mypage-edit-card">
         <p class="mypage-edit-current-label">現在登録のメールアドレス</p>
@@ -21,7 +21,7 @@
             {% if form.email.errors %}
                 {% for error in form.email.errors %}
                     <span class="auth-inline-error">{{ error }}</span>
-            {% endfor %}
+                {% endfor %}
             {% endif %}
 
             <div class="mypage-edit-actions">
