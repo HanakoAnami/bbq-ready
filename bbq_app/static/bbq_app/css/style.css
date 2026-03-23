@@ -1516,14 +1516,14 @@ input[type="checkbox"] {
 .portfolio-screenshot-area {
     display: flex;
     justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
+    gap: 13px;
+    flex-wrap: nowrap;
     margin-bottom: 28px;
 }
 
 .portfolio-screenshot {
     width: 100%;
-    max-width: 180px;
+    max-width: 160px;
     border-radius: 18px;
     border: 1px solid #ddd;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
