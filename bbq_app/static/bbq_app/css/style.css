@@ -1519,7 +1519,7 @@ input[type="checkbox"] {
 
 .portfolio-screenshot {
     width: 100%;
-    max-width: 360px;
+    max-width: 180px;
     border-radius: 18px;
     border: 1px solid #ddd;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
