@@ -1514,6 +1514,10 @@ input[type="checkbox"] {
 }
 
 .portfolio-screenshot-area {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
     margin-bottom: 28px;
 }
 
